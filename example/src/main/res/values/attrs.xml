@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <!--圆弧进度条-->
+    <declare-styleable name="TasksCompletedView">
+        <!--内圆半径-->
+        <attr name="radius" format="dimension" />
+        <!--内圆颜色-->
+        <attr name="circleColor" format="color" />
+        <!--进度条宽度-->
+        <attr name="progressWidth" format="dimension" />
+        <!--进度条颜色-->
+        <attr name="progressColor" format="color" />
+        <!--进度条背景色-->
+        <attr name="progressBgColor" format="color" />
+        <!--进度条中间的文字-->
+        <attr name="progressText" format="string" />
+        <!--进度条中间的文字大小-->
+        <attr name="progressTextSize" format="dimension" />
+        <!--进度条中间的文字颜色-->
+        <attr name="progressTextColor" format="color" />
+
+    </declare-styleable>
+
+
+</resources>

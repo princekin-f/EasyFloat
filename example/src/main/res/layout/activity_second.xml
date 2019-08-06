@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white2"
+        android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/tvShow"
+            style="@style/TextStyle2"
+            android:layout_marginTop="120dp"
+            android:text="Show" />
+
+    <TextView
+            android:id="@+id/openThird"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="Open ThirdActivity" />
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@color/violet">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="直接在xml布局中使用"
+                android:textColor="@color/white" />
+
+        <com.lzf.easyfloat.widget.activityfloat.FloatingView
+                android:id="@+id/floatingView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+            <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@mipmap/ic_launcher_round" />
+
+        </com.lzf.easyfloat.widget.activityfloat.FloatingView>
+
+    </FrameLayout>
+</LinearLayout>

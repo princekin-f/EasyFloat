@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:background="@color/translucent"
+        android:orientation="vertical">
+
+    <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:padding="10dp"
+            android:src="@drawable/icon_x" />
+
+    <com.lzf.easyfloat.example.widget.RoundProgressBar
+            android:id="@+id/roundProgressBar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="22dp"
+            app:circleColor="@color/transparent"
+            app:progressColor="@color/colorPrimary"
+            app:progressTextColor="@color/white"
+            app:progressWidth="2dp"
+            app:radius="20dp" />
+
+    <TextView
+            android:id="@+id/tvOpenMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/roundProgressBar"
+            android:padding="5dp"
+            android:text="打开首页"
+            android:textColor="@color/white" />
+
+    <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvOpenMain"
+            android:layout_toEndOf="@id/roundProgressBar"
+            android:checked="true"
+            android:text="是否可拖拽"
+            android:textColor="@color/white" />
+
+    <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkbox"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:max="100"
+            android:progress="66" />
+
+</RelativeLayout>
