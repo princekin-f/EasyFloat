@@ -1,5 +1,5 @@
 ## EasyFloat：Android浮窗框架
-
+[![](https://jitpack.io/v/princekin-f/EasyFloat.svg)](https://jitpack.io/#princekin-f/EasyFloat)
 > Android浮窗，从未如此简单...
 
 ### 特点功能：
@@ -24,6 +24,22 @@
 |:---:|:---:|:---:|
 |![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97%E7%BC%A9%E6%94%BE.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/dialog%E5%92%8Cxml%E4%BD%BF%E7%94%A8.gif)|
 
+### 关于集成：
+- 在项目的根目录的`build.gradle`添加：
+```
+allprojects {
+    repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
+- 在应用模块的`build.gradle`添加：
+```
+dependencies {
+    implementation 'com.github.princekin-f:EasyFloat:1.0'
+}
+```
 
 ### 一行代码搞定Android浮窗，浮窗从未如此简单：
 ```
