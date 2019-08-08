@@ -44,7 +44,7 @@ data class FloatConfig(
     // 浮窗的摆放方式，使用系统的Gravity属性
     var gravity: Int = 0,
     // 坐标的偏移量
-    var offsetPair:Pair<Int,Int> =Pair(0,0),
+    var offsetPair: Pair<Int, Int> = Pair(0, 0),
     // 固定的初始坐标，左上角坐标
     var locationPair: Pair<Int, Int> = Pair(0, 0),
     // ps：优先使用固定坐标，若固定坐标不为原点坐标，gravity属性和offset属性无效

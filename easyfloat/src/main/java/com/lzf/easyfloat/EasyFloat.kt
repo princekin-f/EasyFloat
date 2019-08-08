@@ -91,7 +91,7 @@ class EasyFloat {
          * 显示系统浮窗，发送广播消息，在Service内部接收广播
          */
         @JvmStatic
-        fun createAppFloat(context: Context, tag: String? = null) =
+        fun showAppFloat(context: Context, tag: String? = null) =
             FloatService.setVisible(context, true, tag)
 
         /**

@@ -67,12 +67,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             // 检测权限根据需求考虑有无即可，权限申请为内部进行
             open3 -> checkPermission()
             hide3 -> EasyFloat.hideAppFloat(this)
-            show3 -> EasyFloat.createAppFloat(this)
+            show3 -> EasyFloat.showAppFloat(this)
             dismiss3 -> EasyFloat.dismissAppFloat(this)
 
             open4 -> checkPermission("scaleFloat")
             hide4 -> EasyFloat.hideAppFloat(this, "scaleFloat")
-            show4 -> EasyFloat.createAppFloat(this, "scaleFloat")
+            show4 -> EasyFloat.showAppFloat(this, "scaleFloat")
             dismiss4 -> EasyFloat.dismissAppFloat(this, "scaleFloat")
 
             openSecond -> startActivity(Intent(this, SecondActivity::class.java))

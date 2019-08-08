@@ -18,6 +18,7 @@ internal class AnimatorManager(
     private val sidePattern: SidePattern
 ) {
 
+    // 通过接口实现具体动画，所以只需要更改接口的具体实现
     fun enterAnim(): Animator? = onFloatAnimator?.enterAnim(view, parentView, sidePattern)
 
     fun exitAnim(): Animator? = onFloatAnimator?.exitAnim(view, parentView, sidePattern)

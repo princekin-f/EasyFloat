@@ -46,6 +46,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
     private fun initParams() {
         windowManager = context.getSystemService(Service.WINDOW_SERVICE) as WindowManager
         params = WindowManager.LayoutParams().apply {
+            // 安卓6.0 以后，全局的Window类别，必须使用TYPE_APPLICATION_OVERLAY
             type =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE
             format = PixelFormat.RGBA_8888

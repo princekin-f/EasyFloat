@@ -12,7 +12,9 @@ import com.lzf.easyfloat.enum.SidePattern
  */
 interface OnFloatAnimator {
 
+    // 入场动画
     fun enterAnim(view: View, parentView: ViewGroup, sidePattern: SidePattern): Animator? = null
 
+    // 退出动画
     fun exitAnim(view: View, parentView: ViewGroup, sidePattern: SidePattern): Animator? = null
 }

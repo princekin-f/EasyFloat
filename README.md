@@ -1,6 +1,6 @@
 ## EasyFloat：Android浮窗框架
 [![](https://jitpack.io/v/princekin-f/EasyFloat.svg)](https://jitpack.io/#princekin-f/EasyFloat)
-> Android浮窗，从未如此简单...
+> [EasyFloat：浮窗从未如此简单](www.jianshu.com/p/7d1a7c82094a)
 
 ### 特点功能：
 - 支持单页面浮窗，无需权限申请
@@ -11,7 +11,7 @@
 - 支持默认位置的设定，支持对齐方式和偏移量的设定
 - 支持创建多个单页面浮窗、多个系统浮窗，Tag进行区分
 - 支持出入动画的设定，有默认动画，可自行替换（策略模式）
-- 使用简单、链式调用，侵入性低
+- 使用简单、链式调用，无侵入性
 - 支持xml直接使用，满足拖拽控件的需求
 - 支持解锁更多姿势，如：拖拽缩放、通知弹窗...
 
@@ -37,7 +37,7 @@ allprojects {
 - 在应用模块的`build.gradle`添加：
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0'
+    implementation 'com.github.princekin-f:EasyFloat:1.0.1'
 }
 ```
 
@@ -109,8 +109,86 @@ EasyFloat.with(this)
     .show()
 ```
 
+#### 悬浮窗权限检测，可用于设置引导页面：
+> 无需主动进行权限申请，创建结果、申请结果可在`OnFloatCallbacks`的`createdResult`获取。
+```
+PermissionUtils.checkPermission(this)
+```
+
+#### Activity浮窗的相关API：
+```
+// 关闭浮窗
+dismiss(activity: Activity? = null, floatTag: String? = null)
+
+// 隐藏浮窗
+hide(activity: Activity? = null, floatTag: String? = null)
+
+// 显示浮窗
+show(activity: Activity? = null, floatTag: String? = null)
+
+// 设置是否可拖拽
+setDragEnable(activity: Activity? = null, dragEnable: Boolean, floatTag: String? = null )
+
+// 浮窗是否显示
+isShow(activity: Activity? = null, floatTag: String? = null)
+```
+
+补充一下：**`? = null` 代表可选参数，不填也行，默认值为null。下同。**
+
+#### 系统浮窗的相关API：
+```
+// 关闭浮窗
+dismissAppFloat(context: Context, tag: String? = null)
+
+// 隐藏浮窗
+hideAppFloat(context: Context, tag: String? = null)
+
+// 显示浮窗
+showAppFloat(context: Context, tag: String? = null)
+
+// 设置是否可拖拽
+appFloatDragEnable(dragEnable: Boolean, tag: String? = null)
+
+// 浮窗是否显示
+appFloatIsShow(tag: String? = null)
+
+// 添加单个浮窗过滤页面
+filterActivity(activity: Activity, tag: String? = null)
+
+// 添加多个浮窗过滤页面
+filterActivities(tag: String? = null, vararg clazz: Class<*>)
+
+// 移除单个浮窗过滤页面
+removeFilter(activity: Activity, tag: String? = null)
+
+// 移除多个浮窗过滤页面
+removeFilters(tag: String? = null, vararg clazz: Class<*>)
+
+// 清空过滤页面
+clearFilters(tag: String? = null)
+```
+
+#### 直接在xml布局使用拖拽控件：
+```
+<com.lzf.easyfloat.widget.activityfloat.FloatingView
+    android:id="@+id/floatingView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_launcher_round" />
+
+</com.lzf.easyfloat.widget.activityfloat.FloatingView>
+```
+需要为FloatingView设置点击事件，不然无法拖拽：
+```
+floatingView.setOnClickListener {}
+```
+
 ### 关于混淆：
-> 在默认的混淆规则下，是能够正常使用的，若混淆时出现意外，可以选择过滤掉此框架。
 ```
 -keep class com.lzf.easyfloat.** {*;}
 ```

@@ -57,9 +57,7 @@ internal object LifecycleUtils {
                 if (isForeground()) return
                 // 当app处于后台时，检测是否有仅前台显示的系统浮窗
                 FloatService.floatMap.forEach { (tag, manager) ->
-                    run {
-                        if (manager.config.showPattern == ShowPattern.FOREGROUND) setVisible(tag = tag)
-                    }
+                    run { if (manager.config.showPattern == ShowPattern.FOREGROUND) setVisible(tag = tag) }
                 }
             }
 

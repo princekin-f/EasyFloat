@@ -103,7 +103,9 @@ abstract class AbstractDragFloatingView(
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
+        // updateView(event)是拖拽功能的具体实现
         if (event != null) updateView(event)
+        // 如果是拖拽，这消费此事件，否则返回默认情况，防止影响子View事件的消费
         return config.isDrag || super.onTouchEvent(event)
     }
 
@@ -354,6 +356,7 @@ abstract class AbstractDragFloatingView(
      * 退出动画
      */
     internal fun exitAnim() {
+        // 正在执行动画，防止重复调用
         if (config.isAnim) return
         val manager: AnimatorManager? =
             AnimatorManager(config.floatAnimator, this, parentView, config.sidePattern)

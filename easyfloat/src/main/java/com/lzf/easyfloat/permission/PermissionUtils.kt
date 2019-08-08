@@ -25,6 +25,7 @@ object PermissionUtils {
     /**
      * 检测是否有悬浮窗权限
      */
+    @JvmStatic
     fun checkPermission(context: Context): Boolean {
         // 6.0 版本之后由于 google 增加了对悬浮窗权限的管理，所以方式就统一了
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
