@@ -1,6 +1,6 @@
 ## EasyFloat：Android浮窗框架
 [![](https://jitpack.io/v/princekin-f/EasyFloat.svg)](https://jitpack.io/#princekin-f/EasyFloat)
-> [EasyFloat：浮窗从未如此简单](www.jianshu.com/p/7d1a7c82094a)
+> [EasyFloat：浮窗从未如此简单](https://www.jianshu.com/p/7d1a7c82094a)
 
 ### 特点功能：
 - 支持单页面浮窗，无需权限申请
