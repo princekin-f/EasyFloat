@@ -10,7 +10,7 @@ import android.view.*
 import android.widget.FrameLayout
 import com.lzf.easyfloat.anim.AnimatorManager
 import com.lzf.easyfloat.data.FloatConfig
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.utils.logger
 import kotlin.math.min
 

@@ -2,8 +2,8 @@ package com.lzf.easyfloat.data
 
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
-import com.lzf.easyfloat.enum.ShowPattern
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.ShowPattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.interfaces.OnAppFloatAnimator
 import com.lzf.easyfloat.interfaces.OnFloatAnimator
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks

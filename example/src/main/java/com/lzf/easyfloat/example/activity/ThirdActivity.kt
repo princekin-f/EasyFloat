@@ -8,12 +8,11 @@ import android.view.View
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
-import com.lzf.easyfloat.enum.ShowPattern
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.ShowPattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.interfaces.OnInvokeView
-import kotlinx.android.synthetic.main.activity_third.*
 
 /**
  * @author: liuzhenfeng

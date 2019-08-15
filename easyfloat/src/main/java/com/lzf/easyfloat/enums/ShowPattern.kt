@@ -1,4 +1,4 @@
-package com.lzf.easyfloat.enum
+package com.lzf.easyfloat.enums
 
 /**
  * @author: liuzhenfeng

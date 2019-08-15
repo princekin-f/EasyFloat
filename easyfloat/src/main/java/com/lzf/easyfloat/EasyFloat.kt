@@ -5,8 +5,8 @@ import android.app.Application
 import android.content.Context
 import android.view.View
 import com.lzf.easyfloat.data.FloatConfig
-import com.lzf.easyfloat.enum.ShowPattern
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.ShowPattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.interfaces.*
 import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.PermissionUtils
@@ -29,6 +29,7 @@ class EasyFloat {
         private var activityWr: WeakReference<Activity>? = null
 
         @JvmStatic
+        @JvmOverloads
         fun init(application: Application, isDebug: Boolean = false) {
             this.isDebug = isDebug
             // 注册Activity生命周期回调
@@ -44,23 +45,28 @@ class EasyFloat {
         // *************************** Activity浮窗的相关方法 ***************************
         // 通过浮窗管理类，实现相应的功能，详情参考ActivityFloatManager
         @JvmStatic
+        @JvmOverloads
         fun dismiss(activity: Activity? = null, floatTag: String? = null) =
             manager(activity)?.dismiss(floatTag)
 
         @JvmStatic
+        @JvmOverloads
         fun hide(activity: Activity? = null, floatTag: String? = null) =
             manager(activity)?.setVisibility(floatTag, View.GONE)
 
         @JvmStatic
+        @JvmOverloads
         fun show(activity: Activity? = null, floatTag: String? = null) =
             manager(activity)?.setVisibility(floatTag, View.VISIBLE)
 
         @JvmStatic
+        @JvmOverloads
         fun setDragEnable(
             activity: Activity? = null, dragEnable: Boolean, floatTag: String? = null
         ) = manager(activity)?.setDragEnable(dragEnable, floatTag)
 
         @JvmStatic
+        @JvmOverloads
         fun isShow(activity: Activity? = null, floatTag: String? = null) =
             manager(activity)?.isShow(floatTag)
 
@@ -77,6 +83,7 @@ class EasyFloat {
          * 关闭系统级浮窗，发送广播消息，在Service内部接收广播
          */
         @JvmStatic
+        @JvmOverloads
         fun dismissAppFloat(context: Context, tag: String? = null) =
             FloatService.dismiss(context, tag)
 
@@ -84,6 +91,7 @@ class EasyFloat {
          * 隐藏系统浮窗，发送广播消息，在Service内部接收广播
          */
         @JvmStatic
+        @JvmOverloads
         fun hideAppFloat(context: Context, tag: String? = null) =
             FloatService.setVisible(context, false, tag)
 
@@ -91,6 +99,7 @@ class EasyFloat {
          * 显示系统浮窗，发送广播消息，在Service内部接收广播
          */
         @JvmStatic
+        @JvmOverloads
         fun showAppFloat(context: Context, tag: String? = null) =
             FloatService.setVisible(context, true, tag)
 
@@ -98,6 +107,7 @@ class EasyFloat {
          * 设置系统浮窗是否可拖拽，先获取浮窗的config，后修改相应属性
          */
         @JvmStatic
+        @JvmOverloads
         fun appFloatDragEnable(dragEnable: Boolean, tag: String? = null) =
             getConfig(tag).let { it?.dragEnable = dragEnable }
 
@@ -105,28 +115,34 @@ class EasyFloat {
          * 获取系统浮窗是否显示，通过浮窗的config，获取显示状态
          */
         @JvmStatic
+        @JvmOverloads
         fun appFloatIsShow(tag: String? = null) = getConfig(tag) != null && getConfig(tag)!!.isShow
 
         /**
          * 以下几个方法为：系统浮窗过滤页面的添加、移除、清空
          */
         @JvmStatic
+        @JvmOverloads
         fun filterActivity(activity: Activity, tag: String? = null) =
             getConfig(tag).let { it?.filterSet?.add(activity.componentName.className) }
 
         @JvmStatic
+        @JvmOverloads
         fun filterActivities(tag: String? = null, vararg clazz: Class<*>) =
             clazz.forEach { c -> getConfig(tag).let { it?.filterSet?.add(c.name) } }
 
         @JvmStatic
+        @JvmOverloads
         fun removeFilter(activity: Activity, tag: String? = null) =
             getConfig(tag).let { it?.filterSet?.remove(activity.componentName.className) }
 
         @JvmStatic
+        @JvmOverloads
         fun removeFilters(tag: String? = null, vararg clazz: Class<*>) =
             clazz.forEach { c -> getConfig(tag).let { it?.filterSet?.remove(c.name) } }
 
         @JvmStatic
+        @JvmOverloads
         fun clearFilters(tag: String? = null) = getConfig(tag)?.filterSet?.clear()
 
         /**

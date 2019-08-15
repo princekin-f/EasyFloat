@@ -8,7 +8,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams
 import com.lzf.easyfloat.data.FloatConfig
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.utils.DisplayUtils
 import kotlin.math.min
 

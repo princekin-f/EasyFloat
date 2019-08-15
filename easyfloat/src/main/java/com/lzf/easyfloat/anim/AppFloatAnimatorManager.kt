@@ -4,8 +4,6 @@ import android.animation.Animator
 import android.view.View
 import android.view.WindowManager
 import com.lzf.easyfloat.data.FloatConfig
-import com.lzf.easyfloat.enum.SidePattern
-import com.lzf.easyfloat.interfaces.OnAppFloatAnimator
 
 /**
  * @author: liuzhenfeng

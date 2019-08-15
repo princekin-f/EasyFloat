@@ -3,7 +3,6 @@ package com.lzf.easyfloat.example.activity
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.BounceInterpolator
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.DefaultAnimator
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.interfaces.OnFloatAnimator
 import com.lzf.easyfloat.interfaces.OnInvokeView

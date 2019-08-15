@@ -37,7 +37,7 @@ allprojects {
 - 在应用模块的`build.gradle`添加：
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0.1'
+    implementation 'com.github.princekin-f:EasyFloat:1.0.2'
 }
 ```
 
@@ -195,3 +195,9 @@ floatingView.setOnClickListener {}
 
 ### 关于感谢：
 > 权限适配：[FloatWindowPermission](https://github.com/zhaozepeng/FloatWindowPermission)
+
+
+### 更新日志：
+#### v 1.0.2：
+- 修改`enum`包名，解决Java特殊路径无法调用的问题；
+- 添加`@JvmOverloads`注解，支持对Java的方法重载。

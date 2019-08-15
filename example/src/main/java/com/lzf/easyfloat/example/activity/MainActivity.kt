@@ -10,8 +10,8 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.lzf.easyfloat.EasyFloat
-import com.lzf.easyfloat.enum.ShowPattern
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.ShowPattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.example.logger
 import com.lzf.easyfloat.example.widget.RoundProgressBar

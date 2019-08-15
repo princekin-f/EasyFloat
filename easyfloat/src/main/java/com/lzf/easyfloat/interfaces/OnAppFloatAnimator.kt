@@ -3,7 +3,7 @@ package com.lzf.easyfloat.interfaces
 import android.animation.Animator
 import android.view.View
 import android.view.WindowManager
-import com.lzf.easyfloat.enum.SidePattern
+import com.lzf.easyfloat.enums.SidePattern
 
 /**
  * @author: liuzhenfeng
