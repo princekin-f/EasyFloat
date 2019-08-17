@@ -39,7 +39,6 @@ public class MeizuUtils {
             Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
 //            intent.setClassName("com.meizu.safe", "com.meizu.safe.security.AppSecActivity");//remove this line code for fix flyme6.3
             intent.putExtra("packageName", fragment.getActivity().getPackageName());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             fragment.startActivityForResult(intent, PermissionUtils.requestCode);
         } catch (Exception e) {
             try {

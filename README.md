@@ -3,17 +3,17 @@
 > [EasyFloat：浮窗从未如此简单](https://www.jianshu.com/p/7d1a7c82094a)
 
 ### 特点功能：
-- 支持单页面浮窗，无需权限申请
-- 支持全局浮窗、应用前台浮窗，需要授权悬浮窗权限
-- 自动权限检测、自动跳转浮窗权限管理页、自动处理授权结果
-- 支持系统浮窗的页面过滤
-- 支持拖拽，支持各种状态的回调
-- 支持默认位置的设定，支持对齐方式和偏移量的设定
-- 支持创建多个单页面浮窗、多个系统浮窗，Tag进行区分
-- 支持出入动画的设定，有默认动画，可自行替换（策略模式）
-- 使用简单、链式调用，无侵入性
-- 支持xml直接使用，满足拖拽控件的需求
-- 支持解锁更多姿势，如：拖拽缩放、通知弹窗...
+- **支持单页面浮窗，无需权限申请**
+- **支持全局浮窗、应用前台浮窗，需要授权悬浮窗权限**
+- **自动权限检测、自动跳转浮窗权限管理页、自动处理授权结果**
+- **支持系统浮窗的页面过滤**
+- **支持拖拽，支持各种状态的回调**
+- **支持默认位置的设定，支持对齐方式和偏移量的设定**
+- **支持创建多个单页面浮窗、多个系统浮窗，Tag进行区分**
+- **支持出入动画的设定，有默认动画，可自行替换（策略模式）**
+- **使用简单、链式调用，无侵入性**
+- **支持xml直接使用，满足拖拽控件的需求**
+- **支持解锁更多姿势，如：拖拽缩放、通知弹窗...**
 
 
 |权限申请|系统浮窗|
@@ -37,7 +37,7 @@ allprojects {
 - 在应用模块的`build.gradle`添加：
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0.2'
+    implementation 'com.github.princekin-f:EasyFloat:1.0.3'
 }
 ```
 
@@ -133,7 +133,7 @@ setDragEnable(activity: Activity? = null, dragEnable: Boolean, floatTag: String?
 isShow(activity: Activity? = null, floatTag: String? = null)
 ```
 
-补充一下：**`? = null` 代表可选参数，不填也行，默认值为null。下同。**
+**补充一下：`? = null` 代表可选参数，不填也行，默认值为null。下同。**
 
 #### 系统浮窗的相关API：
 ```
@@ -168,6 +168,16 @@ removeFilters(tag: String? = null, vararg clazz: Class<*>)
 clearFilters(tag: String? = null)
 ```
 
+#### 系统浮窗中使用`EditText`：
+**1，为`EditText`设置点击事件，调用`openInputMethod`方法：**
+```
+InputMethodUtils.openInputMethod(editText, tag)
+```
+**2，软键盘关闭时，调用`closedInputMethod`方法：**
+```
+InputMethodUtils.closedInputMethod(tag)
+```
+
 #### 直接在xml布局使用拖拽控件：
 ```
 <com.lzf.easyfloat.widget.activityfloat.FloatingView
@@ -183,7 +193,7 @@ clearFilters(tag: String? = null)
 
 </com.lzf.easyfloat.widget.activityfloat.FloatingView>
 ```
-需要为FloatingView设置点击事件，不然无法拖拽：
+**需要为FloatingView设置点击事件，不然无法拖拽：**
 ```
 floatingView.setOnClickListener {}
 ```
@@ -198,6 +208,11 @@ floatingView.setOnClickListener {}
 
 
 ### 更新日志：
-#### v 1.0.2：
+#### v 1.0.3:
+- 修改魅族手机，权限申请回调异常的问题；
+- 为系统浮窗的`EditText`，提供了软键盘的打开、关闭后的焦点移除；
+- 但暂未提供软键盘的关闭监听方案，希望大家一起努力。
+
+#### v 1.0.2:
 - 修改`enum`包名，解决Java特殊路径无法调用的问题；
 - 添加`@JvmOverloads`注解，支持对Java的方法重载。

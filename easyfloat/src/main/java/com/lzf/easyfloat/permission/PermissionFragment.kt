@@ -1,6 +1,5 @@
 package com.lzf.easyfloat.permission
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Fragment
 import android.content.Intent
@@ -20,7 +19,6 @@ internal class PermissionFragment : Fragment() {
     companion object {
         private var onPermissionResult: OnPermissionResult? = null
 
-        @SuppressLint("CommitTransaction")
         fun requestPermission(activity: Activity, onPermissionResult: OnPermissionResult) {
             this.onPermissionResult = onPermissionResult
             activity.fragmentManager

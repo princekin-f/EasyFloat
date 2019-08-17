@@ -23,9 +23,9 @@ import com.lzf.easyfloat.utils.DisplayUtils
  */
 internal class AppFloatManager(val context: Context, var config: FloatConfig) {
 
-    private lateinit var windowManager: WindowManager
-    private lateinit var params: WindowManager.LayoutParams
-    private var frameLayout: ParentFrameLayout? = null
+    lateinit var windowManager: WindowManager
+    lateinit var params: WindowManager.LayoutParams
+    var frameLayout: ParentFrameLayout? = null
     private lateinit var touchUtils: TouchUtils
 
 

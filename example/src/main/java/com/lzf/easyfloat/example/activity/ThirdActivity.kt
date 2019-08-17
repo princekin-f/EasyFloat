@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
+import android.widget.TextView
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
@@ -13,10 +15,12 @@ import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.interfaces.OnInvokeView
+import com.lzf.easyfloat.utils.InputMethodUtils
+import kotlinx.android.synthetic.main.activity_third.*
 
 /**
  * @author: liuzhenfeng
- * @function:
+ * @function: 测试EditText
  * @date: 2019-07-26  13:13
  */
 class ThirdActivity : Activity() {
@@ -24,6 +28,32 @@ class ThirdActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_third)
+
+        openEditTextFloat.setOnClickListener {
+            showEditTextFloat()
+        }
+    }
+
+    private fun showEditTextFloat(tag: String? = "editTextFloat") {
+        EasyFloat.with(this)
+            .setLayout(R.layout.float_edit)
+            .setShowPattern(ShowPattern.ALL_TIME)
+            .setGravity(Gravity.CENTER)
+            .setTag(tag)
+            .invokeView(OnInvokeView {
+                it.findViewById<EditText>(R.id.editText).setOnClickListener { et ->
+                    InputMethodUtils.openInputMethod(et as EditText, tag)
+                }
+
+                it.findViewById<TextView>(R.id.tvImmClosed).setOnClickListener {
+                    InputMethodUtils.closedInputMethod(tag)
+                }
+
+                it.findViewById<TextView>(R.id.tvCloseFloat).setOnClickListener {
+                    EasyFloat.dismissAppFloat(this, tag)
+                }
+            })
+            .show()
     }
 
     private fun showFloat() {
