@@ -1,8 +1,10 @@
 package com.lzf.easyfloat.example.activity
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
+import android.app.*
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
@@ -164,6 +166,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .setShowPattern(ShowPattern.ALL_TIME)
             .setSidePattern(SidePattern.RESULT_SIDE)
             .setGravity(Gravity.CENTER)
+            // 启动前台Service
+            .startForeground(true, myNotification())
             .invokeView(OnInvokeView {
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
                     EasyFloat.dismissAppFloat(this@MainActivity)
@@ -242,5 +246,42 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun toast(string: String = "onClick") =
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
+
+    /**
+     * 自定义的通知栏消息，可根据业务需要进行配置
+     */
+    private fun myNotification(): Notification = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+            // 创建消息渠道
+            val channel =
+                NotificationChannel("EasyFloat", "系统悬浮窗", NotificationManager.IMPORTANCE_MIN)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+
+            Notification.Builder(this, "EasyFloat")
+                .setCategory(Notification.CATEGORY_SERVICE)
+        }
+
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ->
+            Notification.Builder(this)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .setPriority(Notification.PRIORITY_MIN)
+
+        else -> Notification.Builder(this)
+    }
+        .setAutoCancel(true)
+        .setOngoing(true)
+        .setContentTitle("EasyFloat正在使用系统悬浮窗")
+        .setContentText("浮窗从未如此简单……")
+        .setSmallIcon(R.mipmap.ic_launcher)
+        .setContentIntent(
+            PendingIntent.getActivity(
+                this,
+                0,
+                Intent(this, SecondActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        )
+        .build()
 
 }

@@ -9,7 +9,7 @@ enum class SidePattern {
 
     // 默认不贴边，跟随手指移动
     DEFAULT,
-    // 左、右、上、下四个方向固定
+    // 左、右、上、下四个方向固定（一直吸附在该方向边缘，只能在该方向的边缘移动）
     LEFT, RIGHT, TOP, BOTTOM,
     // 根据手指到屏幕边缘的距离，自动选择水平方向的贴边、垂直方向的贴边、四周方向的贴边
     AUTO_HORIZONTAL, AUTO_VERTICAL, AUTO_SIDE,

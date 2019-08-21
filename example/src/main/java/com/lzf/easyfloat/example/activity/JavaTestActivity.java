@@ -13,6 +13,7 @@ import com.lzf.easyfloat.enums.SidePattern;
 import com.lzf.easyfloat.example.R;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.lzf.easyfloat.permission.PermissionUtils;
+import com.lzf.easyfloat.utils.DefaultNotificationKt;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +50,9 @@ public class JavaTestActivity extends Activity {
                 .setAppFloatAnimator(new AppFloatDefaultAnimator())
                 // 设置系统浮窗的不需要显示的页面
                 .setFilter(MainActivity.class, SecondActivity.class)
+                // 是否启动前台Service
+                .startForeground(true, DefaultNotificationKt.floatNotification(this))
+                .startForeground(true)
                 // 设置我们传入xml布局的详细信息
                 .invokeView(floatingView -> {
 

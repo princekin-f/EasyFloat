@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.view.View
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.utils.logger
@@ -27,7 +29,7 @@ internal class FloatService : Service() {
         private const val FLOAT_DISMISS = "floatDismiss"
         private const val FLOAT_TAG = "floatTag"
         const val DEFAULT_TAG = "default"
-        var floatMap = mutableMapOf<String, AppFloatManager>()
+        val floatMap = mutableMapOf<String, AppFloatManager>()
         private var config = FloatConfig()
 
         /**
@@ -44,8 +46,14 @@ internal class FloatService : Service() {
         fun checkStop(context: Context, floatTag: String?) {
             // 先清除当条浮窗信息
             if (floatMap.isNotEmpty()) floatMap.remove(floatTag)
-            // 如有没有其他浮窗存在，关闭Service
-            if (floatMap.isEmpty()) context.stopService(Intent(context, FloatService::class.java))
+            // 如有没有其他浮窗存在，延迟关闭Service
+            if (floatMap.isEmpty()) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (floatMap.isEmpty()) {
+                        context.stopService(Intent(context, FloatService::class.java))
+                    }
+                }, 500)
+            }
         }
 
         /**
@@ -102,6 +110,13 @@ internal class FloatService : Service() {
         if (checkTag()) {
             // 通过floatManager创建浮窗，并将floatManager添加到map中
             floatMap[config.floatTag!!] = AppFloatManager(this, config).apply { createFloat() }
+
+            // 启动前台Service，更长的生命周期，但是会在通知栏出现通知
+            // ps：只要有一个浮窗设置了前台Service，就会启动，只有当全部浮窗关闭时，才会关闭前台Service；
+            // 如要需要严格区分前后台Service，需要自行处理stopForeground()
+            if (config.startForeground && config.notification != null) {
+                startForeground(99, config.notification)
+            }
         } else {
             config.callbacks?.createdResult(false, "请为系统浮窗设置不同的tag", null)
             logger.w("请为系统浮窗设置不同的tag")
@@ -125,6 +140,7 @@ internal class FloatService : Service() {
     override fun onDestroy() {
         // 取消广播接收
         unregisterReceiver(receiver)
+        // TODO 是否需要清除已有浮窗
         super.onDestroy()
     }
 

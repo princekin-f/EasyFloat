@@ -2,6 +2,7 @@ package com.lzf.easyfloat
 
 import android.app.Activity
 import android.app.Application
+import android.app.Notification
 import android.content.Context
 import android.view.View
 import com.lzf.easyfloat.data.FloatConfig
@@ -11,6 +12,7 @@ import com.lzf.easyfloat.interfaces.*
 import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.service.FloatService
+import com.lzf.easyfloat.utils.floatNotification
 import com.lzf.easyfloat.utils.LifecycleUtils
 import com.lzf.easyfloat.utils.logger
 import com.lzf.easyfloat.widget.activityfloat.ActivityFloatManager
@@ -176,6 +178,7 @@ class EasyFloat {
             return this
         }
 
+        @JvmOverloads
         fun setGravity(gravity: Int, offsetX: Int = 0, offsetY: Int = 0): Builder {
             config.gravity = gravity
             config.offsetPair = Pair(offsetX, offsetY)
@@ -227,6 +230,17 @@ class EasyFloat {
         // 设置需要过滤的Activity，仅对系统浮窗有效
         fun setFilter(vararg clazz: Class<*>): Builder {
             clazz.forEach { config.filterSet.add(it.name) }
+            return this
+        }
+
+        // 是否启动前台Service，会在通知栏创建一个通知，仅针对系统浮窗有效
+        @JvmOverloads
+        fun startForeground(
+            startForeground: Boolean,
+            notification: Notification? = floatNotification(activity)
+        ): Builder {
+            config.startForeground = startForeground
+            config.notification = notification
             return this
         }
 

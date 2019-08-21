@@ -2,7 +2,7 @@
 [![](https://jitpack.io/v/princekin-f/EasyFloat.svg)](https://jitpack.io/#princekin-f/EasyFloat)
 > [EasyFloat：浮窗从未如此简单](https://www.jianshu.com/p/7d1a7c82094a)
 
-### 特点功能：
+## 特点功能：
 - **支持单页面浮窗，无需权限申请**
 - **支持全局浮窗、应用前台浮窗，需要授权悬浮窗权限**
 - **自动权限检测、自动跳转浮窗权限管理页、自动处理授权结果**
@@ -11,6 +11,7 @@
 - **支持默认位置的设定，支持对齐方式和偏移量的设定**
 - **支持创建多个单页面浮窗、多个系统浮窗，Tag进行区分**
 - **支持出入动画的设定，有默认动画，可自行替换（策略模式）**
+- **根据浮窗复杂度、重要性，可自主选择前后台Service**
 - **使用简单、链式调用，无侵入性**
 - **支持xml直接使用，满足拖拽控件的需求**
 - **支持解锁更多姿势，如：拖拽缩放、通知弹窗...**
@@ -24,7 +25,7 @@
 |:---:|:---:|:---:|
 |![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97%E7%BC%A9%E6%94%BE.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/dialog%E5%92%8Cxml%E4%BD%BF%E7%94%A8.gif)|
 
-### 关于集成：
+## 关于集成：
 - 在项目的根目录的`build.gradle`添加：
 ```
 allprojects {
@@ -37,32 +38,44 @@ allprojects {
 - 在应用模块的`build.gradle`添加：
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0.3'
+    implementation 'com.github.princekin-f:EasyFloat:1.0.4'
 }
 ```
 
-### 一行代码搞定Android浮窗，浮窗从未如此简单：
+## 一行代码搞定Android浮窗，浮窗从未如此简单：
 ```
-EasyFloat.with(this).setLayout(R.layout.float_app).show()
+EasyFloat.with(this).setLayout(R.layout.float_test).show()
 ```
 
-### 关于初始化：
-> 全局初始化为非必须，当浮窗为仅前台显示，或者设置了浮窗过滤页面，需要进行全局初始化，进行进行页面生命周期检测。
+## 关于初始化：
+- 全局初始化为非必须；
+- 当浮窗为仅前台显示，或者设置了浮窗过滤页面;
+- 需要在项目的`Application`中进行全局初始化，进行页面生命周期检测。
 ```
 EasyFloat.init(this, isDebug)
 ```
 
-### 关于权限声明：
-> 权限声明为非必须，如果使用到系统浮窗（ShowPattern.ALL_TIME、ShowPattern.FOREGROUND），需要在`AndroidManifest.xml`进行权限声明。
+## 关于权限声明：
+- 权限声明为非必须；
+- 如果使用到系统浮窗（`ShowPattern.ALL_TIME`、`ShowPattern.FOREGROUND`）；
+- 需要在`AndroidManifest.xml`进行权限声明。
 ```
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 ```
-> 在使用到系统浮窗的情况下，不仅要声明浮窗权限，还要声明启动系统浮窗的服务。该服务和浮窗权限成对出现。
+- 在使用到系统浮窗的情况下，不仅要声明浮窗权限，还要声明启动系统浮窗的服务；
+- **该服务和上述系统浮窗权限，成对出现。**
 ```
 <service android:name="com.lzf.easyfloat.service.FloatService" />
 ```
+### 关于前台Service：
+- 可根据系统浮窗的重要性和复杂度，选择是否开启前台Service（默认后台Service）；
+- 从`Android 9.0`开始，前台Service需要在`AndroidManifest.xml`进行权限声明。
+```
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+```
+**PS：前台Service会在通知栏创建一条消息，有默认实现，也可进行消息自定义。**
 
-### 完整使用示例：
+## 完整使用示例：
 ```
 EasyFloat.with(this)
     // 设置浮窗xml布局文件
@@ -87,6 +100,8 @@ EasyFloat.with(this)
     .setAppFloatAnimator(AppFloatDefaultAnimator())
     // 设置系统浮窗的不需要显示的页面
     .setFilter(MainActivity::class.java, SecondActivity::class.java)
+    // 是否启动前台Service，仅针对系统浮窗；有默认的Notification，可不传
+    .startForeground(true, floatNotification(this))
     // 设置我们传入xml布局的详细信息
     .invokeView(OnInvokeView { })
     // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
@@ -109,13 +124,13 @@ EasyFloat.with(this)
     .show()
 ```
 
-#### 悬浮窗权限检测，可用于设置引导页面：
-> 无需主动进行权限申请，创建结果、申请结果可在`OnFloatCallbacks`的`createdResult`获取。
+### 悬浮窗权限检测，可用于设置引导页面：
+- 无需主动进行权限申请，创建结果、申请结果可在`OnFloatCallbacks`的`createdResult`获取。
 ```
 PermissionUtils.checkPermission(this)
 ```
 
-#### Activity浮窗的相关API：
+### Activity浮窗的相关API：
 ```
 // 关闭浮窗
 dismiss(activity: Activity? = null, floatTag: String? = null)
@@ -133,9 +148,9 @@ setDragEnable(activity: Activity? = null, dragEnable: Boolean, floatTag: String?
 isShow(activity: Activity? = null, floatTag: String? = null)
 ```
 
-**补充一下：`? = null` 代表可选参数，不填也行，默认值为null。下同。**
+**PS：`? = null` 代表可选参数，不填也行，默认值为null。下同。**
 
-#### 系统浮窗的相关API：
+### 系统浮窗的相关API：
 ```
 // 关闭浮窗
 dismissAppFloat(context: Context, tag: String? = null)
@@ -168,7 +183,7 @@ removeFilters(tag: String? = null, vararg clazz: Class<*>)
 clearFilters(tag: String? = null)
 ```
 
-#### 系统浮窗中使用`EditText`：
+### 系统浮窗中使用`EditText`：
 **1，为`EditText`设置点击事件，调用`openInputMethod`方法：**
 ```
 InputMethodUtils.openInputMethod(editText, tag)
@@ -178,7 +193,7 @@ InputMethodUtils.openInputMethod(editText, tag)
 InputMethodUtils.closedInputMethod(tag)
 ```
 
-#### 直接在xml布局使用拖拽控件：
+### 直接在xml布局使用拖拽控件：
 ```
 <com.lzf.easyfloat.widget.activityfloat.FloatingView
     android:id="@+id/floatingView"
@@ -193,21 +208,25 @@ InputMethodUtils.closedInputMethod(tag)
 
 </com.lzf.easyfloat.widget.activityfloat.FloatingView>
 ```
-**需要为FloatingView设置点击事件，不然无法拖拽：**
+- **需要为FloatingView设置点击事件，不然无法拖拽：**
 ```
 floatingView.setOnClickListener {}
 ```
 
-### 关于混淆：
+## 关于混淆：
 ```
 -keep class com.lzf.easyfloat.** {*;}
 ```
 
-### 关于感谢：
-> 权限适配：[FloatWindowPermission](https://github.com/zhaozepeng/FloatWindowPermission)
+## 关于感谢：
+- **权限适配：[FloatWindowPermission](https://github.com/zhaozepeng/FloatWindowPermission)**
 
 
-### 更新日志：
+---
+## 更新日志：
+#### v 1.0.4:
+- 可选择是否开启前台Service，可自定义通知栏消息。
+
 #### v 1.0.3:
 - 修改魅族手机，权限申请回调异常的问题；
 - 为系统浮窗的`EditText`，提供了软键盘的打开、关闭后的焦点移除；

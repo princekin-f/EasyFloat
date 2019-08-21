@@ -1,5 +1,6 @@
 package com.lzf.easyfloat.data
 
+import android.app.Notification
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
@@ -60,6 +61,11 @@ data class FloatConfig(
     // 不需要显示系统浮窗的页面集合，参数为类名
     val filterSet: MutableSet<String> = mutableSetOf(),
     // 是否需要显示，当过滤信息匹配上时，该值为false
-    internal var needShow: Boolean = true
+    internal var needShow: Boolean = true,
+
+    // 是否启动前台Service
+    var startForeground: Boolean = false,
+    // 用于前台Service的通知栏消息
+    var notification: Notification? = null
 
 )

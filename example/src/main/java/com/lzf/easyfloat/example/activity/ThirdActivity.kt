@@ -16,6 +16,7 @@ import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.interfaces.OnInvokeView
 import com.lzf.easyfloat.utils.InputMethodUtils
+import com.lzf.easyfloat.utils.floatNotification
 import kotlinx.android.synthetic.main.activity_third.*
 
 /**
@@ -83,6 +84,8 @@ class ThirdActivity : Activity() {
             .setAppFloatAnimator(AppFloatDefaultAnimator())
             // 设置系统浮窗的不需要显示的页面
             .setFilter(MainActivity::class.java, SecondActivity::class.java)
+            // 是否启动前台Service，仅针对系统浮窗；有默认的Notification，可不传
+            .startForeground(true, floatNotification(this))
             // 设置我们传入xml布局的详细信息
             .invokeView(OnInvokeView { })
             // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
