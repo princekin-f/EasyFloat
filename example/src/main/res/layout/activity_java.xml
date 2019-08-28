@@ -2,19 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white2"
         android:orientation="vertical">
 
     <TextView
-            android:id="@+id/openEditTextFloat"
+            android:id="@+id/testJava"
             style="@style/TextStyle2"
             android:layout_marginTop="120dp"
-            android:text="OpenEditTextFloat" />
+            android:text="使用Java中创建一个浮窗" />
 
     <TextView
-            android:id="@+id/openJavaTestActivity"
+            android:id="@+id/tvCloseFloat"
             style="@style/TextStyle2"
             android:layout_marginTop="20dp"
-            android:text="OpenJavaTestActivity" />
+            android:text="关闭浮窗" />
 
 </LinearLayout>

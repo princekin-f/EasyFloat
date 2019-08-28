@@ -53,6 +53,8 @@ abstract class AbstractDragFloatingView(
         FrameLayout(context, attrs, defStyleAttr)
         config = FloatConfig()
         initView(context)
+        // 设置空点击事件，用于接收触摸事件
+        setOnClickListener { }
     }
 
     protected fun initView(context: Context) {
@@ -114,6 +116,7 @@ abstract class AbstractDragFloatingView(
      */
     private fun updateView(event: MotionEvent) {
         config.callbacks?.touchEvent(this, event)
+        config.floatCallbacks?.builder?.touchEvent?.invoke(this, event)
         // 关闭拖拽/执行动画阶段，不可拖动
         if (!config.dragEnable || config.isAnim) {
             config.isDrag = false
@@ -195,6 +198,7 @@ abstract class AbstractDragFloatingView(
                 lastX = rawX
                 lastY = rawY
                 config.callbacks?.drag(this, event)
+                config.floatCallbacks?.builder?.drag?.invoke(this, event)
             }
 
             MotionEvent.ACTION_UP -> {
@@ -223,7 +227,8 @@ abstract class AbstractDragFloatingView(
     private fun touchOver() {
         config.isAnim = false
         config.isDrag = false
-        config.callbacks?.dragEnd(this@AbstractDragFloatingView)
+        config.callbacks?.dragEnd(this)
+        config.floatCallbacks?.builder?.dragEnd?.invoke(this)
     }
 
     /**
@@ -363,7 +368,8 @@ abstract class AbstractDragFloatingView(
         val animator: Animator? = manager?.exitAnim()
         if (animator == null) {
             config.callbacks?.dismiss()
-            parentView.removeView(this@AbstractDragFloatingView)
+            config.floatCallbacks?.builder?.dismiss?.invoke()
+            parentView.removeView(this)
         } else {
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {}
@@ -371,6 +377,7 @@ abstract class AbstractDragFloatingView(
                 override fun onAnimationEnd(animation: Animator?) {
                     config.isAnim = false
                     config.callbacks?.dismiss()
+                    config.floatCallbacks?.builder?.dismiss?.invoke()
                     parentView.removeView(this@AbstractDragFloatingView)
                 }
 

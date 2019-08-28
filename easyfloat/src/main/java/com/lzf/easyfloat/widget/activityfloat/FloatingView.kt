@@ -3,7 +3,7 @@ package com.lzf.easyfloat.widget.activityfloat
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import com.lzf.easyfloat.widget.activityfloat.AbstractDragFloatingView
+import com.lzf.easyfloat.data.FloatConfig
 
 /**
  * @author: liuzhenfeng
@@ -13,8 +13,8 @@ import com.lzf.easyfloat.widget.activityfloat.AbstractDragFloatingView
 class FloatingView(context: Context, attrs: AttributeSet? = null) :
     AbstractDragFloatingView(context, attrs, 0) {
 
-    fun setLayout(layoutResource: Int) {
-        config.layoutId = layoutResource
+    fun setFloatConfig(config: FloatConfig) {
+        this.config = config
         initView(context)
         requestLayout()
     }

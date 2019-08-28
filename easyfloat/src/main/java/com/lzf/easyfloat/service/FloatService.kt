@@ -30,7 +30,7 @@ internal class FloatService : Service() {
         private const val FLOAT_TAG = "floatTag"
         const val DEFAULT_TAG = "default"
         val floatMap = mutableMapOf<String, AppFloatManager>()
-        private var config = FloatConfig()
+        private lateinit var config: FloatConfig
 
         /**
          * 开启创建浮窗的Service

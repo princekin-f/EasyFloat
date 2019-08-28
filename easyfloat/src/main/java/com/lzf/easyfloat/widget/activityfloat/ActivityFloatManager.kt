@@ -1,12 +1,9 @@
 package com.lzf.easyfloat.widget.activityfloat
 
 import android.app.Activity
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import com.lzf.easyfloat.R
 import com.lzf.easyfloat.data.FloatConfig
-import com.lzf.easyfloat.utils.logger
 
 /**
  * @author: liuzhenfeng
@@ -26,83 +23,65 @@ internal class ActivityFloatManager(val activity: Activity) {
      * 再将浮窗的xml布局，添加到拖拽布局中，从而实现拖拽效果。
      */
     fun createFloat(config: FloatConfig) {
-        // 获取可拖拽浮窗的外壳
-        val shell =
-            LayoutInflater.from(activity).inflate(R.layout.float_layout, parentFrame, false)
-        // 为浮窗打上tag，如果未设置tag，使用类名作为tag
-        shell.tag = config.floatTag ?: activity.componentName.className
-        // 默认wrap_content，会导致子view的match_parent无效，所以手动设置params
-        shell.layoutParams = FrameLayout.LayoutParams(
-            if (config.widthMatch) FrameLayout.LayoutParams.MATCH_PARENT else FrameLayout.LayoutParams.WRAP_CONTENT,
-            if (config.heightMatch) FrameLayout.LayoutParams.MATCH_PARENT else FrameLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            // 如若未设置固定坐标，设置浮窗Gravity
-            if (config.locationPair == Pair(0, 0)) gravity = config.gravity
-        }
-        // 将浮窗外壳添加到根布局中
-        parentFrame.addView(shell)
-
-        // 获取浮窗对象，即自定义的FloatingView
-        val floatingView = shell.findViewById<FloatingView>(R.id.floatingView).also {
+        // 设置浮窗的拖拽外壳FloatingView
+        val floatingView = FloatingView(activity).apply {
+            // 为浮窗打上tag，如果未设置tag，使用类名作为tag
+            tag = config.floatTag ?: activity.componentName.className
+            // 默认wrap_content，会导致子view的match_parent无效，所以手动设置params
+            layoutParams = FrameLayout.LayoutParams(
+                if (config.widthMatch) FrameLayout.LayoutParams.MATCH_PARENT else FrameLayout.LayoutParams.WRAP_CONTENT,
+                if (config.heightMatch) FrameLayout.LayoutParams.MATCH_PARENT else FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                // 如若未设置固定坐标，设置浮窗Gravity
+                if (config.locationPair == Pair(0, 0)) gravity = config.gravity
+            }
             // 同步配置
-            it.config = config
-            // 设置浮窗的布局文件，即我们传递过来的xml布局文件
-            it.setLayout(config.layoutId!!)
-            // 设置空点击事件，用于接收触摸事件
-            it.setOnClickListener {}
+            setFloatConfig(config)
         }
+
+        // 将FloatingView添加到根布局中
+        parentFrame.addView(floatingView)
 
         // 设置Callbacks
         config.callbacks?.createdResult(true, null, floatingView)
+        config.floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)
     }
 
     /**
      * 关闭activity浮窗
      */
-    fun dismiss(tag: String?) {
-        val view = getShellyView(tag) ?: return
-        val floatingView: FloatingView = view.findViewById(R.id.floatingView)
-        logger.i("dismiss: ${getTag(tag)}")
-        floatingView.exitAnim()
-    }
+    fun dismiss(tag: String?) = floatingView(tag)?.exitAnim()
 
     /**
      * 设置浮窗的可见性
      */
-    fun setVisibility(tag: String?, visibility: Int) {
-        val view = getShellyView(tag) ?: return
-        view.visibility = visibility
-        val floatingView: FloatingView? = view.findViewById(R.id.floatingView)
+    fun setVisibility(tag: String?, visibility: Int) = floatingView(tag)?.apply {
+        this.visibility = visibility
         if (visibility == View.GONE) {
-            floatingView?.config?.callbacks?.hide(floatingView)
+            config.callbacks?.hide(this)
+            config.floatCallbacks?.builder?.hide?.invoke(this)
         } else {
-            floatingView?.config?.callbacks?.show(floatingView)
+            config.callbacks?.show(this)
+            config.floatCallbacks?.builder?.show?.invoke(this)
         }
     }
 
     /**
      * 获取浮窗是否显示
      */
-    fun isShow(tag: String? = null): Boolean {
-        val view = getShellyView(tag) ?: return false
-        return view.visibility == View.VISIBLE
-    }
+    fun isShow(tag: String? = null): Boolean = floatingView(tag)?.visibility == View.VISIBLE
 
     /**
      * 设置是否可拖拽
      */
     fun setDragEnable(dragEnable: Boolean, tag: String? = null) {
-        val view = getShellyView(tag) ?: return
-        view.findViewById<FloatingView>(R.id.floatingView).also {
-            it?.config?.dragEnable = dragEnable
-        }
+        floatingView(tag)?.config?.dragEnable = dragEnable
     }
 
     /**
-     * 获取浮窗的外壳view
+     * 获取浮窗的拖拽外壳FloatingView
      */
-    private fun getShellyView(tag: String?): View? = parentFrame.findViewWithTag(getTag(tag))
-
-    private fun getTag(tag: String?) = tag ?: activity.componentName.className
+    private fun floatingView(tag: String?): FloatingView? =
+        parentFrame.findViewWithTag(tag ?: activity.componentName.className)
 
 }

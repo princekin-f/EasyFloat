@@ -2,6 +2,7 @@ package com.lzf.easyfloat.widget.appfloat
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.View
@@ -17,7 +18,7 @@ import kotlin.math.min
  * @function: 根据吸附模式，实现相应的拖拽效果
  * @date: 2019-07-05  14:24
  */
-internal class TouchUtils(var config: FloatConfig) {
+internal class TouchUtils(val context: Context, val config: FloatConfig) {
 
     // 窗口所在的矩形
     private var parentRect: Rect = Rect()
@@ -36,6 +37,11 @@ internal class TouchUtils(var config: FloatConfig) {
     private var minX = 0
     private var minY = 0
 
+    private var emptyHeight = 0
+    private val screenHeight = DisplayUtils.getScreenHeight(context)
+    private val navigationBarHeight = DisplayUtils.getNavigationBarHeight(context)
+    private var hasStatusBar = true
+
     /**
      * 根据吸附模式，实现相应的拖拽效果
      */
@@ -46,6 +52,7 @@ internal class TouchUtils(var config: FloatConfig) {
         params: LayoutParams
     ) {
         config.callbacks?.touchEvent(view, event)
+        config.floatCallbacks?.builder?.touchEvent?.invoke(view, event)
         // 不可拖拽、或者正在执行动画，不做处理
         if (!config.dragEnable || config.isAnim) {
             config.isDrag = false
@@ -61,6 +68,10 @@ internal class TouchUtils(var config: FloatConfig) {
                 windowManager.defaultDisplay.getRectSize(parentRect)
                 parentWidth = parentRect.width()
                 parentHeight = parentRect.height()
+                // 当前高度是否包含顶部状态栏
+                hasStatusBar =
+                    parentHeight == screenHeight || parentHeight + navigationBarHeight == screenHeight
+                emptyHeight = parentHeight - view.height
             }
 
             MotionEvent.ACTION_MOVE -> {
@@ -81,8 +92,13 @@ internal class TouchUtils(var config: FloatConfig) {
                 }
                 y = when {
                     y < 0 -> 0
-                    y > parentHeight - view.height - statusBarHeight(view) ->
-                        parentHeight - view.height - statusBarHeight(view)
+                    y > emptyHeight - statusBarHeight(view) -> {
+                        when {
+                            hasStatusBar -> emptyHeight - statusBarHeight(view)
+                            y > emptyHeight -> emptyHeight
+                            else -> y
+                        }
+                    }
                     else -> y
                 }
 
@@ -122,6 +138,7 @@ internal class TouchUtils(var config: FloatConfig) {
                 params.y = y
                 windowManager.updateViewLayout(view, params)
                 config.callbacks?.drag(view, event)
+                config.floatCallbacks?.builder?.drag?.invoke(view, event)
                 // 更新上次触摸点的数据
                 lastX = event.rawX
                 lastY = event.rawY
@@ -137,7 +154,10 @@ internal class TouchUtils(var config: FloatConfig) {
                     SidePattern.RESULT_HORIZONTAL,
                     SidePattern.RESULT_VERTICAL,
                     SidePattern.RESULT_SIDE -> sideAnim(view, params, windowManager)
-                    else -> config.callbacks?.dragEnd(view)
+                    else -> {
+                        config.callbacks?.dragEnd(view)
+                        config.floatCallbacks?.builder?.dragEnd?.invoke(view)
+                    }
                 }
             }
 
@@ -173,12 +193,13 @@ internal class TouchUtils(var config: FloatConfig) {
             SidePattern.RESULT_BOTTOM -> {
                 isX = false
                 // 不要轻易使用此相关模式，需要考虑虚拟导航栏的情况
-                parentHeight - view.height - statusBarHeight(view)
+                if (hasStatusBar) emptyHeight - statusBarHeight(view) else emptyHeight
             }
             SidePattern.RESULT_VERTICAL -> {
                 isX = false
-                if (topDistance < bottomDistance) 0 else
-                    parentHeight - view.height - statusBarHeight(view)
+                if (topDistance < bottomDistance) 0 else {
+                    if (hasStatusBar) emptyHeight - statusBarHeight(view) else emptyHeight
+                }
             }
 
             SidePattern.RESULT_SIDE -> {
@@ -187,8 +208,9 @@ internal class TouchUtils(var config: FloatConfig) {
                     if (leftDistance < rightDistance) 0 else params.x + rightDistance
                 } else {
                     isX = false
-                    if (topDistance < bottomDistance) 0 else
-                        parentHeight - view.height - statusBarHeight(view)
+                    if (topDistance < bottomDistance) 0 else {
+                        if (hasStatusBar) emptyHeight - statusBarHeight(view) else emptyHeight
+                    }
                 }
             }
             else -> return
@@ -205,6 +227,7 @@ internal class TouchUtils(var config: FloatConfig) {
             override fun onAnimationEnd(animation: Animator?) {
                 config.isAnim = false
                 config.callbacks?.dragEnd(view)
+                config.floatCallbacks?.builder?.dragEnd?.invoke(view)
             }
 
             override fun onAnimationCancel(animation: Animator?) {}
@@ -219,12 +242,13 @@ internal class TouchUtils(var config: FloatConfig) {
     /**
      * 计算一些边界距离数据
      */
-    private fun initDistanceValue(params: LayoutParams, floatingView: View) {
+    private fun initDistanceValue(params: LayoutParams, view: View) {
         leftDistance = params.x
-        rightDistance = parentWidth - (leftDistance + floatingView.right)
+        rightDistance = parentWidth - (leftDistance + view.right)
         topDistance = params.y
-        bottomDistance =
-            parentRect.bottom - statusBarHeight(floatingView) - (params.y + floatingView.bottom)
+        bottomDistance = if (hasStatusBar) {
+            parentHeight - statusBarHeight(view) - topDistance - view.height
+        } else parentHeight - topDistance - view.height
 
         minX = min(leftDistance, rightDistance)
         minY = min(topDistance, bottomDistance)

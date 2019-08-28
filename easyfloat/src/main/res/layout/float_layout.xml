@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.lzf.easyfloat.widget.activityfloat.FloatingView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/floatingView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />

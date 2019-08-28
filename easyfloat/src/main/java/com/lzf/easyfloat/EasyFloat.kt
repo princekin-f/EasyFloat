@@ -14,6 +14,7 @@ import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.service.FloatService
 import com.lzf.easyfloat.utils.floatNotification
 import com.lzf.easyfloat.utils.LifecycleUtils
+import com.lzf.easyfloat.interfaces.FloatCallbacks
 import com.lzf.easyfloat.utils.logger
 import com.lzf.easyfloat.widget.activityfloat.ActivityFloatManager
 import java.lang.ref.WeakReference
@@ -173,8 +174,10 @@ class EasyFloat {
             return this
         }
 
-        fun setLayout(layoutId: Int): Builder {
+        @JvmOverloads
+        fun setLayout(layoutId: Int, invokeView: OnInvokeView? = null): Builder {
             config.layoutId = layoutId
+            config.invokeView = invokeView
             return this
         }
 
@@ -201,6 +204,7 @@ class EasyFloat {
             return this
         }
 
+        @Deprecated("建议直接在 setLayout 设置详细布局")
         fun invokeView(invokeView: OnInvokeView): Builder {
             config.invokeView = invokeView
             return this
@@ -208,6 +212,12 @@ class EasyFloat {
 
         fun registerCallbacks(callbacks: OnFloatCallbacks): Builder {
             config.callbacks = callbacks
+            return this
+        }
+
+        fun registerCallbacks(builder: FloatCallbacks.Builder.() -> Unit): Builder {
+            config.floatCallbacks = FloatCallbacks()
+            config.floatCallbacks?.registerListener(builder)
             return this
         }
 
@@ -261,6 +271,7 @@ class EasyFloat {
                 }
             } else {
                 config.callbacks?.createdResult(false, "未设置浮窗布局文件", null)
+                config.floatCallbacks?.builder?.createdResult?.invoke(false, "未设置浮窗布局文件", null)
                 logger.w("未设置浮窗布局文件")
             }
         }
@@ -279,9 +290,9 @@ class EasyFloat {
          * 申请浮窗权限的结果回调
          */
         override fun permissionResult(isOpen: Boolean) {
-            if (isOpen) createAppFloat()
-            else {
+            if (isOpen) createAppFloat() else {
                 config.callbacks?.createdResult(false, "系统浮窗权限不足，开启失败", null)
+                config.floatCallbacks?.builder?.createdResult?.invoke(false, "系统浮窗权限不足，开启失败", null)
                 logger.w("系统浮窗权限不足，开启失败")
             }
         }

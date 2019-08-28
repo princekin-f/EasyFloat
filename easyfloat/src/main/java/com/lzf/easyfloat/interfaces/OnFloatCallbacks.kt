@@ -28,7 +28,7 @@ interface OnFloatCallbacks {
     /**
      * 触摸事件的回调
      */
-    fun touchEvent(view: View,event: MotionEvent)
+    fun touchEvent(view: View, event: MotionEvent)
 
     /**
      * 浮窗被拖拽时的回调，坐标为浮窗的左上角坐标

@@ -9,6 +9,7 @@ import com.lzf.easyfloat.interfaces.OnAppFloatAnimator
 import com.lzf.easyfloat.interfaces.OnFloatAnimator
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.interfaces.OnInvokeView
+import com.lzf.easyfloat.interfaces.FloatCallbacks
 
 /**
  * @author: liuzhenfeng
@@ -53,6 +54,8 @@ data class FloatConfig(
     // Callbacks
     var invokeView: OnInvokeView? = null,
     var callbacks: OnFloatCallbacks? = null,
+    // 通过Kotlin DSL设置回调，无需复写全部方法，按需复写
+    var floatCallbacks: FloatCallbacks? = null,
 
     // 出入动画
     var floatAnimator: OnFloatAnimator? = DefaultAnimator(),

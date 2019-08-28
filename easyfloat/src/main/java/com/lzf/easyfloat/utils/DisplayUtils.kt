@@ -1,18 +1,12 @@
 package com.lzf.easyfloat.utils
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Point
 import android.os.Build
 import android.util.Log
-import android.util.DisplayMetrics
 import android.view.*
-import android.view.View.*
 import android.widget.FrameLayout
-import android.widget.Toast
-import android.view.WindowManager
 
 /**
  * @author: liuzhenfeng
@@ -74,14 +68,13 @@ object DisplayUtils {
         return result
     }
 
-    fun statusBarHeight(view: View) =
-        DisplayUtils.getStatusBarHeight(view.context.applicationContext)
+    fun statusBarHeight(view: View) = getStatusBarHeight(view.context.applicationContext)
 
     /**
      * 获取导航栏当前的高度
      */
-    fun getNavigationBarCurrentHeight(activity: Activity) =
-        if (isNavigationBarShow(activity)) getNavigationBarHeight(activity) else 0
+    fun getNavigationBarCurrentHeight(context: Context) =
+        if (isNavigationBarShow(context)) getNavigationBarHeight(context) else 0
 
     /**
      * 获取导航栏真实的高度（可能未显示）
@@ -99,16 +92,17 @@ object DisplayUtils {
     }
 
     @SuppressLint("ObsoleteSdkInt")
-    fun isNavigationBarShow(activity: Activity): Boolean {
+    fun isNavigationBarShow(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            val display = activity.windowManager.defaultDisplay
+            val display =
+                (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
             val size = Point()
             val realSize = Point()
             display.getSize(size)
             display.getRealSize(realSize)
             realSize.y != size.y
         } else {
-            val menu = ViewConfiguration.get(activity).hasPermanentMenuKey()
+            val menu = ViewConfiguration.get(context).hasPermanentMenuKey()
             val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
             !(menu || back)
         }

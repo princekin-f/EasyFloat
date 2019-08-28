@@ -7,8 +7,6 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.view.*
 import com.lzf.easyfloat.anim.AppFloatAnimatorManager
 import com.lzf.easyfloat.data.FloatConfig
@@ -34,12 +32,13 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
      */
     fun createFloat() {
         try {
-            touchUtils = TouchUtils(config)
+            touchUtils = TouchUtils(context, config)
             initParams()
             addView()
             config.isShow = true
         } catch (e: Exception) {
             config.callbacks?.createdResult(false, "$e", null)
+            config.floatCallbacks?.builder?.createdResult?.invoke(false, "$e", null)
         }
     }
 
@@ -97,6 +96,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         // 设置callbacks
         config.invokeView?.invoke(floatingView)
         config.callbacks?.createdResult(true, null, floatingView)
+        config.floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)
     }
 
     /**
@@ -163,10 +163,16 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         frameLayout?.visibility = visible
         if (visible == View.VISIBLE) {
             config.isShow = true
-            if (frameLayout!!.childCount > 0) config.callbacks?.show(frameLayout!!.getChildAt(0))
+            if (frameLayout!!.childCount > 0) {
+                config.callbacks?.show(frameLayout!!.getChildAt(0))
+                config.floatCallbacks?.builder?.show?.invoke(frameLayout!!.getChildAt(0))
+            }
         } else {
             config.isShow = false
-            if (frameLayout!!.childCount > 0) config.callbacks?.hide(frameLayout!!.getChildAt(0))
+            if (frameLayout!!.childCount > 0) {
+                config.callbacks?.hide(frameLayout!!.getChildAt(0))
+                config.floatCallbacks?.builder?.hide?.invoke(frameLayout!!.getChildAt(0))
+            }
         }
     }
 
@@ -234,6 +240,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
     private fun floatOver() {
         config.isAnim = false
         config.callbacks?.dismiss()
+        config.floatCallbacks?.builder?.dismiss?.invoke()
         windowManager.removeView(frameLayout)
         FloatService.checkStop(context, config.floatTag)
     }

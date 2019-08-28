@@ -12,7 +12,7 @@
 - **支持创建多个单页面浮窗、多个系统浮窗，Tag进行区分**
 - **支持出入动画的设定，有默认动画，可自行替换（策略模式）**
 - **根据浮窗复杂度、重要性，可自主选择前后台Service**
-- **使用简单、链式调用，无侵入性**
+- **使用简单、链式调用，Kotlin DSL按需回调状态**
 - **支持xml直接使用，满足拖拽控件的需求**
 - **支持解锁更多姿势，如：拖拽缩放、通知弹窗...**
 
@@ -26,7 +26,7 @@
 |![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97%E7%BC%A9%E6%94%BE.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/dialog%E5%92%8Cxml%E4%BD%BF%E7%94%A8.gif)|
 
 ## 关于集成：
-- 在项目的根目录的`build.gradle`添加：
+- **在项目的根目录的`build.gradle`添加：**
 ```
 allprojects {
     repositories {
@@ -35,10 +35,10 @@ allprojects {
 	}
 }
 ```
-- 在应用模块的`build.gradle`添加：
+- **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0.4'
+    implementation 'com.github.princekin-f:EasyFloat:1.0.5'
 }
 ```
 
@@ -78,8 +78,8 @@ EasyFloat.init(this, isDebug)
 ## 完整使用示例：
 ```
 EasyFloat.with(this)
-    // 设置浮窗xml布局文件
-    .setLayout(R.layout.float_app)
+    // 设置浮窗xml布局文件，并可设置详细信息
+    .setLayout(R.layout.float_app, OnInvokeView {  })
     // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
     .setShowPattern(ShowPattern.ALL_TIME)
     // 设置吸附方式，共15种模式，详情参考SidePattern
@@ -102,30 +102,49 @@ EasyFloat.with(this)
     .setFilter(MainActivity::class.java, SecondActivity::class.java)
     // 是否启动前台Service，仅针对系统浮窗；有默认的Notification，可不传
     .startForeground(true, floatNotification(this))
-    // 设置我们传入xml布局的详细信息
-    .invokeView(OnInvokeView { })
     // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
-    .registerCallbacks(object : OnFloatCallbacks {
-        override fun createdResult(isCreated: Boolean, msg: String?, view: View?) {}
-
-        override fun show(view: View) {}
-
-        override fun hide(view: View) {}
-
-        override fun dismiss() {}
-
-        override fun touchEvent(view: View, event: MotionEvent) {}
-
-        override fun drag(view: View, event: MotionEvent) {}
-
-        override fun dragEnd(view: View) {}
-    })
-    // 创建浮窗（不要忘记哦😂）
+    // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
+    .registerCallbacks {
+        createResult { isCreated, msg, view ->  }
+        show {  }
+        hide {  }
+        dismiss {  }
+        touchEvent { view, motionEvent ->  }
+        drag { view, motionEvent ->  }
+        dragEnd {  }
+    }
+    // 创建浮窗（这是关键哦😂）
     .show()
 ```
+**在Java中使用Kotlin DSL不是很方便，状态回调还有一种常规的接口方式：**
+```
+.registerCallbacks(new OnFloatCallbacks() {
+        @Override
+        public void createdResult(boolean isCreated, @Nullable String msg, @Nullable View view) { }
+
+        @Override
+        public void show(@NotNull View view) { }
+
+        @Override
+        public void hide(@NotNull View view) { }
+
+        @Override
+        public void dismiss() { }
+
+        @Override
+        public void touchEvent(@NotNull View view, @NotNull MotionEvent event) { }
+
+        @Override
+        public void drag(@NotNull View view, @NotNull MotionEvent event) { }
+
+        @Override
+        public void dragEnd(@NotNull View view) { }
+})
+```
+如果想要在Java是使用Kotlin DSL，可以参考Demo。
 
 ### 悬浮窗权限检测，可用于设置引导页面：
-- 无需主动进行权限申请，创建结果、申请结果可在`OnFloatCallbacks`的`createdResult`获取。
+- **无需主动进行权限申请，创建结果、申请结果可在`OnFloatCallbacks`的`createdResult`获取。**
 ```
 PermissionUtils.checkPermission(this)
 ```
@@ -208,7 +227,7 @@ InputMethodUtils.closedInputMethod(tag)
 
 </com.lzf.easyfloat.widget.activityfloat.FloatingView>
 ```
-- **需要为FloatingView设置点击事件，不然无法拖拽：**
+- `1.0.4`及以下需要为FloatingView设置点击事件，不然无法拖拽：
 ```
 floatingView.setOnClickListener {}
 ```
@@ -224,6 +243,9 @@ floatingView.setOnClickListener {}
 
 ---
 ## 更新日志：
+#### v 1.0.5:
+- 优化代码和功能，支持`FloatCallbacks`的按需调用（Kotlin DSL）。
+
 #### v 1.0.4:
 - 可选择是否开启前台Service，可自定义通知栏消息。
 

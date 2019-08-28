@@ -31,14 +31,13 @@ class SecondActivity : Activity() {
 
         tvShow.setOnClickListener {
             EasyFloat.with(this)
-                .setLayout(R.layout.float_top_dialog)
+                .setLayout(R.layout.float_top_dialog, OnInvokeView {
+                    it.postDelayed({ EasyFloat.dismiss(this, it.tag.toString()) }, 2500)
+                })
                 .setMatchParent(true)
                 .setSidePattern(SidePattern.TOP)
                 .setDragEnable(false)
                 .setTag(Random.nextDouble().toString())
-                .invokeView(OnInvokeView {
-                    it.postDelayed({ EasyFloat.dismiss(this, it.tag.toString()) }, 2500)
-                })
                 .setAnimator(object : DefaultAnimator() {
                     override fun enterAnim(
                         view: View, parentView: ViewGroup, sidePattern: SidePattern
@@ -54,7 +53,6 @@ class SecondActivity : Activity() {
         }
 
         floatingView.apply {
-            setOnClickListener {}
             config.floatAnimator = object : OnFloatAnimator {
                 override fun enterAnim(
                     view: View, parentView: ViewGroup, sidePattern: SidePattern

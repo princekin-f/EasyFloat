@@ -18,7 +18,6 @@ import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.example.logger
 import com.lzf.easyfloat.example.widget.RoundProgressBar
 import com.lzf.easyfloat.example.widget.ScaleImage
-import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.interfaces.OnInvokeView
 import com.lzf.easyfloat.permission.PermissionUtils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -83,21 +82,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     * 测试Callback回调
+     */
     @SuppressLint("SetTextI18n")
     private fun showActivityFloat() {
         EasyFloat.with(this)
-            .setLayout(R.layout.float_custom)
             .setSidePattern(SidePattern.RESULT_HORIZONTAL)
             .setGravity(Gravity.END, 0, 100)
-            .invokeView(OnInvokeView {
+            .setLayout(R.layout.float_custom, OnInvokeView {
                 it.findViewById<TextView>(R.id.textView).setOnClickListener { toast() }
             })
-            .registerCallbacks(object : OnFloatCallbacks {
-                // 在此处设置view也可以，建议在invokeView进行view操作
-                override fun createdResult(isCreated: Boolean, msg: String?, view: View?) =
-                    logger.e("createdResult: $isCreated   $msg")
+            .registerCallbacks {
+                // 在此处设置view也可以，建议在setLayout进行view操作
+                createResult { isCreated, msg, _ -> logger.e("DSL:  $isCreated   $msg") }
 
-                override fun touchEvent(view: View, event: MotionEvent) {
+                show { toast("show") }
+
+                hide { toast("hide") }
+
+                dismiss { toast("dismiss") }
+
+                touchEvent { view, event ->
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         view.findViewById<TextView>(R.id.textView).run {
                             text = "拖一下试试"
@@ -106,38 +112,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
 
-                override fun drag(view: View, event: MotionEvent) {
+                drag { view, _ ->
                     view.findViewById<TextView>(R.id.textView).run {
                         text = "我被拖拽..."
                         setBackgroundResource(R.drawable.corners_red)
                     }
                 }
 
-                override fun dragEnd(view: View) {
-                    view.findViewById<TextView>(R.id.textView).run {
+                dragEnd {
+                    it.findViewById<TextView>(R.id.textView).run {
                         text = "拖拽结束"
                         val location = IntArray(2)
                         getLocationOnScreen(location)
                         setBackgroundResource(if (location[0] > 0) R.drawable.corners_left else R.drawable.corners_right)
                     }
                 }
-
-                override fun show(view: View) = logger.e("show")
-
-                override fun hide(view: View) = logger.e("hide")
-
-                override fun dismiss() = logger.e("dismiss")
-
-            })
+            }
             .show()
     }
 
     private fun showActivity2() {
         EasyFloat.with(this)
-            .setLayout(R.layout.float_seekbar)
             .setTag("seekBar")
             .setGravity(Gravity.CENTER)
-            .invokeView(OnInvokeView {
+            .setLayout(R.layout.float_seekbar, OnInvokeView {
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
                     EasyFloat.dismiss(this@MainActivity, "seekBar")
                 }
@@ -162,13 +160,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun showAppFloat() {
         EasyFloat.with(this)
-            .setLayout(R.layout.float_app)
             .setShowPattern(ShowPattern.ALL_TIME)
             .setSidePattern(SidePattern.RESULT_SIDE)
             .setGravity(Gravity.CENTER)
             // 启动前台Service
             .startForeground(true, myNotification())
-            .invokeView(OnInvokeView {
+            .setLayout(R.layout.float_app, OnInvokeView {
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
                     EasyFloat.dismissAppFloat(this@MainActivity)
                 }
@@ -201,13 +198,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun showAppFloat2(tag: String) {
         EasyFloat.with(this)
-            .setLayout(R.layout.float_app_scale)
             .setTag(tag)
             .setShowPattern(ShowPattern.FOREGROUND)
             .setLocation(100, 100)
             .setAppFloatAnimator(null)
             .setFilter(SecondActivity::class.java)
-            .invokeView(OnInvokeView {
+            .setLayout(R.layout.float_app_scale, OnInvokeView {
                 val content = it.findViewById<RelativeLayout>(R.id.rlContent)
                 val params = content.layoutParams as FrameLayout.LayoutParams
                 it.findViewById<ScaleImage>(R.id.ivScale).onScaledListener =

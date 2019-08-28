@@ -1,9 +1,11 @@
 package com.lzf.easyfloat.example.activity;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator;
@@ -11,6 +13,7 @@ import com.lzf.easyfloat.anim.DefaultAnimator;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
 import com.lzf.easyfloat.example.R;
+import com.lzf.easyfloat.example.logger;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.lzf.easyfloat.permission.PermissionUtils;
 import com.lzf.easyfloat.utils.DefaultNotificationKt;
@@ -25,11 +28,50 @@ import org.jetbrains.annotations.Nullable;
  */
 public class JavaTestActivity extends Activity {
 
+    @Override
+    protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_java);
+
+        findViewById(R.id.testJava).setOnClickListener(v ->
+                EasyFloat.with(this)
+                        .setLayout(R.layout.float_custom, view ->
+                                view.findViewById(R.id.textView).setOnClickListener(v1 -> toast("onClick")))
+                        .setGravity(Gravity.END, 0, 100)
+                        .registerCallbacks(builder -> {
+                            builder.createResult((aBoolean, s, view) -> {
+                                toast("创建成功：" + aBoolean.toString());
+                                return null;
+                            });
+
+                            builder.dismiss(() -> {
+                                toast("dismiss");
+                                return null;
+                            });
+
+                            // ...可根据需求复写其他方法
+
+                            return null;
+                        })
+                        .show());
+
+        findViewById(R.id.tvCloseFloat).setOnClickListener(v -> EasyFloat.dismissAppFloat(this));
+    }
+
+    private void toast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
     private void test() {
 
         EasyFloat.with(this)
                 // 设置浮窗xml布局文件
-                .setLayout(R.layout.float_app)
+                .setLayout(R.layout.float_app, view -> {
+                    // view就是我们传入的浮窗xml布局
+                })
+                // 设置我们传入xml布局的详细信息（建议直接在setLayout方法中设置）
+                .invokeView(view -> {
+                })
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
                 // 设置吸附方式，共15种模式，详情参考SidePattern
@@ -52,11 +94,6 @@ public class JavaTestActivity extends Activity {
                 .setFilter(MainActivity.class, SecondActivity.class)
                 // 是否启动前台Service
                 .startForeground(true, DefaultNotificationKt.floatNotification(this))
-                .startForeground(true)
-                // 设置我们传入xml布局的详细信息
-                .invokeView(floatingView -> {
-
-                })
                 // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
@@ -94,12 +131,28 @@ public class JavaTestActivity extends Activity {
 
                     }
                 })
+                // Kotlin DSL实现回调效果，和registerCallbacks二选一即可，该方式主要针对Kotlin，Java使用起来并不怎么方便
+                .registerCallbacks(builder -> {
+                    builder.createResult((aBoolean, s, view) -> {
+                        logger.e("Java使用kotlin DSL：" + aBoolean);
+                        return null;
+                    });
+
+                    builder.dismiss(() -> {
+                        toast("dismiss");
+                        return null;
+                    });
+
+                    // ...可根据需求复写其他方法
+
+                    return null;
+                })
                 // 创建浮窗（这是关键哦😂）
                 .show();
 
 
         // 测试方法重载
-        EasyFloat.setDragEnable(this,false);
+        EasyFloat.setDragEnable(this, false);
 
         PermissionUtils.checkPermission(this);
 

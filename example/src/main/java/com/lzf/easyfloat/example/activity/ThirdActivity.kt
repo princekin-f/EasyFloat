@@ -1,6 +1,7 @@
 package com.lzf.easyfloat.example.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
@@ -33,15 +34,18 @@ class ThirdActivity : Activity() {
         openEditTextFloat.setOnClickListener {
             showEditTextFloat()
         }
+
+        openJavaTestActivity.setOnClickListener {
+            startActivity(Intent(this, JavaTestActivity::class.java))
+        }
     }
 
     private fun showEditTextFloat(tag: String? = "editTextFloat") {
         EasyFloat.with(this)
-            .setLayout(R.layout.float_edit)
             .setShowPattern(ShowPattern.ALL_TIME)
             .setGravity(Gravity.CENTER)
             .setTag(tag)
-            .invokeView(OnInvokeView {
+            .setLayout(R.layout.float_edit, OnInvokeView {
                 it.findViewById<EditText>(R.id.editText).setOnClickListener { et ->
                     InputMethodUtils.openInputMethod(et as EditText, tag)
                 }
@@ -62,8 +66,10 @@ class ThirdActivity : Activity() {
         EasyFloat.with(this).setLayout(R.layout.float_app).show()
 
         EasyFloat.with(this)
-            // 设置浮窗xml布局文件
-            .setLayout(R.layout.float_app)
+            // 设置浮窗xml布局文件，并可设置详细信息
+            .setLayout(R.layout.float_app, OnInvokeView { })
+            // 设置我们传入xml布局的详细信息
+            .invokeView(OnInvokeView { })
             // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
             .setShowPattern(ShowPattern.ALL_TIME)
             // 设置吸附方式，共15种模式，详情参考SidePattern
@@ -86,9 +92,17 @@ class ThirdActivity : Activity() {
             .setFilter(MainActivity::class.java, SecondActivity::class.java)
             // 是否启动前台Service，仅针对系统浮窗；有默认的Notification，可不传
             .startForeground(true, floatNotification(this))
-            // 设置我们传入xml布局的详细信息
-            .invokeView(OnInvokeView { })
             // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
+            // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
+            .registerCallbacks {
+                createResult { isCreated, msg, view -> }
+                show { }
+                hide { }
+                dismiss { }
+                touchEvent { view, motionEvent -> }
+                drag { view, motionEvent -> }
+                dragEnd { }
+            }
             .registerCallbacks(object : OnFloatCallbacks {
                 override fun createdResult(isCreated: Boolean, msg: String?, view: View?) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
