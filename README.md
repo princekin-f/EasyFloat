@@ -12,18 +12,18 @@
 - **支持创建多个单页面浮窗、多个系统浮窗，Tag进行区分**
 - **支持出入动画的设定，有默认动画，可自行替换（策略模式）**
 - **根据浮窗复杂度、重要性，可自主选择前后台Service**
-- **使用简单、链式调用，Kotlin DSL按需回调状态**
+- **使用简单、链式调用、可轻松修改浮窗View**
+- **支持Kotlin DSL，可按需回调状态，摆脱Java的繁琐**
 - **支持xml直接使用，满足拖拽控件的需求**
 - **支持解锁更多姿势，如：拖拽缩放、通知弹窗...**
 
-
-|权限申请|系统浮窗|
-|:---:|:---:|
-|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%9D%83%E9%99%90%E7%94%B3%E8%AF%B7.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E7%B3%BB%E7%BB%9F%E6%B5%AE%E7%AA%97.gif)|
-
-|前台和过滤|状态回调|拓展使用|
+|权限申请|系统浮窗|前台和过滤|
 |:---:|:---:|:---:|
-|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97%E7%BC%A9%E6%94%BE.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/dialog%E5%92%8Cxml%E4%BD%BF%E7%94%A8.gif)|
+|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%9D%83%E9%99%90%E7%94%B3%E8%AF%B7.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E7%B3%BB%E7%BB%9F%E6%B5%AE%E7%AA%97.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97%E7%BC%A9%E6%94%BE.gif)|
+
+|状态回调|View修改|拓展使用|
+|:---:|:---:|:---:|
+|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%96%B9%E4%BE%BF%E7%9A%84view%E4%BF%AE%E6%94%B9.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/dialog%E5%92%8Cxml%E4%BD%BF%E7%94%A8.gif)|
 
 ## 关于集成：
 - **在项目的根目录的`build.gradle`添加：**
@@ -38,7 +38,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0.5'
+    implementation 'com.github.princekin-f:EasyFloat:1.0.6'
 }
 ```
 
@@ -165,6 +165,9 @@ setDragEnable(activity: Activity? = null, dragEnable: Boolean, floatTag: String?
 
 // 浮窗是否显示
 isShow(activity: Activity? = null, floatTag: String? = null)
+
+// 获取我们设置的浮窗View
+getFloatView(activity: Activity? = null, tag: String? = null)
 ```
 
 **PS：`? = null` 代表可选参数，不填也行，默认值为null。下同。**
@@ -185,6 +188,9 @@ appFloatDragEnable(dragEnable: Boolean, tag: String? = null)
 
 // 浮窗是否显示
 appFloatIsShow(tag: String? = null)
+
+// 获取我们设置的浮窗View
+getAppFloatView(tag: String? = null)
 
 // 添加单个浮窗过滤页面
 filterActivity(activity: Activity, tag: String? = null)
@@ -243,6 +249,9 @@ floatingView.setOnClickListener {}
 
 ---
 ## 更新日志：
+#### v 1.0.6:
+- 新增浮窗`View`的获取，方便`View`的修改。
+
 #### v 1.0.5:
 - 优化代码和功能，支持`FloatCallbacks`的按需调用（Kotlin DSL）。
 
