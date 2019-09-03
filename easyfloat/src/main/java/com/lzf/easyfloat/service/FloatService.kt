@@ -1,5 +1,6 @@
 package com.lzf.easyfloat.service
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -30,7 +31,8 @@ internal class FloatService : Service() {
         private const val FLOAT_TAG = "floatTag"
         const val DEFAULT_TAG = "default"
         val floatMap = mutableMapOf<String, AppFloatManager>()
-        private lateinit var config: FloatConfig
+        @SuppressLint("StaticFieldLeak")
+        private var config: FloatConfig? = null
 
         /**
          * 开启创建浮窗的Service
@@ -107,18 +109,20 @@ internal class FloatService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (config == null) return START_NOT_STICKY
         if (checkTag()) {
             // 通过floatManager创建浮窗，并将floatManager添加到map中
-            floatMap[config.floatTag!!] = AppFloatManager(this, config).apply { createFloat() }
+            floatMap[config!!.floatTag!!] =
+                AppFloatManager(this.applicationContext, config!!).apply { createFloat() }
 
             // 启动前台Service，更长的生命周期，但是会在通知栏出现通知
             // ps：只要有一个浮窗设置了前台Service，就会启动，只有当全部浮窗关闭时，才会关闭前台Service；
             // 如要需要严格区分前后台Service，需要自行处理stopForeground()
-            if (config.startForeground && config.notification != null) {
-                startForeground(99, config.notification)
+            if (config!!.startForeground && config!!.notification != null) {
+                startForeground(99, config!!.notification)
             }
         } else {
-            config.callbacks?.createdResult(false, "请为系统浮窗设置不同的tag", null)
+            config!!.callbacks?.createdResult(false, "请为系统浮窗设置不同的tag", null)
             logger.w("请为系统浮窗设置不同的tag")
         }
         return START_NOT_STICKY
@@ -129,17 +133,19 @@ internal class FloatService : Service() {
      */
     private fun checkTag(): Boolean {
         // 如果未设置tag，设置默认tag
-        config.floatTag = config.floatTag ?: DEFAULT_TAG
+        config!!.floatTag = config!!.floatTag ?: DEFAULT_TAG
         // map为空使用默认值，有效
         if (floatMap.isEmpty()) return true
         // map不为空，tag比对，存在相同的无效
-        floatMap.forEach { (tag, _) -> run { if (tag == config.floatTag) return false } }
+        floatMap.forEach { (tag, _) -> run { if (tag == config!!.floatTag) return false } }
         return true
     }
 
     override fun onDestroy() {
         // 取消广播接收
         unregisterReceiver(receiver)
+        // 将config置为null，因为内部包含view
+        config = null
         // TODO 是否需要清除已有浮窗
         super.onDestroy()
     }

@@ -7,7 +7,9 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
@@ -37,6 +39,20 @@ class ThirdActivity : Activity() {
 
         openJavaTestActivity.setOnClickListener {
             startActivity(Intent(this, JavaTestActivity::class.java))
+        }
+
+        changeBackground.setOnClickListener {
+            EasyFloat.getAppFloatView()?.also {
+                it.findViewById<RelativeLayout>(R.id.rlContent)
+                    .setBackgroundColor(ContextCompat.getColor(this, R.color.violet))
+
+                // ...其他View操作
+            }
+        }
+
+        recoverBackground.setOnClickListener {
+            EasyFloat.getAppFloatView()?.findViewById<RelativeLayout>(R.id.rlContent)
+                ?.setBackgroundColor(ContextCompat.getColor(this, R.color.translucent))
         }
     }
 

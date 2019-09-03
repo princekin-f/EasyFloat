@@ -43,6 +43,7 @@ internal class ActivityFloatManager(val activity: Activity) {
         parentFrame.addView(floatingView)
 
         // 设置Callbacks
+        config.layoutView = floatingView
         config.callbacks?.createdResult(true, null, floatingView)
         config.floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)
     }
@@ -77,6 +78,11 @@ internal class ActivityFloatManager(val activity: Activity) {
     fun setDragEnable(dragEnable: Boolean, tag: String? = null) {
         floatingView(tag)?.config?.dragEnable = dragEnable
     }
+
+    /**
+     * 获取我们传入的浮窗View
+     */
+    fun getFloatView(tag: String? = null): View? = floatingView(tag)?.config?.layoutView
 
     /**
      * 获取浮窗的拖拽外壳FloatingView

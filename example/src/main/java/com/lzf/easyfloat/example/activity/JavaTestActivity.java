@@ -38,6 +38,7 @@ public class JavaTestActivity extends Activity {
                         .setLayout(R.layout.float_custom, view ->
                                 view.findViewById(R.id.textView).setOnClickListener(v1 -> toast("onClick")))
                         .setGravity(Gravity.END, 0, 100)
+                        // 在Java中使用Kotlin DSL回调
                         .registerCallbacks(builder -> {
                             builder.createResult((aBoolean, s, view) -> {
                                 toast("创建成功：" + aBoolean.toString());
@@ -55,7 +56,7 @@ public class JavaTestActivity extends Activity {
                         })
                         .show());
 
-        findViewById(R.id.tvCloseFloat).setOnClickListener(v -> EasyFloat.dismissAppFloat(this));
+        findViewById(R.id.tvCloseFloat).setOnClickListener(v -> EasyFloat.dismiss(this));
     }
 
     private void toast(String text) {

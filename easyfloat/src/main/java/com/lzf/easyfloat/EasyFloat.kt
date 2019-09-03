@@ -28,7 +28,7 @@ class EasyFloat {
 
     companion object {
         internal var isDebug: Boolean = false
-        // 通过弱引用持有Activity，防止内容泄漏，适用于只有一个浮窗的情况
+        // 通过弱引用持有Activity，防止内容泄漏，适用于只在一个Activity创建浮窗的情况
         private var activityWr: WeakReference<Activity>? = null
 
         @JvmStatic
@@ -49,29 +49,35 @@ class EasyFloat {
         // 通过浮窗管理类，实现相应的功能，详情参考ActivityFloatManager
         @JvmStatic
         @JvmOverloads
-        fun dismiss(activity: Activity? = null, floatTag: String? = null) =
-            manager(activity)?.dismiss(floatTag)
+        fun dismiss(activity: Activity? = null, tag: String? = null) =
+            manager(activity)?.dismiss(tag)
 
         @JvmStatic
         @JvmOverloads
-        fun hide(activity: Activity? = null, floatTag: String? = null) =
-            manager(activity)?.setVisibility(floatTag, View.GONE)
+        fun hide(activity: Activity? = null, tag: String? = null) =
+            manager(activity)?.setVisibility(tag, View.GONE)
 
         @JvmStatic
         @JvmOverloads
-        fun show(activity: Activity? = null, floatTag: String? = null) =
-            manager(activity)?.setVisibility(floatTag, View.VISIBLE)
+        fun show(activity: Activity? = null, tag: String? = null) =
+            manager(activity)?.setVisibility(tag, View.VISIBLE)
 
         @JvmStatic
         @JvmOverloads
-        fun setDragEnable(
-            activity: Activity? = null, dragEnable: Boolean, floatTag: String? = null
-        ) = manager(activity)?.setDragEnable(dragEnable, floatTag)
+        fun setDragEnable(activity: Activity? = null, dragEnable: Boolean, tag: String? = null) =
+            manager(activity)?.setDragEnable(dragEnable, tag)
 
         @JvmStatic
         @JvmOverloads
-        fun isShow(activity: Activity? = null, floatTag: String? = null) =
-            manager(activity)?.isShow(floatTag)
+        fun isShow(activity: Activity? = null, tag: String? = null) = manager(activity)?.isShow(tag)
+
+        /**
+         * 获取我们传入的浮窗View
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun getFloatView(activity: Activity? = null, tag: String? = null): View? =
+            manager(activity)?.getFloatView(tag)
 
         /**
          * 获取Activity浮窗管理类
@@ -120,6 +126,13 @@ class EasyFloat {
         @JvmStatic
         @JvmOverloads
         fun appFloatIsShow(tag: String? = null) = getConfig(tag) != null && getConfig(tag)!!.isShow
+
+        /**
+         * 获取系统浮窗中，我们传入的View
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun getAppFloatView(tag: String? = null): View? = getConfig(tag)?.layoutView
 
         /**
          * 以下几个方法为：系统浮窗过滤页面的添加、移除、清空

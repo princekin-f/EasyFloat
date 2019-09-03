@@ -71,11 +71,11 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
      */
     private fun addView() {
         // 创建一个frameLayout作为浮窗布局的父容器
-        frameLayout = ParentFrameLayout(context.applicationContext, config)
+        frameLayout = ParentFrameLayout(context, config)
         frameLayout?.tag = config.floatTag
         // 将浮窗布局文件添加到父容器frameLayout中，并返回该浮窗文件
-        val floatingView = LayoutInflater.from(context.applicationContext)
-            .inflate(config.layoutId!!, frameLayout, true)
+        val floatingView =
+            LayoutInflater.from(context).inflate(config.layoutId!!, frameLayout, true)
         // 将frameLayout添加到系统windowManager中
         windowManager.addView(frameLayout, params)
 
@@ -94,6 +94,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         }
 
         // 设置callbacks
+        config.layoutView = floatingView
         config.invokeView?.invoke(floatingView)
         config.callbacks?.createdResult(true, null, floatingView)
         config.floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)

@@ -1,6 +1,7 @@
 package com.lzf.easyfloat.data
 
 import android.app.Notification
+import android.view.View
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
@@ -20,6 +21,7 @@ data class FloatConfig(
 
     // 浮窗的xml布局文件
     var layoutId: Int? = null,
+    var layoutView: View? = null,
 
     // 当前浮窗的tag
     var floatTag: String? = null,

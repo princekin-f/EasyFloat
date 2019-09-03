@@ -13,7 +13,7 @@
             android:layout_marginStart="14dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="当页浮窗（Activity Float）"
+            android:text="当页浮窗1（Activity Float）"
             android:textSize="13sp" />
 
     <LinearLayout
@@ -84,7 +84,7 @@
             android:layout_marginStart="14dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="系统浮窗（全局显示）"
+            android:text="系统浮窗1（全局显示）"
             android:textSize="13sp" />
 
     <LinearLayout
@@ -153,6 +153,5 @@
             style="@style/TextStyle2"
             android:layout_marginTop="20dp"
             android:text="Open SecondActivity" />
-
 
 </LinearLayout>

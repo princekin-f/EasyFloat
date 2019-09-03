@@ -17,4 +17,16 @@
             android:layout_marginTop="20dp"
             android:text="OpenJavaTestActivity" />
 
+    <TextView
+            android:id="@+id/changeBackground"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="改变首页系统浮窗1的背景" />
+
+    <TextView
+            android:id="@+id/recoverBackground"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="恢复首页系统浮窗1的背景" />
+
 </LinearLayout>
