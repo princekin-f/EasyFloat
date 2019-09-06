@@ -1,4 +1,4 @@
-## EasyFloat：Android浮窗框架
+## EasyFloat：Android悬浮窗框架
 [![](https://jitpack.io/v/princekin-f/EasyFloat.svg)](https://jitpack.io/#princekin-f/EasyFloat)
 > [EasyFloat：浮窗从未如此简单](https://www.jianshu.com/p/7d1a7c82094a)
 
@@ -38,7 +38,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0.6'
+    implementation 'com.github.princekin-f:EasyFloat:1.0.7'
 }
 ```
 
@@ -249,6 +249,9 @@ floatingView.setOnClickListener {}
 
 ---
 ## 更新日志：
+#### v 1.0.7:
+- 优化页面过滤细节上的不足。
+
 #### v 1.0.6:
 - 新增浮窗`View`的获取，方便`View`的修改。
 

@@ -65,6 +65,8 @@ data class FloatConfig(
 
     // 不需要显示系统浮窗的页面集合，参数为类名
     val filterSet: MutableSet<String> = mutableSetOf(),
+    // 是否设置，当前创建的页面也被过滤
+    internal var filterSelf: Boolean = false,
     // 是否需要显示，当过滤信息匹配上时，该值为false
     internal var needShow: Boolean = true,
 

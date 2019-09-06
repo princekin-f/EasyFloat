@@ -50,9 +50,9 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE
             format = PixelFormat.RGBA_8888
             gravity = Gravity.START or Gravity.TOP
-            // 设置浮窗以外的触摸事件可以传递给后面的窗口、不自动获取焦点、可以延伸到屏幕外（设置动画时能用到，动画结束需要去除该属性，不然旋转屏幕可能置于屏幕外部）
+            // 设置浮窗以外的触摸事件可以传递给后面的窗口、不自动获取焦点
             flags =
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             width =
                 if (config.widthMatch) WindowManager.LayoutParams.MATCH_PARENT else WindowManager.LayoutParams.WRAP_CONTENT
             height =
@@ -89,7 +89,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         frameLayout?.layoutListener = object : ParentFrameLayout.OnLayoutListener {
             override fun onLayout() {
                 setGravity(frameLayout)
-                enterAnim()
+                if (config.filterSelf) setVisible(View.GONE) else enterAnim()
             }
         }
 
@@ -185,16 +185,16 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         val manager: AppFloatAnimatorManager? =
             AppFloatAnimatorManager(frameLayout!!, params, windowManager, config)
         val animator: Animator? = manager?.enterAnim()
-        if (animator == null) {
-            // 不需要延伸到屏幕外了，防止屏幕旋转的时候，浮窗处于屏幕外
+        if (animator != null) {
+            // 可以延伸到屏幕外，动画结束需要去除该属性，不然旋转屏幕可能置于屏幕外部
             params.flags =
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        } else {
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {}
 
                 override fun onAnimationEnd(animation: Animator?) {
                     config.isAnim = false
+                    // 不需要延伸到屏幕外了，防止屏幕旋转的时候，浮窗处于屏幕外
                     params.flags =
                         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 }

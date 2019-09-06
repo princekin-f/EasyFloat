@@ -40,7 +40,7 @@ internal object LifecycleUtils {
                             }
                         }
 
-                        // 当过滤信息没有匹配上时，需要发送广播，反正修改needShow为默认值
+                        // 当过滤信息没有匹配上时，需要发送广播，反之修改needShow为默认值
                         if (manager.config.needShow) setVisible(tag = tag)
                         else manager.config.needShow = true
                     }
@@ -57,7 +57,13 @@ internal object LifecycleUtils {
                 if (isForeground()) return
                 // 当app处于后台时，检测是否有仅前台显示的系统浮窗
                 FloatService.floatMap.forEach { (tag, manager) ->
-                    run { if (manager.config.showPattern == ShowPattern.FOREGROUND) setVisible(tag = tag) }
+                    run {
+                        when (manager.config.showPattern) {
+                            ShowPattern.ALL_TIME -> setVisible(true, tag)
+                            ShowPattern.FOREGROUND -> setVisible(tag = tag)
+                            else -> { }
+                        }
+                    }
                 }
             }
 

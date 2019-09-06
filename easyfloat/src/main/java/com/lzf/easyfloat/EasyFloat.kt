@@ -252,7 +252,13 @@ class EasyFloat {
 
         // 设置需要过滤的Activity，仅对系统浮窗有效
         fun setFilter(vararg clazz: Class<*>): Builder {
-            clazz.forEach { config.filterSet.add(it.name) }
+            clazz.forEach {
+                config.filterSet.add(it.name)
+                if (it.name == activity.componentName.className) {
+                    // 过滤掉当前Activity
+                    config.filterSelf = true
+                }
+            }
             return this
         }
 
