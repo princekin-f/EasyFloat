@@ -39,7 +39,7 @@ public class JavaTestActivity extends Activity {
                                 view.findViewById(R.id.textView).setOnClickListener(v1 -> toast("onClick")))
                         .setGravity(Gravity.END, 0, 100)
                         // 在Java中使用Kotlin DSL回调
-                        .registerCallbacks(builder -> {
+                        .registerCallback(builder -> {
                             builder.createResult((aBoolean, s, view) -> {
                                 toast("创建成功：" + aBoolean.toString());
                                 return null;
@@ -133,7 +133,7 @@ public class JavaTestActivity extends Activity {
                     }
                 })
                 // Kotlin DSL实现回调效果，和registerCallbacks二选一即可，该方式主要针对Kotlin，Java使用起来并不怎么方便
-                .registerCallbacks(builder -> {
+                .registerCallback(builder -> {
                     builder.createResult((aBoolean, s, view) -> {
                         logger.e("Java使用kotlin DSL：" + aBoolean);
                         return null;

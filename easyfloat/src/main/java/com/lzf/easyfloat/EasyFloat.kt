@@ -223,14 +223,20 @@ class EasyFloat {
             return this
         }
 
+        /**
+         * 通过传统接口，进行浮窗的各种状态回调
+         */
         fun registerCallbacks(callbacks: OnFloatCallbacks): Builder {
             config.callbacks = callbacks
             return this
         }
 
-        fun registerCallbacks(builder: FloatCallbacks.Builder.() -> Unit): Builder {
-            config.floatCallbacks = FloatCallbacks()
-            config.floatCallbacks?.registerListener(builder)
+        /**
+         * 针对kotlin 用户，传入带FloatCallbacks.Builder 返回值的 lambda，可按需回调
+         * 为了避免方法重载时 出现编译错误的情况，更改了方法名
+         */
+        fun registerCallback(builder: FloatCallbacks.Builder.() -> Unit): Builder {
+            config.floatCallbacks = FloatCallbacks().apply { registerListener(builder) }
             return this
         }
 

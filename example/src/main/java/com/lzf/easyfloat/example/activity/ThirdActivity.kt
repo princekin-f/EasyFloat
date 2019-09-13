@@ -110,7 +110,7 @@ class ThirdActivity : Activity() {
             .startForeground(true, floatNotification(this))
             // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
             // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
-            .registerCallbacks {
+            .registerCallback {
                 createResult { isCreated, msg, view -> }
                 show { }
                 hide { }

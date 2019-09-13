@@ -19,6 +19,7 @@ import com.lzf.easyfloat.example.logger
 import com.lzf.easyfloat.example.widget.RoundProgressBar
 import com.lzf.easyfloat.example.widget.ScaleImage
 import com.lzf.easyfloat.interfaces.OnInvokeView
+import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.PermissionUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.float_seekbar.*
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .setLayout(R.layout.float_custom, OnInvokeView {
                 it.findViewById<TextView>(R.id.textView).setOnClickListener { toast() }
             })
-            .registerCallbacks {
+            .registerCallback {
                 // 在此处设置view也可以，建议在setLayout进行view操作
                 createResult { isCreated, msg, _ -> logger.e("DSL:  $isCreated   $msg") }
 
@@ -240,6 +241,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 .setNegativeButton("取消") { _, _ -> }
                 .show()
         }
+    }
+
+    /**
+     * 主动申请浮窗权限
+     */
+    private fun requestPermission() {
+        PermissionUtils.requestPermission(this, object : OnPermissionResult {
+            override fun permissionResult(isOpen: Boolean) {
+                logger.i(isOpen)
+            }
+        })
     }
 
 

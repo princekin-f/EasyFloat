@@ -43,7 +43,7 @@ object PermissionUtils {
     /**
      * 申请悬浮窗权限
      */
-    internal fun requestPermission(activity: Activity, onPermissionResult: OnPermissionResult) {
+    fun requestPermission(activity: Activity, onPermissionResult: OnPermissionResult) {
         PermissionFragment.requestPermission(activity, onPermissionResult)
     }
 
