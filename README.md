@@ -25,6 +25,11 @@
 |:---:|:---:|:---:|
 |![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/%E6%96%B9%E4%BE%BF%E7%9A%84view%E4%BF%AE%E6%94%B9.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/dialog%E5%92%8Cxml%E4%BD%BF%E7%94%A8.gif)|
 
+## 下载体验：
+- [直接下载测试APK](https://raw.githubusercontent.com/princekin-f/EasyFloat/master/example/release/EasyFloat.apk)，或者扫码下载：
+
+![](https://raw.githubusercontent.com/princekin-f/EasyFloat/master/example/release/downloadImage.png)
+
 ## 关于集成：
 - **在项目的根目录的`build.gradle`添加：**
 ```
@@ -38,7 +43,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.0.7'
+    implementation 'com.github.princekin-f:EasyFloat:1.1.0'
 }
 ```
 
@@ -104,7 +109,7 @@ EasyFloat.with(this)
     .startForeground(true, floatNotification(this))
     // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
     // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
-    .registerCallbacks {
+    .registerCallback {
         createResult { isCreated, msg, view ->  }
         show {  }
         hide {  }
@@ -143,10 +148,14 @@ EasyFloat.with(this)
 ```
 如果想要在Java是使用Kotlin DSL，可以参考Demo。
 
-### 悬浮窗权限检测，可用于设置引导页面：
+### 悬浮窗权限的检测、申请：
 - **无需主动进行权限申请，创建结果、申请结果可在`OnFloatCallbacks`的`createdResult`获取。**
 ```
+// 权限检测
 PermissionUtils.checkPermission(this)
+
+// 权限申请，参数2为权限回调接口
+PermissionUtils.requestPermission(this，OnPermissionResult)
 ```
 
 ### Activity浮窗的相关API：
@@ -246,29 +255,8 @@ floatingView.setOnClickListener {}
 ## 关于感谢：
 - **权限适配：[FloatWindowPermission](https://github.com/zhaozepeng/FloatWindowPermission)**
 
-
----
-## 更新日志：
-#### v 1.0.7:
-- 优化页面过滤细节上的不足。
-
-#### v 1.0.6:
-- 新增浮窗`View`的获取，方便`View`的修改。
-
-#### v 1.0.5:
-- 优化代码和功能，支持`FloatCallbacks`的按需调用（Kotlin DSL）。
-
-#### v 1.0.4:
-- 可选择是否开启前台Service，可自定义通知栏消息。
-
-#### v 1.0.3:
-- 修改魅族手机，权限申请回调异常的问题；
-- 为系统浮窗的`EditText`，提供了软键盘的打开、关闭后的焦点移除；
-- 但暂未提供软键盘的关闭监听方案，希望大家一起努力。
-
-#### v 1.0.2:
-- 修改`enum`包名，解决Java特殊路径无法调用的问题；
-- 添加`@JvmOverloads`注解，支持对Java的方法重载。
+## 关于更新：
+- [查看版本更新日志](https://github.com/princekin-f/EasyFloat/blob/master/UpdateDoc.md)
 
 License
 -------
