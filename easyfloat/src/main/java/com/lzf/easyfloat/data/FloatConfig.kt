@@ -34,6 +34,8 @@ data class FloatConfig(
     var isAnim: Boolean = false,
     // 是否显示
     var isShow: Boolean = false,
+    // 是否包含EditText
+    var hasEditText: Boolean = false,
 
     // 浮窗的吸附方式（默认不吸附，拖到哪里是哪里）
     var sidePattern: SidePattern = SidePattern.DEFAULT,

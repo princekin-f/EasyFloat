@@ -3,10 +3,13 @@ package com.lzf.easyfloat.widget.appfloat
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.interfaces.OnFloatTouchListener
+import com.lzf.easyfloat.service.FloatService
+import com.lzf.easyfloat.utils.InputMethodUtils
 
 /**
  * @author: liuzhenfeng
@@ -50,6 +53,16 @@ internal class ParentFrameLayout(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event != null) touchListener?.onTouch(event)
         return config.isDrag || super.onTouchEvent(event)
+    }
+
+    /**
+     * 按键转发到视图的分发方法，在这里关闭输入法
+     */
+    override fun dispatchKeyEventPreIme(event: KeyEvent?): Boolean {
+        if (config.hasEditText && event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_BACK) {
+            InputMethodUtils.closedInputMethod(config.floatTag ?: FloatService.DEFAULT_TAG)
+        }
+        return super.dispatchKeyEventPreIme(event)
     }
 
 }

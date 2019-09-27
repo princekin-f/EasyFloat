@@ -81,6 +81,8 @@ public class JavaTestActivity extends Activity {
                 .setTag("testFloat")
                 // 设置浮窗是否可拖拽
                 .setDragEnable(true)
+                // 系统浮窗是否包含EditText，仅针对系统浮窗，默认不包含
+                .hasEditText(false)
                 // 设置浮窗固定坐标，ps：设置固定坐标，Gravity属性和offset属性将无效
                 .setLocation(100, 200)
                 // 设置浮窗的对齐方式和坐标偏移量

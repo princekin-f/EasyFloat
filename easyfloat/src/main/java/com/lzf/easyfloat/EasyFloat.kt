@@ -207,13 +207,20 @@ class EasyFloat {
         }
 
         fun setTag(floatTag: String?): Builder {
-            // 如果tag为空，默认使用类名
-            config.floatTag = floatTag ?: activity.componentName.className
+            config.floatTag = floatTag
             return this
         }
 
         fun setDragEnable(dragEnable: Boolean): Builder {
             config.dragEnable = dragEnable
+            return this
+        }
+
+        /**
+         * 该方法针对系统浮窗，单页面浮窗无需设置
+         */
+        fun hasEditText(hasEditText: Boolean): Builder {
+            config.hasEditText = hasEditText
             return this
         }
 

@@ -59,15 +59,17 @@ class ThirdActivity : Activity() {
     private fun showEditTextFloat(tag: String? = "editTextFloat") {
         EasyFloat.with(this)
             .setShowPattern(ShowPattern.ALL_TIME)
-            .setGravity(Gravity.CENTER)
+            .setGravity(Gravity.CENTER, 0, -300)
             .setTag(tag)
+            .hasEditText(true)
             .setLayout(R.layout.float_edit, OnInvokeView {
-                it.findViewById<EditText>(R.id.editText).setOnClickListener { et ->
-                    InputMethodUtils.openInputMethod(et as EditText, tag)
-                }
-
-                it.findViewById<TextView>(R.id.tvImmClosed).setOnClickListener {
-                    InputMethodUtils.closedInputMethod(tag)
+                it.findViewById<EditText>(R.id.editText).apply {
+                    // 点击打开软键盘
+                    setOnClickListener { InputMethodUtils.openInputMethod(this as EditText, tag) }
+                    // 首次点击，不会回调onClick事件，但是会改变焦点
+                    setOnFocusChangeListener { _, hasFocus ->
+                        if (hasFocus) InputMethodUtils.openInputMethod(this as EditText, tag)
+                    }
                 }
 
                 it.findViewById<TextView>(R.id.tvCloseFloat).setOnClickListener {
@@ -94,6 +96,8 @@ class ThirdActivity : Activity() {
             .setTag("testFloat")
             // 设置浮窗是否可拖拽
             .setDragEnable(true)
+            // 系统浮窗是否包含EditText，仅针对系统浮窗，默认不包含
+            .hasEditText(false)
             // 设置浮窗固定坐标，ps：设置固定坐标，Gravity属性和offset属性将无效
             .setLocation(100, 200)
             // 设置浮窗的对齐方式和坐标偏移量

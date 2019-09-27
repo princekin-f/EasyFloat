@@ -1,5 +1,7 @@
 ## EasyFloat：Android悬浮窗框架
 [![](https://jitpack.io/v/princekin-f/EasyFloat.svg)](https://jitpack.io/#princekin-f/EasyFloat)
+[![License](https://img.shields.io/badge/License%20-Apache%202-337ab7.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+
 > [EasyFloat：浮窗从未如此简单](https://www.jianshu.com/p/7d1a7c82094a)
 
 ## 特点功能：
@@ -43,7 +45,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.1.0'
+    implementation 'com.github.princekin-f:EasyFloat:1.1.1'
 }
 ```
 
@@ -93,6 +95,8 @@ EasyFloat.with(this)
     .setTag("testFloat")
     // 设置浮窗是否可拖拽
     .setDragEnable(true)
+    // 系统浮窗是否包含EditText，仅针对系统浮窗，默认不包含
+    .hasEditText(false)
     // 设置浮窗固定坐标，ps：设置固定坐标，Gravity属性和offset属性将无效
     .setLocation(100, 200)
     // 设置浮窗的对齐方式和坐标偏移量
@@ -218,11 +222,12 @@ clearFilters(tag: String? = null)
 ```
 
 ### 系统浮窗中使用`EditText`：
-**1，为`EditText`设置点击事件，调用`openInputMethod`方法：**
+- **首先设置`.hasEditText(true)`，用于内部监听返回键；**
+- **当点击`EditText`时，主动调用`openInputMethod`方法：**
 ```
 InputMethodUtils.openInputMethod(editText, tag)
 ```
-**2，软键盘关闭时，调用`closedInputMethod`方法：**
+软键盘关闭时调用`closedInputMethod`方法（`1.1.1`开始无需再调用）：
 ```
 InputMethodUtils.closedInputMethod(tag)
 ```

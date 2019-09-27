@@ -43,6 +43,7 @@ object PermissionUtils {
     /**
      * 申请悬浮窗权限
      */
+    @JvmStatic
     fun requestPermission(activity: Activity, onPermissionResult: OnPermissionResult) {
         PermissionFragment.requestPermission(activity, onPermissionResult)
     }
