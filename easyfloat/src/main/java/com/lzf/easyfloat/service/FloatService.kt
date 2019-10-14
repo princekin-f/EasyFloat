@@ -29,6 +29,7 @@ internal class FloatService : Service() {
         private const val FLOAT_VISIBLE = "floatVisible"
         private const val FLOAT_DISMISS = "floatDismiss"
         private const val FLOAT_TAG = "floatTag"
+        private const val NEED_SHOW = "needShow"
         const val DEFAULT_TAG = "default"
         val floatMap = mutableMapOf<String, AppFloatManager>()
         @SuppressLint("StaticFieldLeak")
@@ -61,12 +62,18 @@ internal class FloatService : Service() {
         /**
          * 设置浮窗可见性，hide or show
          */
-        fun setVisible(context: Context, isShow: Boolean, tag: String? = null) =
-            context.sendBroadcast(
-                Intent().setAction(FLOAT_ACTION)
-                    .putExtra(FLOAT_VISIBLE, isShow)
-                    .putExtra(FLOAT_TAG, tag)
-            )
+        fun setVisible(
+            context: Context,
+            isShow: Boolean,
+            tag: String? = null,
+            needShow: Boolean = true
+        ) = context.sendBroadcast(
+            Intent().setAction(FLOAT_ACTION)
+                .putExtra(FLOAT_VISIBLE, isShow)
+                .putExtra(FLOAT_TAG, tag)
+                // 如果主动隐藏浮窗，则该值为false
+                .putExtra(NEED_SHOW, needShow)
+        )
 
         /**
          * 关闭系统浮窗
@@ -95,7 +102,10 @@ internal class FloatService : Service() {
                     floatMap[tag]?.setVisible(View.VISIBLE)
 
                 // 设置浮窗不可见
-                else -> floatMap[tag]?.setVisible(View.GONE)
+                else -> floatMap[tag]?.setVisible(
+                    View.GONE,
+                    intent.getBooleanExtra(NEED_SHOW, true)
+                )
             }
         }
     }

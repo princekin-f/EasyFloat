@@ -159,8 +159,10 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
     /**
      * 设置浮窗的可见性
      */
-    fun setVisible(visible: Int) {
+    fun setVisible(visible: Int, needShow: Boolean = true) {
         if (frameLayout == null) return
+        // 如果用户主动隐藏浮窗，则该值为false
+        config.needShow = needShow
         frameLayout?.visibility = visible
         if (visible == View.VISIBLE) {
             config.isShow = true

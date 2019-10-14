@@ -102,7 +102,7 @@ class EasyFloat {
         @JvmStatic
         @JvmOverloads
         fun hideAppFloat(context: Context, tag: String? = null) =
-            FloatService.setVisible(context, false, tag)
+            FloatService.setVisible(context, false, tag, false)
 
         /**
          * 显示系统浮窗，发送广播消息，在Service内部接收广播

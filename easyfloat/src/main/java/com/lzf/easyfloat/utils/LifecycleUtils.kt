@@ -30,6 +30,8 @@ internal object LifecycleUtils {
                 activityCount++
                 FloatService.floatMap.forEach { (tag, manager) ->
                     run {
+                        // 如果手动隐藏浮窗，不再考虑过滤信息
+                        if (!manager.config.needShow) return@run
                         // 过滤不需要显示浮窗的页面
                         manager.config.filterSet.forEach filterSet@{
                             if (it == activity.componentName.className) {
@@ -58,6 +60,8 @@ internal object LifecycleUtils {
                 // 当app处于后台时，检测是否有仅前台显示的系统浮窗
                 FloatService.floatMap.forEach { (tag, manager) ->
                     run {
+                        // 如果手动隐藏浮窗，不再考虑过滤信息
+                        if (!manager.config.needShow) return@run
                         when (manager.config.showPattern) {
                             ShowPattern.ALL_TIME -> setVisible(true, tag)
                             ShowPattern.FOREGROUND -> setVisible(tag = tag)
