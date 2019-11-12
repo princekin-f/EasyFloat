@@ -36,10 +36,14 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
     // x轴、y轴的最小距离值
     private var minX = 0
     private var minY = 0
-
+    private val location = IntArray(2)
+    // 屏幕可用高度 - 浮窗自身高度 的剩余高度
     private var emptyHeight = 0
+    // 屏幕高度
     private val screenHeight = DisplayUtils.getScreenHeight(context)
-    private val navigationBarHeight = DisplayUtils.getNavigationBarHeight(context)
+    // 虚拟导航栏高度
+    private val navigationBarHeight = DisplayUtils.getNavigationBarCurrentHeight(context)
+    // 是否包含状态栏
     private var hasStatusBar = true
 
     /**
@@ -67,10 +71,12 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 lastY = event.rawY
                 windowManager.defaultDisplay.getRectSize(parentRect)
                 parentWidth = parentRect.width()
-                parentHeight = parentRect.height()
-                // 当前高度是否包含顶部状态栏
-                hasStatusBar =
-                    parentHeight == screenHeight || parentHeight + navigationBarHeight == screenHeight
+                // 可用高度 = 屏幕高度 - 导航栏
+                parentHeight = screenHeight - navigationBarHeight
+                // 获取在整个屏幕内的绝对坐标
+                view.getLocationOnScreen(location)
+                // 通过绝对高度和相对高度比较，判断包含顶部状态栏
+                hasStatusBar = location[1] > params.y
                 emptyHeight = parentHeight - view.height
             }
 

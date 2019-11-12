@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import android.view.*
-import android.widget.FrameLayout
 
 /**
  * @author: liuzhenfeng
@@ -50,9 +50,11 @@ object DisplayUtils {
      * 获取屏幕高度
      */
     fun getScreenHeight(context: Context): Int {
-        val resources = context.resources
-        val dm = resources.displayMetrics
-        return dm.heightPixels
+        val display =
+            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+        val point = Point()
+        display.getRealSize(point)
+        return point.y
     }
 
     /**
@@ -91,31 +93,36 @@ object DisplayUtils {
         return result
     }
 
-    @SuppressLint("ObsoleteSdkInt")
-    fun isNavigationBarShow(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            val display =
-                (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
-            val size = Point()
-            val realSize = Point()
-            display.getSize(size)
-            display.getRealSize(realSize)
-            realSize.y != size.y
-        } else {
-            val menu = ViewConfiguration.get(context).hasPermanentMenuKey()
-            val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
-            !(menu || back)
-        }
-    }
-
     /**
-     *  设置相对于原点坐标的偏移量
+     * 判断虚拟导航栏是否显示
+     *
+     * @param context 上下文对象
+     * @return true(显示虚拟导航栏)，false(不显示或不支持虚拟导航栏)
      */
-    fun setLayoutLocation(view: View, pair: Pair<Int, Int>) {
-        val margin = ViewGroup.MarginLayoutParams(view.layoutParams)
-        margin.setMargins(pair.first, pair.second, 0, 0)
-        val layoutParams = FrameLayout.LayoutParams(margin)
-        view.layoutParams = layoutParams
+    @SuppressLint("PrivateApi")
+    fun isNavigationBarShow(context: Context): Boolean {
+        var hasNavigationBar = false
+        val rs = context.resources
+        val id = rs.getIdentifier("config_showNavigationBar", "bool", "android")
+        if (id > 0) hasNavigationBar = rs.getBoolean(id)
+        try {
+            val systemPropertiesClass = Class.forName("android.os.SystemProperties")
+            val m = systemPropertiesClass.getMethod("get", String::class.java)
+            val navBarOverride = m.invoke(systemPropertiesClass, "qemu.hw.mainkeys") as String
+            // 判断是否隐藏了底部虚拟导航
+            val navigationBarIsMin = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                Settings.System.getInt(context.contentResolver, "navigationbar_is_min", 0)
+            } else {
+                Settings.Global.getInt(context.contentResolver, "navigationbar_is_min", 0)
+            }
+            if ("1" == navBarOverride || 1 == navigationBarIsMin) {
+                hasNavigationBar = false
+            } else if ("0" == navBarOverride) {
+                hasNavigationBar = true
+            }
+        } catch (e: Exception) {
+        }
+        return hasNavigationBar
     }
 
 }

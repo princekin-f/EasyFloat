@@ -45,7 +45,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.1.2'
+    implementation 'com.github.princekin-f:EasyFloat:1.1.3'
 }
 ```
 
