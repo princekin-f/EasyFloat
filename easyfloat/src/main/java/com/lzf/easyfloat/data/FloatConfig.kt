@@ -1,6 +1,5 @@
 package com.lzf.easyfloat.data
 
-import android.app.Notification
 import android.view.View
 import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
@@ -69,12 +68,7 @@ data class FloatConfig(
     val filterSet: MutableSet<String> = mutableSetOf(),
     // 是否设置，当前创建的页面也被过滤
     internal var filterSelf: Boolean = false,
-    // 是否需要显示，当过滤信息匹配上时，该值为false
-    internal var needShow: Boolean = true,
-
-    // 是否启动前台Service
-    var startForeground: Boolean = false,
-    // 用于前台Service的通知栏消息
-    var notification: Notification? = null
+    // 是否需要显示，当过滤信息匹配上时，该值为false（用户手动调用隐藏，该值也为false，相当于手动过滤）
+    internal var needShow: Boolean = true
 
 )

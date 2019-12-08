@@ -16,7 +16,6 @@ import com.lzf.easyfloat.example.R;
 import com.lzf.easyfloat.example.logger;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.lzf.easyfloat.permission.PermissionUtils;
-import com.lzf.easyfloat.utils.DefaultNotificationKt;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -95,8 +94,6 @@ public class JavaTestActivity extends Activity {
                 .setAppFloatAnimator(new AppFloatDefaultAnimator())
                 // 设置系统浮窗的不需要显示的页面
                 .setFilter(MainActivity.class, SecondActivity.class)
-                // 是否启动前台Service
-                .startForeground(true, DefaultNotificationKt.floatNotification(this))
                 // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override

@@ -2,8 +2,6 @@ package com.lzf.easyfloat
 
 import android.app.Activity
 import android.app.Application
-import android.app.Notification
-import android.content.Context
 import android.view.View
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.enums.ShowPattern
@@ -11,12 +9,11 @@ import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.interfaces.*
 import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.PermissionUtils
-import com.lzf.easyfloat.service.FloatService
-import com.lzf.easyfloat.utils.floatNotification
 import com.lzf.easyfloat.utils.LifecycleUtils
 import com.lzf.easyfloat.interfaces.FloatCallbacks
 import com.lzf.easyfloat.utils.logger
 import com.lzf.easyfloat.widget.activityfloat.ActivityFloatManager
+import com.lzf.easyfloat.widget.appfloat.FloatManager
 import java.lang.ref.WeakReference
 
 /**
@@ -93,24 +90,21 @@ class EasyFloat {
          */
         @JvmStatic
         @JvmOverloads
-        fun dismissAppFloat(context: Context, tag: String? = null) =
-            FloatService.dismiss(context, tag)
+        fun dismissAppFloat(tag: String? = null) = FloatManager.dismiss(tag)
 
         /**
          * 隐藏系统浮窗，发送广播消息，在Service内部接收广播
          */
         @JvmStatic
         @JvmOverloads
-        fun hideAppFloat(context: Context, tag: String? = null) =
-            FloatService.setVisible(context, false, tag, false)
+        fun hideAppFloat(tag: String? = null) = FloatManager.visible(false, tag, false)
 
         /**
          * 显示系统浮窗，发送广播消息，在Service内部接收广播
          */
         @JvmStatic
         @JvmOverloads
-        fun showAppFloat(context: Context, tag: String? = null) =
-            FloatService.setVisible(context, true, tag)
+        fun showAppFloat(tag: String? = null) = FloatManager.visible(true, tag)
 
         /**
          * 设置系统浮窗是否可拖拽，先获取浮窗的config，后修改相应属性
@@ -164,8 +158,7 @@ class EasyFloat {
         /**
          * 获取系统浮窗的config
          */
-        private fun getConfig(tag: String?) =
-            FloatService.floatMap[tag ?: FloatService.DEFAULT_TAG]?.config
+        private fun getConfig(tag: String?) = FloatManager.getAppFloatManager(tag)?.config
     }
 
 
@@ -275,17 +268,6 @@ class EasyFloat {
             return this
         }
 
-        // 是否启动前台Service，会在通知栏创建一个通知，仅针对系统浮窗有效
-        @JvmOverloads
-        fun startForeground(
-            startForeground: Boolean,
-            notification: Notification? = floatNotification(activity)
-        ): Builder {
-            config.startForeground = startForeground
-            config.notification = notification
-            return this
-        }
-
         /**
          * 创建浮窗，包括Activity浮窗和系统浮窗，如若系统浮窗无权限，先进行权限申请
          */
@@ -316,7 +298,7 @@ class EasyFloat {
         /**
          * 通过Service创建系统浮窗
          */
-        private fun createAppFloat() = FloatService.startService(activity, config)
+        private fun createAppFloat() = FloatManager.create(activity, config)
 
         /**
          * 申请浮窗权限的结果回调

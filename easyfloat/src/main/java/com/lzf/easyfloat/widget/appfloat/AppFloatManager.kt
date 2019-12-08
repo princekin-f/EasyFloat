@@ -11,7 +11,6 @@ import android.view.*
 import com.lzf.easyfloat.anim.AppFloatAnimatorManager
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.interfaces.OnFloatTouchListener
-import com.lzf.easyfloat.service.FloatService
 import com.lzf.easyfloat.utils.DisplayUtils
 
 /**
@@ -245,7 +244,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         config.callbacks?.dismiss()
         config.floatCallbacks?.builder?.dismiss?.invoke()
         windowManager.removeView(frameLayout)
-        FloatService.checkStop(context, config.floatTag)
+        FloatManager.remove(config.floatTag)
     }
 
 }

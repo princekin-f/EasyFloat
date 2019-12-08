@@ -13,7 +13,6 @@
 - **支持默认位置的设定，支持对齐方式和偏移量的设定**
 - **支持创建多个单页面浮窗、多个系统浮窗，Tag进行区分**
 - **支持出入动画的设定，有默认动画，可自行替换（策略模式）**
-- **根据浮窗复杂度、重要性，可自主选择前后台Service**
 - **使用简单、链式调用、可轻松修改浮窗View**
 - **支持Kotlin DSL，可按需回调状态，摆脱Java的繁琐**
 - **支持xml直接使用，满足拖拽控件的需求**
@@ -45,7 +44,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.1.3'
+    implementation 'com.github.princekin-f:EasyFloat:1.2.0'
 }
 ```
 
@@ -56,7 +55,7 @@ EasyFloat.with(this).setLayout(R.layout.float_test).show()
 
 ## 关于初始化：
 - 全局初始化为非必须；
-- 当浮窗为仅前台显示，或者设置了浮窗过滤页面;
+- **当浮窗为仅前台显示，或者设置了浮窗过滤页面;**
 - 需要在项目的`Application`中进行全局初始化，进行页面生命周期检测。
 ```
 EasyFloat.init(this, isDebug)
@@ -64,23 +63,11 @@ EasyFloat.init(this, isDebug)
 
 ## 关于权限声明：
 - 权限声明为非必须；
-- 如果使用到系统浮窗（`ShowPattern.ALL_TIME`、`ShowPattern.FOREGROUND`）；
+- **当使用到系统浮窗（`ShowPattern.ALL_TIME`、`ShowPattern.FOREGROUND`）；**
 - 需要在`AndroidManifest.xml`进行权限声明。
 ```
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 ```
-- 在使用到系统浮窗的情况下，不仅要声明浮窗权限，还要声明启动系统浮窗的服务；
-- **该服务和上述系统浮窗权限，成对出现。**
-```
-<service android:name="com.lzf.easyfloat.service.FloatService" />
-```
-### 关于前台Service：
-- 可根据系统浮窗的重要性和复杂度，选择是否开启前台Service（默认后台Service）；
-- 从`Android 9.0`开始，前台Service需要在`AndroidManifest.xml`进行权限声明。
-```
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-```
-**PS：前台Service会在通知栏创建一条消息，有默认实现，也可进行消息自定义。**
 
 ## 完整使用示例：
 ```
@@ -109,8 +96,6 @@ EasyFloat.with(this)
     .setAppFloatAnimator(AppFloatDefaultAnimator())
     // 设置系统浮窗的不需要显示的页面
     .setFilter(MainActivity::class.java, SecondActivity::class.java)
-    // 是否启动前台Service，仅针对系统浮窗；有默认的Notification，可不传
-    .startForeground(true, floatNotification(this))
     // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
     // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
     .registerCallback {
@@ -188,13 +173,13 @@ getFloatView(activity: Activity? = null, tag: String? = null)
 ### 系统浮窗的相关API：
 ```
 // 关闭浮窗
-dismissAppFloat(context: Context, tag: String? = null)
+dismissAppFloat(tag: String? = null)
 
 // 隐藏浮窗
-hideAppFloat(context: Context, tag: String? = null)
+hideAppFloat(tag: String? = null)
 
 // 显示浮窗
-showAppFloat(context: Context, tag: String? = null)
+showAppFloat(tag: String? = null)
 
 // 设置是否可拖拽
 appFloatDragEnable(dragEnable: Boolean, tag: String? = null)
@@ -246,10 +231,6 @@ InputMethodUtils.closedInputMethod(tag)
         android:src="@mipmap/ic_launcher_round" />
 
 </com.lzf.easyfloat.widget.activityfloat.FloatingView>
-```
-- `1.0.4`及以下需要为FloatingView设置点击事件，不然无法拖拽：
-```
-floatingView.setOnClickListener {}
 ```
 
 ## 关于混淆：

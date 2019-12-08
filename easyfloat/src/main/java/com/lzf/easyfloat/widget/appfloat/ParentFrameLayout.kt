@@ -8,7 +8,6 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.interfaces.OnFloatTouchListener
-import com.lzf.easyfloat.service.FloatService
 import com.lzf.easyfloat.utils.InputMethodUtils
 
 /**
@@ -60,7 +59,7 @@ internal class ParentFrameLayout(
      */
     override fun dispatchKeyEventPreIme(event: KeyEvent?): Boolean {
         if (config.hasEditText && event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_BACK) {
-            InputMethodUtils.closedInputMethod(config.floatTag ?: FloatService.DEFAULT_TAG)
+            InputMethodUtils.closedInputMethod(FloatManager.getTag(config.floatTag))
         }
         return super.dispatchKeyEventPreIme(event)
     }

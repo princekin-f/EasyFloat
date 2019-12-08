@@ -26,7 +26,7 @@ internal class ActivityFloatManager(val activity: Activity) {
         // 设置浮窗的拖拽外壳FloatingView
         val floatingView = FloatingView(activity).apply {
             // 为浮窗打上tag，如果未设置tag，使用类名作为tag
-            tag = config.floatTag ?: activity.componentName.className
+            tag = getTag(config.floatTag)
             // 默认wrap_content，会导致子view的match_parent无效，所以手动设置params
             layoutParams = FrameLayout.LayoutParams(
                 if (config.widthMatch) FrameLayout.LayoutParams.MATCH_PARENT else FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -87,7 +87,11 @@ internal class ActivityFloatManager(val activity: Activity) {
     /**
      * 获取浮窗的拖拽外壳FloatingView
      */
-    private fun floatingView(tag: String?): FloatingView? =
-        parentFrame.findViewWithTag(tag ?: activity.componentName.className)
+    private fun floatingView(tag: String?): FloatingView? = parentFrame.findViewWithTag(getTag(tag))
+
+    /**
+     * 如果未设置tag，使用类名作为tag
+     */
+    private fun getTag(tag: String?) = tag ?: activity.componentName.className
 
 }

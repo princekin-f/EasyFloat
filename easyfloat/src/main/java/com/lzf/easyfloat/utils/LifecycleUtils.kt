@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import com.lzf.easyfloat.enums.ShowPattern
-import com.lzf.easyfloat.service.FloatService
+import com.lzf.easyfloat.widget.appfloat.FloatManager
 
 /**
  * @author: liuzhenfeng
@@ -28,7 +28,7 @@ internal object LifecycleUtils {
             override fun onActivityStarted(activity: Activity?) {
                 if (activity == null) return
                 activityCount++
-                FloatService.floatMap.forEach { (tag, manager) ->
+                FloatManager.floatMap.forEach { (tag, manager) ->
                     run {
                         // 如果手动隐藏浮窗，不再考虑过滤信息
                         if (!manager.config.needShow) return@run
@@ -58,14 +58,14 @@ internal object LifecycleUtils {
                 activityCount--
                 if (isForeground()) return
                 // 当app处于后台时，检测是否有仅前台显示的系统浮窗
-                FloatService.floatMap.forEach { (tag, manager) ->
+                FloatManager.floatMap.forEach { (tag, manager) ->
                     run {
                         // 如果手动隐藏浮窗，不再考虑过滤信息
                         if (!manager.config.needShow) return@run
                         when (manager.config.showPattern) {
                             ShowPattern.ALL_TIME -> setVisible(true, tag)
                             ShowPattern.FOREGROUND -> setVisible(tag = tag)
-                            else -> { }
+                            else -> return
                         }
                     }
                 }
@@ -78,6 +78,6 @@ internal object LifecycleUtils {
     private fun isForeground() = activityCount > 0
 
     private fun setVisible(boolean: Boolean = isForeground(), tag: String?) =
-        FloatService.setVisible(application, boolean, tag)
+        FloatManager.visible(boolean, tag)
 
 }

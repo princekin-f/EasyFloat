@@ -6,7 +6,7 @@ import android.os.Looper
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import com.lzf.easyfloat.service.FloatService
+import com.lzf.easyfloat.widget.appfloat.FloatManager
 
 /**
  * @author: liuzhenfeng
@@ -23,7 +23,7 @@ object InputMethodUtils {
     @JvmStatic
     @JvmOverloads
     fun openInputMethod(editText: EditText, tag: String? = null) {
-        FloatService.floatMap[tag ?: FloatService.DEFAULT_TAG]?.run {
+        FloatManager.getAppFloatManager(tag)?.run {
             // 更改flags，并刷新布局，让系统浮窗获取焦点
             params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
             windowManager.updateViewLayout(frameLayout, params)
@@ -42,12 +42,9 @@ object InputMethodUtils {
      */
     @JvmStatic
     @JvmOverloads
-    fun closedInputMethod(tag: String? = null) {
-        FloatService.floatMap[tag ?: FloatService.DEFAULT_TAG]?.run {
-            params.flags =
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            windowManager.updateViewLayout(frameLayout, params)
-        }
+    fun closedInputMethod(tag: String? = null) = FloatManager.getAppFloatManager(tag)?.run {
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        windowManager.updateViewLayout(frameLayout, params)
     }
 
 }
