@@ -24,7 +24,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
     private var parentRect: Rect = Rect()
     // 悬浮的父布局高度、宽度
     private var parentHeight = 0
-    private var parentWidth = 0
+    private val parentWidth = DisplayUtils.getScreenWidth(context)
     // 起点坐标
     private var lastX = 0f
     private var lastY = 0f
@@ -39,10 +39,6 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
     private val location = IntArray(2)
     // 屏幕可用高度 - 浮窗自身高度 的剩余高度
     private var emptyHeight = 0
-    // 屏幕高度
-    private val screenHeight = DisplayUtils.getScreenHeight(context)
-    // 虚拟导航栏高度
-    private val navigationBarHeight = DisplayUtils.getNavigationBarCurrentHeight(context)
     // 是否包含状态栏
     private var hasStatusBar = true
 
@@ -69,10 +65,8 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 // 记录触摸点的位置
                 lastX = event.rawX
                 lastY = event.rawY
-                windowManager.defaultDisplay.getRectSize(parentRect)
-                parentWidth = parentRect.width()
-                // 可用高度 = 屏幕高度 - 导航栏
-                parentHeight = screenHeight - navigationBarHeight
+                // 可用高度需要每次获取，因为虚拟导航栏的状态可能是变化的
+                parentHeight = DisplayUtils.rejectedNavHeight(context)
                 // 获取在整个屏幕内的绝对坐标
                 view.getLocationOnScreen(location)
                 // 通过绝对高度和相对高度比较，判断包含顶部状态栏

@@ -7,6 +7,7 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.view.*
+import com.lzf.easyfloat.permission.rom.RomUtils
 
 /**
  * @author: liuzhenfeng
@@ -101,10 +102,15 @@ object DisplayUtils {
      */
     @SuppressLint("PrivateApi")
     fun isNavigationBarShow(context: Context): Boolean {
+
+        // 如果是小米全面屏，并且开启手势操作，则导航栏是隐藏的
+        if (isMiuiFullScreen(context)) return false
+
         var hasNavigationBar = false
         val rs = context.resources
         val id = rs.getIdentifier("config_showNavigationBar", "bool", "android")
         if (id > 0) hasNavigationBar = rs.getBoolean(id)
+
         try {
             val systemPropertiesClass = Class.forName("android.os.SystemProperties")
             val m = systemPropertiesClass.getMethod("get", String::class.java)
@@ -124,5 +130,18 @@ object DisplayUtils {
         }
         return hasNavigationBar
     }
+
+    /**
+     * 不包含导航栏的有效高度（没有导航栏，或者已去除导航栏的高度）
+     */
+    fun rejectedNavHeight(context: Context) =
+        getScreenHeight(context) - getNavigationBarCurrentHeight(context)
+
+    /**
+     * 是否是小米全面屏，并且开启了手势操作
+     */
+    private fun isMiuiFullScreen(context: Context) =
+        RomUtils.checkIsMiuiRom() &&
+                Settings.Global.getInt(context.contentResolver, "force_fsg_nav_bar", 0) != 0
 
 }
