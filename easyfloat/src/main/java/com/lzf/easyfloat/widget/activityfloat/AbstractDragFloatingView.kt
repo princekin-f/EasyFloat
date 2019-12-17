@@ -46,7 +46,7 @@ abstract class AbstractDragFloatingView(
     private var minY = 0
     private var parentRect = Rect()
     private var floatRect = Rect()
-    private lateinit var parentView: ViewGroup
+    private var parentView: ViewGroup? = null
     private var isCreated = false
 
     init {
@@ -90,9 +90,9 @@ abstract class AbstractDragFloatingView(
     private fun initParent() {
         if (parent != null && parent is ViewGroup) {
             parentView = parent as ViewGroup
-            parentHeight = parentView.height
-            parentWidth = parentView.width
-            parentView.getGlobalVisibleRect(parentRect)
+            parentHeight = parentView!!.height
+            parentWidth = parentView!!.width
+            parentView!!.getGlobalVisibleRect(parentRect)
             logger.e("parentRect: $parentRect")
         }
     }
@@ -338,8 +338,9 @@ abstract class AbstractDragFloatingView(
      * 入场动画
      */
     private fun enterAnim() {
+        if (parentView == null) return
         val manager: AnimatorManager? =
-            AnimatorManager(config.floatAnimator, this, parentView, config.sidePattern)
+            AnimatorManager(config.floatAnimator, this, parentView!!, config.sidePattern)
         val animator: Animator? = manager?.enterAnim()
         animator?.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
@@ -362,14 +363,14 @@ abstract class AbstractDragFloatingView(
      */
     internal fun exitAnim() {
         // 正在执行动画，防止重复调用
-        if (config.isAnim) return
+        if (config.isAnim || parentView == null) return
         val manager: AnimatorManager? =
-            AnimatorManager(config.floatAnimator, this, parentView, config.sidePattern)
+            AnimatorManager(config.floatAnimator, this, parentView!!, config.sidePattern)
         val animator: Animator? = manager?.exitAnim()
         if (animator == null) {
             config.callbacks?.dismiss()
             config.floatCallbacks?.builder?.dismiss?.invoke()
-            parentView.removeView(this)
+            parentView?.removeView(this)
         } else {
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {}
@@ -378,7 +379,7 @@ abstract class AbstractDragFloatingView(
                     config.isAnim = false
                     config.callbacks?.dismiss()
                     config.floatCallbacks?.builder?.dismiss?.invoke()
-                    parentView.removeView(this@AbstractDragFloatingView)
+                    parentView?.removeView(this@AbstractDragFloatingView)
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {}
