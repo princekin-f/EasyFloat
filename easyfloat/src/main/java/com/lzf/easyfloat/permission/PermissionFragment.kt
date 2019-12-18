@@ -37,6 +37,7 @@ internal class PermissionFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PermissionUtils.requestCode) {
+            val activity = activity ?: return
             // 需要延迟执行，不然即使授权，仍有部分机型获取不到权限
             Handler(Looper.getMainLooper()).postDelayed({
                 val check = PermissionUtils.checkPermission(activity)
