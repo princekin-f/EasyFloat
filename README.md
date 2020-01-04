@@ -44,7 +44,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.2.2'
+    implementation 'com.github.princekin-f:EasyFloat:1.2.3'
 }
 ```
 
@@ -55,7 +55,7 @@ EasyFloat.with(this).setLayout(R.layout.float_test).show()
 
 ## 关于初始化：
 - 全局初始化为非必须；
-- **当浮窗为仅前台显示，或者设置了浮窗过滤页面;**
+- **当浮窗为仅前台、仅后台显示，或者设置了浮窗过滤页面;**
 - 需要在项目的`Application`中进行全局初始化，进行页面生命周期检测。
 ```
 EasyFloat.init(this, isDebug)
@@ -63,7 +63,7 @@ EasyFloat.init(this, isDebug)
 
 ## 关于权限声明：
 - 权限声明为非必须；
-- **当使用到系统浮窗（`ShowPattern.ALL_TIME`、`ShowPattern.FOREGROUND`）；**
+- **当使用到系统浮窗（`ShowPattern.ALL_TIME`、`ShowPattern.FOREGROUND`、`ShowPattern.BACKROUND`）；**
 - 需要在`AndroidManifest.xml`进行权限声明。
 ```
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -74,7 +74,7 @@ EasyFloat.init(this, isDebug)
 EasyFloat.with(this)
     // 设置浮窗xml布局文件，并可设置详细信息
     .setLayout(R.layout.float_app, OnInvokeView {  })
-    // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
+    // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示、仅后台显示
     .setShowPattern(ShowPattern.ALL_TIME)
     // 设置吸附方式，共15种模式，详情参考SidePattern
     .setSidePattern(SidePattern.RESULT_HORIZONTAL)

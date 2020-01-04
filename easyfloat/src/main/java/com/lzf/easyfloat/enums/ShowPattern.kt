@@ -7,6 +7,6 @@ package com.lzf.easyfloat.enums
  */
 enum class ShowPattern {
 
-    // 只在当前Activity显示、应用位于前台的时候显示、一直显示（不分前后台）
-    CURRENT_ACTIVITY, FOREGROUND, ALL_TIME
+    // 只在当前Activity显示、仅应用前台时显示、仅应用后台时显示，一直显示（不分前后台）
+    CURRENT_ACTIVITY, FOREGROUND, BACKGROUND, ALL_TIME
 }
