@@ -248,9 +248,12 @@ InputMethodUtils.closedInputMethod(tag)
 - **为了大家更好的交流和反馈，我们创建了QQ群：`818756969`**
 - 如果该库对你提供了帮助，你可以小小的赏赞一下作者，同样作者也会非常感谢你！我们一起众筹云测😘
 
-|QQ 交流群|Alipay|WeChat Pay|
-|:---:|:---:|:---:|
-|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/EasyFloatGroup.jpeg)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/Alipay.jpeg)|![](https://github.com/princekin-f/EasyFloat/blob/master/gif/WeChatPay.jpeg)|
+<div align="center">
+<img src="https://github.com/princekin-f/EasyFloat/blob/master/gif/EasyFloatGroup.jpeg"  width="266">
+<img src="https://github.com/princekin-f/EasyFloat/blob/master/gif/Alipay.jpeg" width="266">
+<img src="https://github.com/princekin-f/EasyFloat/blob/master/gif/WeChatPay.jpeg" width="266" >
+</div>
+
 
 License
 -------
