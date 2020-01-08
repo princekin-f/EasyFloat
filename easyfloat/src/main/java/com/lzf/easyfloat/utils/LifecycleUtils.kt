@@ -21,55 +21,65 @@ internal object LifecycleUtils {
         application.registerActivityLifecycleCallbacks(object :
             Application.ActivityLifecycleCallbacks {
 
-            override fun onActivityPaused(activity: Activity?) {}
+            override fun onActivityPaused(activity: Activity?) = checkHide(activity)
 
-            override fun onActivityResumed(activity: Activity?) {}
+            override fun onActivityResumed(activity: Activity?) = checkShow(activity)
 
-            override fun onActivityStarted(activity: Activity?) {
-                if (activity == null) return
-                activityCount++
-                FloatManager.floatMap.forEach { (tag, manager) ->
-                    // 仅后台显示模式下，隐藏浮窗
-                    if (manager.config.showPattern == ShowPattern.BACKGROUND) {
-                        setVisible(false, tag)
-                        return
-                    }
-
-                    // 如果手动隐藏浮窗，不再考虑过滤信息
-                    if (!manager.config.needShow) return
-
-                    // 过滤不需要显示浮窗的页面
-                    manager.config.filterSet.forEach filterSet@{
-                        if (it == activity.componentName.className) {
-                            setVisible(false, tag)
-                            manager.config.needShow = false
-                            logger.i("过滤浮窗显示: $it, tag: $tag")
-                            return@filterSet
-                        }
-                    }
-
-                    // 当过滤信息没有匹配上时，需要发送广播，反之修改needShow为默认值
-                    if (manager.config.needShow) setVisible(tag = tag)
-                    else manager.config.needShow = true
-                }
-            }
+            override fun onActivityStarted(activity: Activity?) {}
 
             override fun onActivityDestroyed(activity: Activity?) {}
 
             override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
 
-            override fun onActivityStopped(activity: Activity?) {
-                if (activity == null) return
-                activityCount--
-                if (isForeground()) return
-                FloatManager.floatMap.forEach { (tag, manager) ->
-                    // 当app处于后台时，不是仅前台显示的浮窗，都需要显示
-                    setVisible(manager.config.showPattern != ShowPattern.FOREGROUND, tag)
-                }
-            }
+            override fun onActivityStopped(activity: Activity?) {}
 
             override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {}
         })
+    }
+
+    /**
+     * 判断浮窗是否需要显示
+     */
+    private fun checkShow(activity: Activity?) {
+        if (activity == null) return
+        activityCount++
+        FloatManager.floatMap.forEach { (tag, manager) ->
+            // 仅后台显示模式下，隐藏浮窗
+            if (manager.config.showPattern == ShowPattern.BACKGROUND) {
+                setVisible(false, tag)
+                return
+            }
+
+            // 如果手动隐藏浮窗，不再考虑过滤信息
+            if (!manager.config.needShow) return
+
+            // 过滤不需要显示浮窗的页面
+            manager.config.filterSet.forEach filterSet@{
+                if (it == activity.componentName.className) {
+                    setVisible(false, tag)
+                    manager.config.needShow = false
+                    logger.i("过滤浮窗显示: $it, tag: $tag")
+                    return@filterSet
+                }
+            }
+
+            // 当过滤信息没有匹配上时，需要发送广播，反之修改needShow为默认值
+            if (manager.config.needShow) setVisible(tag = tag)
+            else manager.config.needShow = true
+        }
+    }
+
+    /**
+     * 判断浮窗是否需要隐藏
+     */
+    private fun checkHide(activity: Activity?) {
+        if (activity == null) return
+        activityCount--
+        if (isForeground()) return
+        FloatManager.floatMap.forEach { (tag, manager) ->
+            // 当app处于后台时，不是仅前台显示的浮窗，都需要显示
+            setVisible(manager.config.showPattern != ShowPattern.FOREGROUND, tag)
+        }
     }
 
     private fun isForeground() = activityCount > 0
