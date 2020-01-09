@@ -73,10 +73,8 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         // 将浮窗布局文件添加到父容器frameLayout中，并返回该浮窗文件
         val floatingView =
             LayoutInflater.from(context).inflate(config.layoutId!!, frameLayout, true)
-        // 如果设置了过滤当前页，或者设置仅后台显示，设置视图不可见可以避免闪一下，不能直接设置GONE，否则定位会出现问题
-        if (config.filterSelf || config.showPattern == ShowPattern.BACKGROUND) {
-            floatingView.visibility = View.INVISIBLE
-        }
+        // 为了避免创建的时候闪一下，我们先隐藏视图，不能直接设置GONE，否则定位会出现问题
+        floatingView.visibility = View.INVISIBLE
         // 将frameLayout添加到系统windowManager中
         windowManager.addView(frameLayout, params)
 
@@ -92,7 +90,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
                 setGravity(frameLayout)
                 // 如果设置了过滤当前页，或者设置仅后台显示，隐藏浮窗，否则执行入场动画
                 if (config.filterSelf || config.showPattern == ShowPattern.BACKGROUND)
-                    setVisible(View.GONE) else enterAnim()
+                    setVisible(View.GONE) else enterAnim(floatingView)
             }
         }
 
@@ -185,7 +183,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
     /**
      * 入场动画
      */
-    private fun enterAnim() {
+    private fun enterAnim(floatingView: View) {
         if (frameLayout == null || config.isAnim) return
         val manager: AppFloatAnimatorManager? =
             AppFloatAnimatorManager(frameLayout!!, params, windowManager, config)
@@ -207,11 +205,12 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
                 override fun onAnimationCancel(animation: Animator?) {}
 
                 override fun onAnimationStart(animation: Animator?) {
+                    floatingView.visibility = View.VISIBLE
                     config.isAnim = true
                 }
             })
             animator.start()
-        }
+        } else floatingView.visibility = View.VISIBLE
     }
 
     /**
