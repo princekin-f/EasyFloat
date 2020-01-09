@@ -24,7 +24,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
     private var parentRect: Rect = Rect()
     // 悬浮的父布局高度、宽度
     private var parentHeight = 0
-    private val parentWidth = DisplayUtils.getScreenWidth(context)
+    private var parentWidth = 0
     // 起点坐标
     private var lastX = 0f
     private var lastY = 0f
@@ -65,7 +65,8 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 // 记录触摸点的位置
                 lastX = event.rawX
                 lastY = event.rawY
-                // 可用高度需要每次获取，因为虚拟导航栏的状态可能是变化的
+                // 屏幕宽高需要每次获取，可能会有屏幕旋转、虚拟导航栏的状态变化
+                parentWidth = DisplayUtils.getScreenWidth(context)
                 parentHeight = DisplayUtils.rejectedNavHeight(context)
                 // 获取在整个屏幕内的绝对坐标
                 view.getLocationOnScreen(location)

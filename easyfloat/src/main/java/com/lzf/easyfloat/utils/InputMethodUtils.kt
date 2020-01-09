@@ -10,9 +10,7 @@ import com.lzf.easyfloat.widget.appfloat.FloatManager
 
 /**
  * @author: liuzhenfeng
- * @function: 软键盘工具类
- * 1，解决系统浮窗内的EditText，无法弹起软键盘的问题；
- * 2，暂未提供软键盘关闭的监听，需要使用者自行处理，希望各位大佬共同提供解决方案。
+ * @function: 软键盘工具类：解决系统浮窗内的EditText，无法弹起软键盘的问题
  * @date: 2019-08-17  11:11
  */
 object InputMethodUtils {
@@ -23,7 +21,7 @@ object InputMethodUtils {
     @JvmStatic
     @JvmOverloads
     fun openInputMethod(editText: EditText, tag: String? = null) {
-        FloatManager.getAppFloatManager(tag)?.run {
+        FloatManager.getAppFloatManager(tag)?.apply {
             // 更改flags，并刷新布局，让系统浮窗获取焦点
             params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
             windowManager.updateViewLayout(frameLayout, params)

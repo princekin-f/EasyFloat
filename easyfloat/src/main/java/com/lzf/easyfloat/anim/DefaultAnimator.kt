@@ -81,14 +81,12 @@ open class DefaultAnimator : OnFloatAnimator {
                 if (topDistance < bottomDistance) topValue(view) else bottomValue(view)
             }
 
-            else -> {
-                if (minX <= minY) {
-                    animType = "translationX"
-                    if (leftDistance < rightDistance) leftValue(view) else rightValue(view)
-                } else {
-                    animType = "translationY"
-                    if (topDistance < bottomDistance) topValue(view) else bottomValue(view)
-                }
+            else -> if (minX <= minY) {
+                animType = "translationX"
+                if (leftDistance < rightDistance) leftValue(view) else rightValue(view)
+            } else {
+                animType = "translationY"
+                if (topDistance < bottomDistance) topValue(view) else bottomValue(view)
             }
         }
 

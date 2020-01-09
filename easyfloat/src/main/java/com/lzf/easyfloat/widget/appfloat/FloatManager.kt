@@ -3,7 +3,7 @@ package com.lzf.easyfloat.widget.appfloat
 import android.content.Context
 import android.view.View
 import com.lzf.easyfloat.data.FloatConfig
-import com.lzf.easyfloat.utils.logger
+import com.lzf.easyfloat.utils.Logger
 
 /**
  * @author: liuzhenfeng
@@ -24,7 +24,7 @@ internal object FloatManager {
             .apply { createFloat() }
     } else {
         config.callbacks?.createdResult(false, "请为系统浮窗设置不同的tag", null)
-        logger.w("请为系统浮窗设置不同的tag")
+        Logger.w("请为系统浮窗设置不同的tag")
     }
 
     /**

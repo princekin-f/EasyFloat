@@ -11,7 +11,7 @@ import android.widget.FrameLayout
 import com.lzf.easyfloat.anim.AnimatorManager
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.enums.SidePattern
-import com.lzf.easyfloat.utils.logger
+import com.lzf.easyfloat.utils.Logger
 import kotlin.math.min
 
 /**
@@ -93,7 +93,7 @@ abstract class AbstractDragFloatingView(
             parentHeight = parentView!!.height
             parentWidth = parentView!!.width
             parentView!!.getGlobalVisibleRect(parentRect)
-            logger.e("parentRect: $parentRect")
+            Logger.e("parentRect: $parentRect")
         }
     }
 
@@ -331,7 +331,7 @@ abstract class AbstractDragFloatingView(
 
         minX = min(leftDistance, rightDistance)
         minY = min(topDistance, bottomDistance)
-        logger.i("$leftDistance   $rightDistance   $topDistance   $bottomDistance")
+        Logger.i("$leftDistance   $rightDistance   $topDistance   $bottomDistance")
     }
 
     /**

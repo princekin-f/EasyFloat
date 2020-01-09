@@ -44,28 +44,14 @@ internal object LifecycleUtils {
         if (activity == null) return
         activityCount++
         FloatManager.floatMap.forEach { (tag, manager) ->
-            // 仅后台显示模式下，隐藏浮窗
-            if (manager.config.showPattern == ShowPattern.BACKGROUND) {
-                setVisible(false, tag)
-                return
+            when {
+                // 仅后台显示模式下，隐藏浮窗
+                manager.config.showPattern == ShowPattern.BACKGROUND -> setVisible(false, tag)
+                // 如果没有手动隐藏浮窗，需要考虑过滤信息
+                manager.config.needShow -> setVisible(
+                    !manager.config.filterSet.contains(activity.componentName.className), tag
+                )
             }
-
-            // 如果手动隐藏浮窗，不再考虑过滤信息
-            if (!manager.config.needShow) return
-
-            // 过滤不需要显示浮窗的页面
-            manager.config.filterSet.forEach filterSet@{
-                if (it == activity.componentName.className) {
-                    setVisible(false, tag)
-                    manager.config.needShow = false
-                    logger.i("过滤浮窗显示: $it, tag: $tag")
-                    return@filterSet
-                }
-            }
-
-            // 当过滤信息没有匹配上时，需要发送广播，反之修改needShow为默认值
-            if (manager.config.needShow) setVisible(tag = tag)
-            else manager.config.needShow = true
         }
     }
 
@@ -84,7 +70,7 @@ internal object LifecycleUtils {
 
     private fun isForeground() = activityCount > 0
 
-    private fun setVisible(boolean: Boolean = isForeground(), tag: String?) =
-        FloatManager.visible(boolean, tag)
+    private fun setVisible(isShow: Boolean = isForeground(), tag: String?) =
+        FloatManager.visible(isShow, tag)
 
 }

@@ -11,7 +11,7 @@ import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.utils.LifecycleUtils
 import com.lzf.easyfloat.interfaces.FloatCallbacks
-import com.lzf.easyfloat.utils.logger
+import com.lzf.easyfloat.utils.Logger
 import com.lzf.easyfloat.widget.activityfloat.ActivityFloatManager
 import com.lzf.easyfloat.widget.appfloat.FloatManager
 import java.lang.ref.WeakReference
@@ -235,33 +235,25 @@ class EasyFloat {
         fun setFilter(vararg clazz: Class<*>): Builder = this.apply {
             clazz.forEach {
                 config.filterSet.add(it.name)
-                if (it.name == activity.componentName.className) {
-                    // 过滤掉当前Activity
-                    config.filterSelf = true
-                }
+                // 过滤掉当前Activity
+                if (it.name == activity.componentName.className) config.filterSelf = true
             }
         }
 
         /**
          * 创建浮窗，包括Activity浮窗和系统浮窗，如若系统浮窗无权限，先进行权限申请
          */
-        fun show() {
-            if (config.layoutId != null) {
-                when {
-                    // 仅当页显示，则直接创建activity浮窗
-                    config.showPattern == ShowPattern.CURRENT_ACTIVITY -> createActivityFloat()
-
-                    // 系统浮窗需要先进行权限审核，有权限则创建app浮窗
-                    PermissionUtils.checkPermission(activity) -> createAppFloat()
-
-                    // 申请浮窗权限
-                    else -> PermissionUtils.requestPermission(activity, this)
-                }
-            } else {
-                config.callbacks?.createdResult(false, "未设置浮窗布局文件", null)
-                config.floatCallbacks?.builder?.createdResult?.invoke(false, "未设置浮窗布局文件", null)
-                logger.w("未设置浮窗布局文件")
-            }
+        fun show() = if (config.layoutId != null) when {
+            // 仅当页显示，则直接创建activity浮窗
+            config.showPattern == ShowPattern.CURRENT_ACTIVITY -> createActivityFloat()
+            // 系统浮窗需要先进行权限审核，有权限则创建app浮窗
+            PermissionUtils.checkPermission(activity) -> createAppFloat()
+            // 申请浮窗权限
+            else -> PermissionUtils.requestPermission(activity, this)
+        } else {
+            config.callbacks?.createdResult(false, "未设置浮窗布局文件", null)
+            config.floatCallbacks?.builder?.createdResult?.invoke(false, "未设置浮窗布局文件", null)
+            Logger.w("未设置浮窗布局文件")
         }
 
         /**
@@ -280,7 +272,7 @@ class EasyFloat {
         override fun permissionResult(isOpen: Boolean) = if (isOpen) createAppFloat() else {
             config.callbacks?.createdResult(false, "系统浮窗权限不足，开启失败", null)
             config.floatCallbacks?.builder?.createdResult?.invoke(false, "系统浮窗权限不足，开启失败", null)
-            logger.w("系统浮窗权限不足，开启失败")
+            Logger.w("系统浮窗权限不足，开启失败")
         }
     }
 

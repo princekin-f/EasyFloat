@@ -26,20 +26,17 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
     var frameLayout: ParentFrameLayout? = null
     private lateinit var touchUtils: TouchUtils
 
-
     /**
      * 创建系统浮窗
      */
-    fun createFloat() {
-        try {
-            touchUtils = TouchUtils(context, config)
-            initParams()
-            addView()
-            config.isShow = true
-        } catch (e: Exception) {
-            config.callbacks?.createdResult(false, "$e", null)
-            config.floatCallbacks?.builder?.createdResult?.invoke(false, "$e", null)
-        }
+    fun createFloat() = try {
+        touchUtils = TouchUtils(context, config)
+        initParams()
+        addView()
+        config.isShow = true
+    } catch (e: Exception) {
+        config.callbacks?.createdResult(false, "$e", null)
+        config.floatCallbacks?.builder?.createdResult?.invoke(false, "$e", null)
     }
 
     private fun initParams() {
