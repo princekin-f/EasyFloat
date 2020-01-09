@@ -43,21 +43,21 @@ object DisplayUtils {
     /**
      * 获取屏幕宽度
      */
-    fun getScreenWidth(context: Context): Int {
-        val resources = context.resources
-        val dm = resources.displayMetrics
-        return dm.widthPixels
-    }
+    fun getScreenWidth(context: Context) = context.resources.displayMetrics.widthPixels
 
     /**
      * 获取屏幕高度
      */
-    fun getScreenHeight(context: Context): Int {
-        val display =
-            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
-        val point = Point()
-        display.getRealSize(point)
-        return point.y
+    fun getScreenHeight(context: Context) = context.resources.displayMetrics.heightPixels
+
+    /**
+     * 获取屏幕宽高
+     */
+    fun getScreenSize(context: Context) = Point().apply {
+        val windowManager: WindowManager =
+            context.getSystemService(Service.WINDOW_SERVICE) as WindowManager
+        val display = windowManager.defaultDisplay
+        display.getRealSize(this)
     }
 
     /**
@@ -67,9 +67,7 @@ object DisplayUtils {
         var result = 0
         val resources = context.resources
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
-        }
+        if (resourceId > 0) result = resources.getDimensionPixelSize(resourceId)
         return result
     }
 
@@ -83,9 +81,7 @@ object DisplayUtils {
         val resources = context.resources
         val resourceId =
             resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
-        }
+        if (resourceId > 0) result = resources.getDimensionPixelSize(resourceId)
         Log.d(TAG, "getNavigationBarHeight = $result")
         return result
     }
@@ -113,8 +109,11 @@ object DisplayUtils {
     /**
      * 不包含导航栏的有效高度（没有导航栏，或者已去除导航栏的高度）
      */
-    fun rejectedNavHeight(context: Context) =
-        getScreenHeight(context) - getNavigationBarCurrentHeight(context)
+    fun rejectedNavHeight(context: Context): Int {
+        val point = getScreenSize(context)
+        if (point.x > point.y) return point.y
+        return point.y - getNavigationBarCurrentHeight(context)
+    }
 
     /**
      * 华为手机是否显示 NavigationBar

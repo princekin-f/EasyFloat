@@ -21,8 +21,9 @@ internal object LifecycleUtils {
         application.registerActivityLifecycleCallbacks(object :
             Application.ActivityLifecycleCallbacks {
 
-            override fun onActivityPaused(activity: Activity?) = checkHide(activity)
+            override fun onActivityPaused(activity: Activity?) {}
 
+            // 每次都要判断当前页面是否需要显示
             override fun onActivityResumed(activity: Activity?) = checkShow(activity)
 
             override fun onActivityStarted(activity: Activity?) {}
@@ -31,7 +32,8 @@ internal object LifecycleUtils {
 
             override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
 
-            override fun onActivityStopped(activity: Activity?) {}
+            // 主要判断当前App是否处于后台
+            override fun onActivityStopped(activity: Activity?) = checkHide(activity)
 
             override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {}
         })
