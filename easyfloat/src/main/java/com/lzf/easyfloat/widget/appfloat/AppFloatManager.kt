@@ -13,6 +13,7 @@ import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.interfaces.OnFloatTouchListener
 import com.lzf.easyfloat.utils.DisplayUtils
+import com.lzf.easyfloat.utils.Logger
 
 /**
  * @author: liuzhenfeng
@@ -210,7 +211,10 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
                 }
             })
             animator.start()
-        } else floatingView.visibility = View.VISIBLE
+        } else {
+            floatingView.visibility = View.VISIBLE
+            windowManager.updateViewLayout(floatingView, params)
+        }
     }
 
     /**
@@ -242,12 +246,14 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
     /**
      * 退出动画执行结束/没有退出动画，一些回调、移除、检测是否需要关闭Service等操作
      */
-    private fun floatOver() {
+    private fun floatOver() = try {
         config.isAnim = false
         config.callbacks?.dismiss()
         config.floatCallbacks?.builder?.dismiss?.invoke()
-        windowManager.removeView(frameLayout)
         FloatManager.remove(config.floatTag)
+        windowManager.removeView(frameLayout)
+    } catch (e: Exception) {
+        Logger.e("浮窗关闭出现异常：$e")
     }
 
 }

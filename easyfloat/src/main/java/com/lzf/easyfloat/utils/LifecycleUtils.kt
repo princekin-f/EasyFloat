@@ -21,21 +21,30 @@ internal object LifecycleUtils {
         application.registerActivityLifecycleCallbacks(object :
             Application.ActivityLifecycleCallbacks {
 
-            override fun onActivityPaused(activity: Activity?) {}
+            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {}
+
+            override fun onActivityStarted(activity: Activity?) {
+                // 计算启动的activity数目
+                if (activity != null) activityCount++
+            }
 
             // 每次都要判断当前页面是否需要显示
             override fun onActivityResumed(activity: Activity?) = checkShow(activity)
 
-            override fun onActivityStarted(activity: Activity?) {}
+            override fun onActivityPaused(activity: Activity?) {}
+
+            override fun onActivityStopped(activity: Activity?) {
+                if (activity != null) {
+                    // 计算关闭的activity数目，并判断当前App是否处于后台
+                    activityCount--
+                    checkHide()
+                }
+            }
 
             override fun onActivityDestroyed(activity: Activity?) {}
 
             override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
 
-            // 主要判断当前App是否处于后台
-            override fun onActivityStopped(activity: Activity?) = checkHide(activity)
-
-            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {}
         })
     }
 
@@ -44,7 +53,6 @@ internal object LifecycleUtils {
      */
     private fun checkShow(activity: Activity?) {
         if (activity == null) return
-        activityCount++
         FloatManager.floatMap.forEach { (tag, manager) ->
             when {
                 // 仅后台显示模式下，隐藏浮窗
@@ -60,9 +68,7 @@ internal object LifecycleUtils {
     /**
      * 判断浮窗是否需要隐藏
      */
-    private fun checkHide(activity: Activity?) {
-        if (activity == null) return
-        activityCount--
+    private fun checkHide() {
         if (isForeground()) return
         FloatManager.floatMap.forEach { (tag, manager) ->
             // 当app处于后台时，不是仅前台显示的浮窗，都需要显示
