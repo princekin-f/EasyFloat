@@ -1,4 +1,7 @@
 ## 版本更新日志
+#### v 1.2.9：
+- [优化细节。](https://github.com/princekin-f/EasyFloat/issues/57)
+
 #### v 1.2.8：
 - 优化细节。
 

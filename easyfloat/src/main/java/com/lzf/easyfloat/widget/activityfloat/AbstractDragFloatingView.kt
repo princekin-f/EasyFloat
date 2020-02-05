@@ -189,8 +189,7 @@ abstract class AbstractDragFloatingView(
                         tempX = pair.first
                         tempY = pair.second
                     }
-                    else -> {
-                    }
+                    else -> Unit
                 }
                 // 更新位置
                 x = tempX

@@ -69,8 +69,6 @@ class SecondActivity : Activity() {
         openThird.setOnClickListener {
             startActivity(Intent(this, ThirdActivity::class.java))
         }
-
-
     }
 
 }
