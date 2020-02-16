@@ -16,8 +16,10 @@ import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
+import com.lzf.easyfloat.interfaces.OnDisplayHeight
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.interfaces.OnInvokeView
+import com.lzf.easyfloat.utils.DisplayUtils
 import com.lzf.easyfloat.utils.InputMethodUtils
 import kotlinx.android.synthetic.main.activity_third.*
 
@@ -109,6 +111,8 @@ class ThirdActivity : Activity() {
             .setAppFloatAnimator(AppFloatDefaultAnimator())
             // 设置系统浮窗的不需要显示的页面
             .setFilter(MainActivity::class.java, SecondActivity::class.java)
+            // 设置系统浮窗的有效显示高度（不包含虚拟导航栏的高度），基本用不到，除非有虚拟导航栏适配问题
+            .setDisplayHeight(OnDisplayHeight { context -> DisplayUtils.rejectedNavHeight(context) })
             // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
             // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
             .registerCallback {

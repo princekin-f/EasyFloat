@@ -73,7 +73,7 @@ class EasyFloat {
          */
         @JvmStatic
         @JvmOverloads
-        fun getFloatView(activity: Activity? = null, tag: String? = null): View? =
+        fun getFloatView(activity: Activity? = null, tag: String? = null) =
             manager(activity)?.getFloatView(tag)
 
         /**
@@ -81,7 +81,7 @@ class EasyFloat {
          */
         private fun manager(activity: Activity?): ActivityFloatManager? {
             val a: Activity? = activity ?: activityWr?.get()
-            return if (a != null) ActivityFloatManager(a) else null
+            return a?.run { ActivityFloatManager(this) }
         }
 
         // *************************** 以下系统浮窗的相关方法 ***************************
@@ -170,45 +170,42 @@ class EasyFloat {
         // 创建浮窗数据类，方便管理配置
         private val config = FloatConfig()
 
-        fun setSidePattern(sidePattern: SidePattern): Builder =
+        fun setSidePattern(sidePattern: SidePattern) =
             this.apply { config.sidePattern = sidePattern }
 
-        fun setShowPattern(showPattern: ShowPattern): Builder =
+        fun setShowPattern(showPattern: ShowPattern) =
             this.apply { config.showPattern = showPattern }
 
         @JvmOverloads
-        fun setLayout(layoutId: Int, invokeView: OnInvokeView? = null): Builder = this.apply {
+        fun setLayout(layoutId: Int, invokeView: OnInvokeView? = null) = this.apply {
             config.layoutId = layoutId
             config.invokeView = invokeView
         }
 
         @JvmOverloads
-        fun setGravity(gravity: Int, offsetX: Int = 0, offsetY: Int = 0): Builder = this.apply {
+        fun setGravity(gravity: Int, offsetX: Int = 0, offsetY: Int = 0) = this.apply {
             config.gravity = gravity
             config.offsetPair = Pair(offsetX, offsetY)
         }
 
-        fun setLocation(x: Int, y: Int): Builder = this.apply { config.locationPair = Pair(x, y) }
+        fun setLocation(x: Int, y: Int) = this.apply { config.locationPair = Pair(x, y) }
 
-        fun setTag(floatTag: String?): Builder = this.apply { config.floatTag = floatTag }
+        fun setTag(floatTag: String?) = this.apply { config.floatTag = floatTag }
 
-        fun setDragEnable(dragEnable: Boolean): Builder =
-            this.apply { config.dragEnable = dragEnable }
+        fun setDragEnable(dragEnable: Boolean) = this.apply { config.dragEnable = dragEnable }
 
         /**
          * 该方法针对系统浮窗，单页面浮窗无需设置
          */
-        fun hasEditText(hasEditText: Boolean): Builder =
-            this.apply { config.hasEditText = hasEditText }
+        fun hasEditText(hasEditText: Boolean) = this.apply { config.hasEditText = hasEditText }
 
         @Deprecated("建议直接在 setLayout 设置详细布局")
-        fun invokeView(invokeView: OnInvokeView): Builder =
-            this.apply { config.invokeView = invokeView }
+        fun invokeView(invokeView: OnInvokeView) = this.apply { config.invokeView = invokeView }
 
         /**
          * 通过传统接口，进行浮窗的各种状态回调
          */
-        fun registerCallbacks(callbacks: OnFloatCallbacks): Builder =
+        fun registerCallbacks(callbacks: OnFloatCallbacks) =
             this.apply { config.callbacks = callbacks }
 
         /**
@@ -219,20 +216,27 @@ class EasyFloat {
             config.floatCallbacks = FloatCallbacks().apply { registerListener(builder) }
         }
 
-        fun setAnimator(floatAnimator: OnFloatAnimator?): Builder =
+        fun setAnimator(floatAnimator: OnFloatAnimator?) =
             this.apply { config.floatAnimator = floatAnimator }
 
-        fun setAppFloatAnimator(appFloatAnimator: OnAppFloatAnimator?): Builder =
+        fun setAppFloatAnimator(appFloatAnimator: OnAppFloatAnimator?) =
             this.apply { config.appFloatAnimator = appFloatAnimator }
 
-        fun setMatchParent(widthMatch: Boolean = false, heightMatch: Boolean = false): Builder =
-            this.apply {
-                config.widthMatch = widthMatch
-                config.heightMatch = heightMatch
-            }
+        /**
+         * 设置屏幕的有效显示高度（不包含虚拟导航栏的高度）
+         */
+        fun setDisplayHeight(displayHeight: OnDisplayHeight) =
+            this.apply { config.displayHeight = displayHeight }
 
-        // 设置需要过滤的Activity，仅对系统浮窗有效
-        fun setFilter(vararg clazz: Class<*>): Builder = this.apply {
+        fun setMatchParent(widthMatch: Boolean = false, heightMatch: Boolean = false) = this.apply {
+            config.widthMatch = widthMatch
+            config.heightMatch = heightMatch
+        }
+
+        /**
+         * 设置需要过滤的Activity，仅对系统浮窗有效
+         */
+        fun setFilter(vararg clazz: Class<*>) = this.apply {
             clazz.forEach {
                 config.filterSet.add(it.name)
                 // 过滤掉当前Activity

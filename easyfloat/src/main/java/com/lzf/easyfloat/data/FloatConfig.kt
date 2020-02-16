@@ -5,11 +5,8 @@ import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
-import com.lzf.easyfloat.interfaces.OnAppFloatAnimator
-import com.lzf.easyfloat.interfaces.OnFloatAnimator
-import com.lzf.easyfloat.interfaces.OnFloatCallbacks
-import com.lzf.easyfloat.interfaces.OnInvokeView
-import com.lzf.easyfloat.interfaces.FloatCallbacks
+import com.lzf.easyfloat.interfaces.*
+import com.lzf.easyfloat.utils.DefaultDisplayHeight
 
 /**
  * @author: liuzhenfeng
@@ -63,6 +60,9 @@ data class FloatConfig(
     // 出入动画
     var floatAnimator: OnFloatAnimator? = DefaultAnimator(),
     var appFloatAnimator: OnAppFloatAnimator? = AppFloatDefaultAnimator(),
+
+    // 设置屏幕的有效显示高度（不包含虚拟导航栏的高度），仅针对系统浮窗，一般不用复写
+    var displayHeight: OnDisplayHeight = DefaultDisplayHeight(),
 
     // 不需要显示系统浮窗的页面集合，参数为类名
     val filterSet: MutableSet<String> = mutableSetOf(),

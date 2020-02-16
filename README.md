@@ -44,7 +44,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:1.2.9'
+    implementation 'com.github.princekin-f:EasyFloat:1.3.0'
 }
 ```
 
@@ -80,7 +80,7 @@ EasyFloat.with(this)
     .setSidePattern(SidePattern.RESULT_HORIZONTAL)
     // 设置浮窗的标签，用于区分多个浮窗
     .setTag("testFloat")
-    // 设置浮窗是否可拖拽
+    // 设置浮窗是否可拖拽，默认可拖拽
     .setDragEnable(true)
     // 系统浮窗是否包含EditText，仅针对系统浮窗，默认不包含
     .hasEditText(false)
@@ -96,6 +96,8 @@ EasyFloat.with(this)
     .setAppFloatAnimator(AppFloatDefaultAnimator())
     // 设置系统浮窗的不需要显示的页面
     .setFilter(MainActivity::class.java, SecondActivity::class.java)
+    // 设置系统浮窗的有效显示高度（不包含虚拟导航栏的高度），基本用不到，除非有虚拟导航栏适配问题
+    .setDisplayHeight(OnDisplayHeight { context -> DisplayUtils.rejectedNavHeight(context) })
     // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
     // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
     .registerCallback {

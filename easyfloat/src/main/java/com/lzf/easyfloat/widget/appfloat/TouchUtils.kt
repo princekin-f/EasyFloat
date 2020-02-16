@@ -67,7 +67,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 lastY = event.rawY
                 // 屏幕宽高需要每次获取，可能会有屏幕旋转、虚拟导航栏的状态变化
                 parentWidth = DisplayUtils.getScreenWidth(context)
-                parentHeight = DisplayUtils.rejectedNavHeight(context)
+                parentHeight = config.displayHeight.getDisplayRealHeight(context)
                 // 获取在整个屏幕内的绝对坐标
                 view.getLocationOnScreen(location)
                 // 通过绝对高度和相对高度比较，判断包含顶部状态栏

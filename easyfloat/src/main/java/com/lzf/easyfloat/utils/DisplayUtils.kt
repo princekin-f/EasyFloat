@@ -10,10 +10,9 @@ import android.util.Log
 import android.view.*
 import com.lzf.easyfloat.permission.rom.RomUtils
 
-
 /**
  * @author: liuzhenfeng
- * @function:
+ * @function: 屏幕显示相关工具类
  * @date: 2019-05-23  15:23
  */
 object DisplayUtils {
@@ -90,8 +89,7 @@ object DisplayUtils {
      * 获取导航栏当前的高度
      */
     fun getNavigationBarCurrentHeight(context: Context) =
-        if (isNavigationBarShow(context)) getNavigationBarHeight(context) else 0
-
+        if (hasNavigationBar(context)) getNavigationBarHeight(context) else 0
 
     /**
      * 判断虚拟导航栏是否显示
@@ -99,10 +97,11 @@ object DisplayUtils {
      * @param context 上下文对象
      * @return true(显示虚拟导航栏)，false(不显示或不支持虚拟导航栏)
      */
-    fun isNavigationBarShow(context: Context) = when {
-        RomUtils.checkIsHuaweiRom() -> huaweiHasNavigationBar(context)
-        RomUtils.checkIsMiuiRom() -> !isMiuiFullScreen(context)
-        RomUtils.checkIsVivoRom() -> !isVivoFullScreen(context)
+    fun hasNavigationBar(context: Context) = when {
+        getNavigationBarHeight(context) == 0 -> false
+        RomUtils.checkIsHuaweiRom() && isHuaWeiHideNav(context) -> false
+        RomUtils.checkIsMiuiRom() && isMiuiFullScreen(context) -> false
+        RomUtils.checkIsVivoRom() && isVivoFullScreen(context) -> false
         else -> isHasNavigationBar(context)
     }
 
@@ -116,35 +115,15 @@ object DisplayUtils {
     }
 
     /**
-     * 华为手机是否显示 NavigationBar
+     * 华为手机是否隐藏了虚拟导航栏
+     * @return true 表示隐藏了，false 表示未隐藏
      */
-    private fun huaweiHasNavigationBar(context: Context): Boolean {
-        var hasNavigationBar = false
-        val rs = context.resources
-        val id = rs.getIdentifier("config_showNavigationBar", "bool", "android")
-        if (id > 0) hasNavigationBar = rs.getBoolean(id)
-
-        try {
-            val systemPropertiesClass = Class.forName("android.os.SystemProperties")
-            val m = systemPropertiesClass.getMethod("get", String::class.java)
-            val navBarOverride =
-                m.invoke(systemPropertiesClass, "qemu.hw.mainkeys") as String
-            // 判断是否隐藏了底部虚拟导航
-            val navigationBarIsMin =
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    Settings.System.getInt(context.contentResolver, "navigationbar_is_min", 0)
-                } else {
-                    Settings.Global.getInt(context.contentResolver, "navigationbar_is_min", 0)
-                }
-            if ("1" == navBarOverride || 1 == navigationBarIsMin) {
-                hasNavigationBar = false
-            } else if ("0" == navBarOverride) {
-                hasNavigationBar = true
-            }
-        } catch (e: Exception) {
-        }
-        return hasNavigationBar
-    }
+    private fun isHuaWeiHideNav(context: Context) =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Settings.System.getInt(context.contentResolver, "navigationbar_is_min", 0)
+        } else {
+            Settings.Global.getInt(context.contentResolver, "navigationbar_is_min", 0)
+        } != 0
 
     /**
      * 小米手机是否开启手势操作
