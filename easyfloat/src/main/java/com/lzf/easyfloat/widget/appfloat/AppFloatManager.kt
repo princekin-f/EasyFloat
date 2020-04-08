@@ -92,14 +92,14 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
                 // 如果设置了过滤当前页，或者设置仅后台显示，隐藏浮窗，否则执行入场动画
                 if (config.filterSelf || config.showPattern == ShowPattern.BACKGROUND)
                     setVisible(View.GONE) else enterAnim(floatingView)
+
+                // 设置callbacks
+                config.layoutView = floatingView
+                config.invokeView?.invoke(floatingView)
+                config.callbacks?.createdResult(true, null, floatingView)
+                config.floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)
             }
         }
-
-        // 设置callbacks
-        config.layoutView = floatingView
-        config.invokeView?.invoke(floatingView)
-        config.callbacks?.createdResult(true, null, floatingView)
-        config.floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)
     }
 
     /**

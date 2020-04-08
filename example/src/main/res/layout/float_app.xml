@@ -58,4 +58,10 @@
             android:max="100"
             android:progress="66" />
 
+<!--    <ListView-->
+<!--            android:id="@+id/lv_test"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="120dp"-->
+<!--            android:layout_below="@id/seekBar" />-->
+
 </RelativeLayout>

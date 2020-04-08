@@ -1,4 +1,7 @@
 ## 版本更新日志
+#### v 1.3.1:
+- 优化`createdResult`回调。
+
 #### v 1.3.0：
 - 可动态适配虚拟导航栏：`setDisplayHeight(displayHeight: OnDisplayHeight)`
 
