@@ -20,14 +20,12 @@ open class AppFloatDefaultAnimator : OnAppFloatAnimator {
         params: WindowManager.LayoutParams,
         windowManager: WindowManager,
         sidePattern: SidePattern
-    ): Animator? {
-        val value = initValue(view, params, windowManager)
-        val animator = ValueAnimator.ofInt(value, params.x).setDuration(500)
-        animator.addUpdateListener {
+    ): Animator? = ValueAnimator.ofInt(initValue(view, params, windowManager), params.x).apply {
+        duration = 500
+        addUpdateListener {
             params.x = it.animatedValue as Int
             windowManager.updateViewLayout(view, params)
         }
-        return animator
     }
 
     override fun exitAnim(
@@ -35,14 +33,11 @@ open class AppFloatDefaultAnimator : OnAppFloatAnimator {
         params: WindowManager.LayoutParams,
         windowManager: WindowManager,
         sidePattern: SidePattern
-    ): Animator? {
-        val value = initValue(view, params, windowManager)
-        val animator = ValueAnimator.ofInt(params.x, value).setDuration(500)
-        animator.addUpdateListener {
+    ): Animator? = ValueAnimator.ofInt(params.x, initValue(view, params, windowManager)).apply {
+        addUpdateListener {
             params.x = it.animatedValue as Int
             windowManager.updateViewLayout(view, params)
         }
-        return animator
     }
 
     private fun initValue(

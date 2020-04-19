@@ -2,6 +2,7 @@ package com.lzf.easyfloat.widget.appfloat
 
 import android.content.Context
 import android.view.View
+import com.lzf.easyfloat.WARN_REPEATED_TAG
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.utils.Logger
 
@@ -23,15 +24,18 @@ internal object FloatManager {
         floatMap[config.floatTag!!] = AppFloatManager(context.applicationContext, config)
             .apply { createFloat() }
     } else {
-        config.callbacks?.createdResult(false, "请为系统浮窗设置不同的tag", null)
-        Logger.w("请为系统浮窗设置不同的tag")
+        config.callbacks?.createdResult(false, WARN_REPEATED_TAG, null)
+        Logger.w(WARN_REPEATED_TAG)
     }
 
     /**
      * 设置浮窗的显隐，用户主动调用隐藏时，needShow需要为false
      */
-    fun visible(isShow: Boolean, tag: String? = null, needShow: Boolean = true) =
-        floatMap[getTag(tag)]?.setVisible(if (isShow) View.VISIBLE else View.GONE, needShow)
+    fun visible(
+        isShow: Boolean,
+        tag: String? = null,
+        needShow: Boolean = floatMap[tag]?.config?.needShow ?: true
+    ) = floatMap[getTag(tag)]?.setVisible(if (isShow) View.VISIBLE else View.GONE, needShow)
 
     /**
      * 关闭浮窗，执行浮窗的退出动画

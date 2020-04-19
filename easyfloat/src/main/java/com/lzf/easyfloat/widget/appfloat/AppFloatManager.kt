@@ -13,6 +13,7 @@ import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.interfaces.OnFloatTouchListener
 import com.lzf.easyfloat.utils.DisplayUtils
+import com.lzf.easyfloat.utils.LifecycleUtils
 import com.lzf.easyfloat.utils.Logger
 
 /**
@@ -89,9 +90,11 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         frameLayout?.layoutListener = object : ParentFrameLayout.OnLayoutListener {
             override fun onLayout() {
                 setGravity(frameLayout)
-                // 如果设置了过滤当前页，或者设置仅后台显示，隐藏浮窗，否则执行入场动画
-                if (config.filterSelf || config.showPattern == ShowPattern.BACKGROUND)
-                    setVisible(View.GONE) else enterAnim(floatingView)
+                // 如果设置了过滤当前页，或者设置仅后台显示，或者在后台创建前台浮窗。隐藏浮窗，否则执行入场动画
+                if (config.filterSelf
+                    || config.showPattern == ShowPattern.BACKGROUND
+                    || (config.showPattern == ShowPattern.FOREGROUND && !LifecycleUtils.isForeground())
+                ) setVisible(View.GONE) else enterAnim(floatingView)
 
                 // 设置callbacks
                 config.layoutView = floatingView
@@ -244,7 +247,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
     }
 
     /**
-     * 退出动画执行结束/没有退出动画，一些回调、移除、检测是否需要关闭Service等操作
+     * 退出动画执行结束/没有退出动画，进行回调、移除等操作
      */
     private fun floatOver() = try {
         config.isAnim = false

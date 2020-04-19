@@ -54,13 +54,13 @@ internal object LifecycleUtils {
     private fun checkShow(activity: Activity?) {
         if (activity == null) return
         FloatManager.floatMap.forEach { (tag, manager) ->
-            when {
-                // 仅后台显示模式下，隐藏浮窗
-                manager.config.showPattern == ShowPattern.BACKGROUND -> setVisible(false, tag)
-                // 如果没有手动隐藏浮窗，需要考虑过滤信息
-                manager.config.needShow -> setVisible(
-                    !manager.config.filterSet.contains(activity.componentName.className), tag
-                )
+            manager.config.apply {
+                when {
+                    // 仅后台显示模式下，隐藏浮窗
+                    showPattern == ShowPattern.BACKGROUND -> setVisible(false, tag)
+                    // 如果没有手动隐藏浮窗，需要考虑过滤信息
+                    needShow -> setVisible(!filterSet.contains(activity.componentName.className), tag)
+                }
             }
         }
     }
@@ -71,12 +71,14 @@ internal object LifecycleUtils {
     private fun checkHide() {
         if (isForeground()) return
         FloatManager.floatMap.forEach { (tag, manager) ->
-            // 当app处于后台时，不是仅前台显示的浮窗，都需要显示
-            setVisible(manager.config.showPattern != ShowPattern.FOREGROUND, tag)
+            manager.config.apply {
+                // 当app处于后台时，不是仅前台显示的浮窗，如果没有手动隐藏，都需要显示
+                setVisible(showPattern != ShowPattern.FOREGROUND && needShow, tag)
+            }
         }
     }
 
-    private fun isForeground() = activityCount > 0
+    fun isForeground() = activityCount > 0
 
     private fun setVisible(isShow: Boolean = isForeground(), tag: String?) =
         FloatManager.visible(isShow, tag)

@@ -18,6 +18,7 @@ import java.lang.ref.WeakReference
 
 /**
  * @author: liuzhenfeng
+ * @github：https://github.com/princekin-f
  * @function: 悬浮窗使用工具类
  * @date: 2019-06-27  15:22
  */
@@ -79,10 +80,8 @@ class EasyFloat {
         /**
          * 获取Activity浮窗管理类
          */
-        private fun manager(activity: Activity?): ActivityFloatManager? {
-            val a: Activity? = activity ?: activityWr?.get()
-            return a?.run { ActivityFloatManager(this) }
-        }
+        private fun manager(activity: Activity?) =
+            (activity ?: activityWr?.get())?.run { ActivityFloatManager(this) }
 
         // *************************** 以下系统浮窗的相关方法 ***************************
         /**
@@ -104,7 +103,7 @@ class EasyFloat {
          */
         @JvmStatic
         @JvmOverloads
-        fun showAppFloat(tag: String? = null) = FloatManager.visible(true, tag)
+        fun showAppFloat(tag: String? = null) = FloatManager.visible(true, tag, true)
 
         /**
          * 设置系统浮窗是否可拖拽，先获取浮窗的config，后修改相应属性
@@ -134,31 +133,33 @@ class EasyFloat {
         @JvmStatic
         @JvmOverloads
         fun filterActivity(activity: Activity, tag: String? = null) =
-            getConfig(tag).let { it?.filterSet?.add(activity.componentName.className) }
+            getFilterSet(tag)?.add(activity.componentName.className)
 
         @JvmStatic
         @JvmOverloads
         fun filterActivities(tag: String? = null, vararg clazz: Class<*>) =
-            clazz.forEach { c -> getConfig(tag).let { it?.filterSet?.add(c.name) } }
+            getFilterSet(tag)?.addAll(clazz.map { it.name })
 
         @JvmStatic
         @JvmOverloads
         fun removeFilter(activity: Activity, tag: String? = null) =
-            getConfig(tag).let { it?.filterSet?.remove(activity.componentName.className) }
+            getFilterSet(tag)?.remove(activity.componentName.className)
 
         @JvmStatic
         @JvmOverloads
         fun removeFilters(tag: String? = null, vararg clazz: Class<*>) =
-            clazz.forEach { c -> getConfig(tag).let { it?.filterSet?.remove(c.name) } }
+            getFilterSet(tag)?.removeAll(clazz.map { it.name })
 
         @JvmStatic
         @JvmOverloads
-        fun clearFilters(tag: String? = null) = getConfig(tag)?.filterSet?.clear()
+        fun clearFilters(tag: String? = null) = getFilterSet(tag)?.clear()
 
         /**
          * 获取系统浮窗的config
          */
         private fun getConfig(tag: String?) = FloatManager.getAppFloatManager(tag)?.config
+
+        private fun getFilterSet(tag: String?) = getConfig(tag)?.filterSet
     }
 
 
@@ -170,65 +171,61 @@ class EasyFloat {
         // 创建浮窗数据类，方便管理配置
         private val config = FloatConfig()
 
-        fun setSidePattern(sidePattern: SidePattern) =
-            this.apply { config.sidePattern = sidePattern }
+        fun setSidePattern(sidePattern: SidePattern) = apply { config.sidePattern = sidePattern }
 
-        fun setShowPattern(showPattern: ShowPattern) =
-            this.apply { config.showPattern = showPattern }
+        fun setShowPattern(showPattern: ShowPattern) = apply { config.showPattern = showPattern }
 
         @JvmOverloads
-        fun setLayout(layoutId: Int, invokeView: OnInvokeView? = null) = this.apply {
+        fun setLayout(layoutId: Int, invokeView: OnInvokeView? = null) = apply {
             config.layoutId = layoutId
             config.invokeView = invokeView
         }
 
         @JvmOverloads
-        fun setGravity(gravity: Int, offsetX: Int = 0, offsetY: Int = 0) = this.apply {
+        fun setGravity(gravity: Int, offsetX: Int = 0, offsetY: Int = 0) = apply {
             config.gravity = gravity
             config.offsetPair = Pair(offsetX, offsetY)
         }
 
-        fun setLocation(x: Int, y: Int) = this.apply { config.locationPair = Pair(x, y) }
+        fun setLocation(x: Int, y: Int) = apply { config.locationPair = Pair(x, y) }
 
-        fun setTag(floatTag: String?) = this.apply { config.floatTag = floatTag }
+        fun setTag(floatTag: String?) = apply { config.floatTag = floatTag }
 
-        fun setDragEnable(dragEnable: Boolean) = this.apply { config.dragEnable = dragEnable }
+        fun setDragEnable(dragEnable: Boolean) = apply { config.dragEnable = dragEnable }
 
         /**
          * 该方法针对系统浮窗，单页面浮窗无需设置
          */
-        fun hasEditText(hasEditText: Boolean) = this.apply { config.hasEditText = hasEditText }
+        fun hasEditText(hasEditText: Boolean) = apply { config.hasEditText = hasEditText }
 
         @Deprecated("建议直接在 setLayout 设置详细布局")
-        fun invokeView(invokeView: OnInvokeView) = this.apply { config.invokeView = invokeView }
+        fun invokeView(invokeView: OnInvokeView) = apply { config.invokeView = invokeView }
 
         /**
          * 通过传统接口，进行浮窗的各种状态回调
          */
-        fun registerCallbacks(callbacks: OnFloatCallbacks) =
-            this.apply { config.callbacks = callbacks }
+        fun registerCallbacks(callbacks: OnFloatCallbacks) = apply { config.callbacks = callbacks }
 
         /**
          * 针对kotlin 用户，传入带FloatCallbacks.Builder 返回值的 lambda，可按需回调
          * 为了避免方法重载时 出现编译错误的情况，更改了方法名
          */
-        fun registerCallback(builder: FloatCallbacks.Builder.() -> Unit): Builder = this.apply {
-            config.floatCallbacks = FloatCallbacks().apply { registerListener(builder) }
-        }
+        fun registerCallback(builder: FloatCallbacks.Builder.() -> Unit) =
+            apply { config.floatCallbacks = FloatCallbacks().apply { registerListener(builder) } }
 
         fun setAnimator(floatAnimator: OnFloatAnimator?) =
-            this.apply { config.floatAnimator = floatAnimator }
+            apply { config.floatAnimator = floatAnimator }
 
         fun setAppFloatAnimator(appFloatAnimator: OnAppFloatAnimator?) =
-            this.apply { config.appFloatAnimator = appFloatAnimator }
+            apply { config.appFloatAnimator = appFloatAnimator }
 
         /**
          * 设置屏幕的有效显示高度（不包含虚拟导航栏的高度）
          */
         fun setDisplayHeight(displayHeight: OnDisplayHeight) =
-            this.apply { config.displayHeight = displayHeight }
+            apply { config.displayHeight = displayHeight }
 
-        fun setMatchParent(widthMatch: Boolean = false, heightMatch: Boolean = false) = this.apply {
+        fun setMatchParent(widthMatch: Boolean = false, heightMatch: Boolean = false) = apply {
             config.widthMatch = widthMatch
             config.heightMatch = heightMatch
         }
@@ -236,7 +233,7 @@ class EasyFloat {
         /**
          * 设置需要过滤的Activity，仅对系统浮窗有效
          */
-        fun setFilter(vararg clazz: Class<*>) = this.apply {
+        fun setFilter(vararg clazz: Class<*>) = apply {
             clazz.forEach {
                 config.filterSet.add(it.name)
                 // 过滤掉当前Activity
@@ -255,9 +252,9 @@ class EasyFloat {
             // 申请浮窗权限
             else -> PermissionUtils.requestPermission(activity, this)
         } else {
-            config.callbacks?.createdResult(false, "未设置浮窗布局文件", null)
-            config.floatCallbacks?.builder?.createdResult?.invoke(false, "未设置浮窗布局文件", null)
-            Logger.w("未设置浮窗布局文件")
+            config.callbacks?.createdResult(false, WARN_NO_LAYOUT, null)
+            config.floatCallbacks?.builder?.createdResult?.invoke(false, WARN_NO_LAYOUT, null)
+            Logger.w(WARN_NO_LAYOUT)
         }
 
         /**
@@ -274,9 +271,9 @@ class EasyFloat {
          * 申请浮窗权限的结果回调
          */
         override fun permissionResult(isOpen: Boolean) = if (isOpen) createAppFloat() else {
-            config.callbacks?.createdResult(false, "系统浮窗权限不足，开启失败", null)
-            config.floatCallbacks?.builder?.createdResult?.invoke(false, "系统浮窗权限不足，开启失败", null)
-            Logger.w("系统浮窗权限不足，开启失败")
+            config.callbacks?.createdResult(false, WARN_PERMISSION, null)
+            config.floatCallbacks?.builder?.createdResult?.invoke(false, WARN_PERMISSION, null)
+            Logger.w(WARN_PERMISSION)
         }
     }
 
