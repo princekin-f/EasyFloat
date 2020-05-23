@@ -90,17 +90,19 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
         frameLayout?.layoutListener = object : ParentFrameLayout.OnLayoutListener {
             override fun onLayout() {
                 setGravity(frameLayout)
-                // 如果设置了过滤当前页，或者设置仅后台显示，或者在后台创建前台浮窗。隐藏浮窗，否则执行入场动画
-                if (config.filterSelf
-                    || config.showPattern == ShowPattern.BACKGROUND
-                    || (config.showPattern == ShowPattern.FOREGROUND && !LifecycleUtils.isForeground())
-                ) setVisible(View.GONE) else enterAnim(floatingView)
+                config.apply {
+                    // 如果设置了过滤当前页，或者后台显示前台创建、前台显示后台创建，隐藏浮窗，否则执行入场动画
+                    if (filterSelf
+                        || (showPattern == ShowPattern.BACKGROUND && LifecycleUtils.isForeground())
+                        || (showPattern == ShowPattern.FOREGROUND && !LifecycleUtils.isForeground())
+                    ) setVisible(View.GONE) else enterAnim(floatingView)
 
-                // 设置callbacks
-                config.layoutView = floatingView
-                config.invokeView?.invoke(floatingView)
-                config.callbacks?.createdResult(true, null, floatingView)
-                config.floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)
+                    // 设置callbacks
+                    layoutView = floatingView
+                    invokeView?.invoke(floatingView)
+                    callbacks?.createdResult(true, null, floatingView)
+                    floatCallbacks?.builder?.createdResult?.invoke(true, null, floatingView)
+                }
             }
         }
     }
@@ -251,8 +253,6 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
      */
     private fun floatOver() = try {
         config.isAnim = false
-        config.callbacks?.dismiss()
-        config.floatCallbacks?.builder?.dismiss?.invoke()
         FloatManager.remove(config.floatTag)
         windowManager.removeView(frameLayout)
     } catch (e: Exception) {

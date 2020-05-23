@@ -366,18 +366,14 @@ abstract class AbstractDragFloatingView(
         val manager: AnimatorManager? =
             AnimatorManager(config.floatAnimator, this, parentView!!, config.sidePattern)
         val animator: Animator? = manager?.exitAnim()
-        if (animator == null) {
-            config.callbacks?.dismiss()
-            config.floatCallbacks?.builder?.dismiss?.invoke()
-            parentView?.removeView(this)
-        } else {
+        // 动画为空，直接移除浮窗视图
+        if (animator == null) parentView?.removeView(this)
+        else {
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {}
 
                 override fun onAnimationEnd(animation: Animator?) {
                     config.isAnim = false
-                    config.callbacks?.dismiss()
-                    config.floatCallbacks?.builder?.dismiss?.invoke()
                     parentView?.removeView(this@AbstractDragFloatingView)
                 }
 
@@ -389,6 +385,12 @@ abstract class AbstractDragFloatingView(
             })
             animator.start()
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        config.callbacks?.dismiss()
+        config.floatCallbacks?.builder?.dismiss?.invoke()
     }
 
 }

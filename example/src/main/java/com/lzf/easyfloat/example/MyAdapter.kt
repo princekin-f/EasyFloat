@@ -1,6 +1,5 @@
 package com.lzf.easyfloat.example
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -17,14 +16,31 @@ import com.lzf.easyfloat.EasyFloat
  * @function:
  * @date: 2020/4/16  13:57
  */
-class MyAdapter(context: Context, private val stringArray: Array<String>) :
-    ArrayAdapter<String>(context, R.layout.item_simple_list, stringArray) {
+class MyAdapter(
+    context: Context,
+    stringArray: Array<String>,
+    private val resourceId: Int = R.layout.item_simple_list
+) : ArrayAdapter<String>(context, resourceId, stringArray) {
 
-    @SuppressLint("ViewHolder")
+    inner class ViewHolder(view: View) {
+        val textView: TextView = view.findViewById(R.id.tv_item)
+        val checkBox: CheckBox = view.findViewById(R.id.checkbox)
+    }
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_simple_list, null)
-        view.findViewById<TextView>(R.id.tv_item).text = stringArray[position]
-        view.findViewById<CheckBox>(R.id.checkbox).apply {
+        val view: View
+        val viewHolder: ViewHolder
+        if (convertView == null) {
+            view = LayoutInflater.from(context).inflate(resourceId, parent, false)
+            viewHolder = ViewHolder(view)
+            view.tag = viewHolder
+        } else {
+            view = convertView
+            viewHolder = view.tag as ViewHolder
+        }
+
+        viewHolder.textView.text = getItem(position)
+        viewHolder.checkBox.apply {
             setOnTouchListener { _, event ->
                 logger.e("setOnTouchListener: ${event.action}")
                 EasyFloat.appFloatDragEnable(event?.action == MotionEvent.ACTION_CANCEL)
@@ -35,9 +51,7 @@ class MyAdapter(context: Context, private val stringArray: Array<String>) :
                 logger.e("点击了：$position   isChecked：$isChecked")
             }
         }
-//        view.setOnClickListener {
-//            logger.e("点击了item： $position")
-//        }
         return view
     }
+
 }

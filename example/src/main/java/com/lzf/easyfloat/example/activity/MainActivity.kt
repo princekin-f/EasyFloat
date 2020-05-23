@@ -2,7 +2,6 @@ package com.lzf.easyfloat.example.activity
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
@@ -14,6 +13,7 @@ import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.example.logger
+import com.lzf.easyfloat.example.startActivity
 import com.lzf.easyfloat.example.widget.RoundProgressBar
 import com.lzf.easyfloat.example.widget.ScaleImage
 import com.lzf.easyfloat.interfaces.OnInvokeView
@@ -21,6 +21,7 @@ import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.PermissionUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.float_seekbar.*
+import kotlin.math.max
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             show4 -> EasyFloat.showAppFloat("scaleFloat")
             dismiss4 -> EasyFloat.dismissAppFloat("scaleFloat")
 
-            openSecond -> startActivity(Intent(this, SecondActivity::class.java))
+            openSecond -> startActivity<SecondActivity>(this)
 
             else -> return
         }
@@ -104,7 +105,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                 touchEvent { view, event ->
                     if (event.action == MotionEvent.ACTION_DOWN) {
-                        view.findViewById<TextView>(R.id.textView).run {
+                        view.findViewById<TextView>(R.id.textView).apply {
                             text = "拖一下试试"
                             setBackgroundResource(R.drawable.corners_green)
                         }
@@ -112,14 +113,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
 
                 drag { view, _ ->
-                    view.findViewById<TextView>(R.id.textView).run {
+                    view.findViewById<TextView>(R.id.textView).apply {
                         text = "我被拖拽..."
                         setBackgroundResource(R.drawable.corners_red)
                     }
                 }
 
                 dragEnd {
-                    it.findViewById<TextView>(R.id.textView).run {
+                    it.findViewById<TextView>(R.id.textView).apply {
                         text = "拖拽结束"
                         val location = IntArray(2)
                         getLocationOnScreen(location)
@@ -170,7 +171,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     EasyFloat.dismissAppFloat()
                 }
                 it.findViewById<TextView>(R.id.tvOpenMain).setOnClickListener {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity<MainActivity>(this)
                 }
                 it.findViewById<CheckBox>(R.id.checkbox)
                     .setOnCheckedChangeListener { _, isChecked ->
@@ -224,8 +225,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 it.findViewById<ScaleImage>(R.id.ivScale).onScaledListener =
                     object : ScaleImage.OnScaledListener {
                         override fun onScaled(x: Float, y: Float, event: MotionEvent) {
-                            params.width += x.toInt()
-                            params.height += y.toInt()
+                            params.width = max(params.width + x.toInt(), 100)
+                            params.height = max(params.height + y.toInt(), 100)
                             content.layoutParams = params
                         }
                     }

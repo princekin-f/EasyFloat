@@ -10,7 +10,7 @@ import com.lzf.easyfloat.EasyFloat
  */
 object logger {
 
-    private var tag = "EasyFloat--->"
+    var tag = "EasyFloat--->"
 
     // 设为false关闭日志
     private var logEnable = true
@@ -69,3 +69,6 @@ object logger {
     }
 
 }
+
+fun <T : Any> T.log(desc: String = this::class.java.simpleName, tag: String = logger.tag) =
+    Log.e(tag, "$desc = $this")

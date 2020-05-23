@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
+import com.lzf.easyfloat.example.startActivity
 import com.lzf.easyfloat.interfaces.OnFloatAnimator
 import com.lzf.easyfloat.interfaces.OnInvokeView
 import kotlinx.android.synthetic.main.activity_second.*
@@ -66,9 +66,7 @@ class SecondActivity : Activity() {
             }
         }
 
-        openThird.setOnClickListener {
-            startActivity(Intent(this, ThirdActivity::class.java))
-        }
+        openThird.setOnClickListener { startActivity<ThirdActivity>(this) }
     }
 
 }

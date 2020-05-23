@@ -8,7 +8,7 @@ import com.lzf.easyfloat.widget.appfloat.FloatManager
 
 /**
  * @author: liuzhenfeng
- * @function: 通过生命周期回调，判断系统浮窗的过滤信息，以及app是否位于前台，通过广播通知浮窗service
+ * @function: 通过生命周期回调，判断系统浮窗的过滤信息，以及app是否位于前台，控制浮窗显隐
  * @date: 2019-07-11  15:51
  */
 internal object LifecycleUtils {
@@ -59,7 +59,7 @@ internal object LifecycleUtils {
                     // 仅后台显示模式下，隐藏浮窗
                     showPattern == ShowPattern.BACKGROUND -> setVisible(false, tag)
                     // 如果没有手动隐藏浮窗，需要考虑过滤信息
-                    needShow -> setVisible(!filterSet.contains(activity.componentName.className), tag)
+                    needShow -> setVisible(activity.componentName.className !in filterSet, tag)
                 }
             }
         }

@@ -64,4 +64,9 @@ internal class ParentFrameLayout(
         return super.dispatchKeyEventPreIme(event)
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        config.callbacks?.dismiss()
+        config.floatCallbacks?.builder?.dismiss?.invoke()
+    }
 }

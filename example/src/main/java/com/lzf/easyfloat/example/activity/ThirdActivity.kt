@@ -1,7 +1,6 @@
 package com.lzf.easyfloat.example.activity
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
@@ -16,6 +15,7 @@ import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
+import com.lzf.easyfloat.example.startActivity
 import com.lzf.easyfloat.interfaces.OnDisplayHeight
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.interfaces.OnInvokeView
@@ -34,18 +34,14 @@ class ThirdActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_third)
 
-        openEditTextFloat.setOnClickListener {
-            showEditTextFloat()
-        }
+        openEditTextFloat.setOnClickListener { showEditTextFloat() }
 
-        openJavaTestActivity.setOnClickListener {
-            startActivity(Intent(this, JavaTestActivity::class.java))
-        }
+        openJavaTestActivity.setOnClickListener { startActivity<JavaTestActivity>(this) }
 
         changeBackground.setOnClickListener {
-            EasyFloat.getAppFloatView()?.also {
-                it.findViewById<RelativeLayout>(R.id.rlContent)
-                    .setBackgroundColor(ContextCompat.getColor(this, R.color.violet))
+            EasyFloat.getAppFloatView()?.apply {
+                findViewById<RelativeLayout>(R.id.rlContent)
+                    .setBackgroundColor(ContextCompat.getColor(this@ThirdActivity, R.color.violet))
 
                 // ...其他View操作
             }

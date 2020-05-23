@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 
 /**
  * @author: liuzhenfeng
  * @function: 通过消费触摸事件，监听手指滑动距离的变化，设置浮窗的大小
  * @date: 2019-08-05  09:55
  */
-class ScaleImage(context: Context, attrs: AttributeSet? = null) : ImageView(context, attrs) {
+class ScaleImage(context: Context, attrs: AttributeSet? = null) : AppCompatImageView(context, attrs) {
 
     private var touchDownX = 0f
     private var touchDownY = 0f
