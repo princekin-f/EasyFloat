@@ -31,12 +31,15 @@ abstract class AbstractDragFloatingView(
 
     // 浮窗配置
     var config: FloatConfig
+
     // 悬浮的父布局高度、宽度
     private var parentHeight = 0
     private var parentWidth = 0
+
     // 终点坐标
     private var lastX = 0
     private var lastY = 0
+
     // 浮窗各边距离父布局的距离
     private var leftDistance = 0
     private var rightDistance = 0
@@ -204,15 +207,17 @@ abstract class AbstractDragFloatingView(
                 // 如果是拖动状态下即非点击按压事件
                 isPressed = !config.isDrag
 
-                when (config.sidePattern) {
-                    SidePattern.RESULT_LEFT,
-                    SidePattern.RESULT_RIGHT,
-                    SidePattern.RESULT_TOP,
-                    SidePattern.RESULT_BOTTOM,
-                    SidePattern.RESULT_HORIZONTAL,
-                    SidePattern.RESULT_VERTICAL,
-                    SidePattern.RESULT_SIDE -> sideAnim()
-                    else -> if (config.isDrag) touchOver()
+                if (config.isDrag) {
+                    when (config.sidePattern) {
+                        SidePattern.RESULT_LEFT,
+                        SidePattern.RESULT_RIGHT,
+                        SidePattern.RESULT_TOP,
+                        SidePattern.RESULT_BOTTOM,
+                        SidePattern.RESULT_HORIZONTAL,
+                        SidePattern.RESULT_VERTICAL,
+                        SidePattern.RESULT_SIDE -> sideAnim()
+                        else -> touchOver()
+                    }
                 }
             }
 

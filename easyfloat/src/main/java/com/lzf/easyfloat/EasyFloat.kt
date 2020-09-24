@@ -89,21 +89,21 @@ class EasyFloat {
 
         // *************************** 以下系统浮窗的相关方法 ***************************
         /**
-         * 关闭系统级浮窗，发送广播消息，在Service内部接收广播
+         * 关闭系统级浮窗
          */
         @JvmStatic
         @JvmOverloads
         fun dismissAppFloat(tag: String? = null) = FloatManager.dismiss(tag)
 
         /**
-         * 隐藏系统浮窗，发送广播消息，在Service内部接收广播
+         * 隐藏系统浮窗
          */
         @JvmStatic
         @JvmOverloads
         fun hideAppFloat(tag: String? = null) = FloatManager.visible(false, tag, false)
 
         /**
-         * 显示系统浮窗，发送广播消息，在Service内部接收广播
+         * 显示系统浮窗
          */
         @JvmStatic
         @JvmOverloads
@@ -280,7 +280,7 @@ class EasyFloat {
             else callbackCreateFailed(WARN_CONTEXT_ACTIVITY)
 
         /**
-         * 通过Service创建系统浮窗
+         * 通过浮窗管理类创建系统浮窗
          */
         private fun createAppFloat() = FloatManager.create(activity, config)
 

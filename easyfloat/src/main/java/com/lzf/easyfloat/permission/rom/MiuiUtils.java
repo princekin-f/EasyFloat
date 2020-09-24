@@ -84,7 +84,7 @@ public class MiuiUtils {
             goToMiuiPermissionActivity_V6(context);
         } else if (versionCode == 7) {
             goToMiuiPermissionActivity_V7(context);
-        } else if (versionCode == 8) {
+        } else if (versionCode >= 8) {
             goToMiuiPermissionActivity_V8(context);
         } else {
             Log.e(TAG, "this is a special MIUI rom version, its version code " + versionCode);
@@ -182,7 +182,7 @@ public class MiuiUtils {
             intent.setPackage("com.miui.securitycenter");
             intent.putExtra("extra_pkgname", context.getPackageName());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            
+
             if (isIntentAvailable(intent, context)) {
                 context.startActivity(intent);
             } else {

@@ -22,23 +22,29 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
 
     // 窗口所在的矩形
     private var parentRect: Rect = Rect()
+
     // 悬浮的父布局高度、宽度
     private var parentHeight = 0
     private var parentWidth = 0
+
     // 起点坐标
     private var lastX = 0f
     private var lastY = 0f
+
     // 浮窗各边距离父布局的距离
     private var leftDistance = 0
     private var rightDistance = 0
     private var topDistance = 0
     private var bottomDistance = 0
+
     // x轴、y轴的最小距离值
     private var minX = 0
     private var minY = 0
     private val location = IntArray(2)
+
     // 屏幕可用高度 - 浮窗自身高度 的剩余高度
     private var emptyHeight = 0
+
     // 是否包含状态栏
     private var hasStatusBar = true
 
@@ -219,25 +225,36 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
 
         val animator = ValueAnimator.ofInt(if (isX) params.x else params.y, end)
         animator.addUpdateListener {
-            if (isX) params.x = it.animatedValue as Int else params.y = it.animatedValue as Int
-            windowManager.updateViewLayout(view, params)
+            try {
+                if (isX) params.x = it.animatedValue as Int else params.y = it.animatedValue as Int
+                // 极端情况，还没吸附就调用了关闭浮窗，会导致吸附闪退
+                windowManager.updateViewLayout(view, params)
+            } catch (e: Exception) {
+                animator.cancel()
+            }
         }
         animator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
 
             override fun onAnimationEnd(animation: Animator?) {
-                config.isAnim = false
-                config.callbacks?.dragEnd(view)
-                config.floatCallbacks?.builder?.dragEnd?.invoke(view)
+                dragEnd(view)
             }
 
-            override fun onAnimationCancel(animation: Animator?) {}
+            override fun onAnimationCancel(animation: Animator?) {
+                dragEnd(view)
+            }
 
             override fun onAnimationStart(animation: Animator?) {
                 config.isAnim = true
             }
         })
         animator.start()
+    }
+
+    private fun dragEnd(view: View) {
+        config.isAnim = false
+        config.callbacks?.dragEnd(view)
+        config.floatCallbacks?.builder?.dragEnd?.invoke(view)
     }
 
     /**

@@ -123,7 +123,7 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
             Gravity.END, Gravity.END or Gravity.TOP, Gravity.RIGHT, Gravity.RIGHT or Gravity.TOP ->
                 params.x = parentRect.right - view.width
             // 左下
-            Gravity.START or Gravity.BOTTOM, Gravity.LEFT, Gravity.LEFT or Gravity.BOTTOM ->
+            Gravity.START or Gravity.BOTTOM, Gravity.BOTTOM, Gravity.LEFT or Gravity.BOTTOM ->
                 params.y = parentBottom - view.height
             // 右下
             Gravity.END or Gravity.BOTTOM, Gravity.RIGHT or Gravity.BOTTOM -> {
@@ -132,24 +132,24 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
             }
             // 居中
             Gravity.CENTER -> {
-                params.x = ((parentRect.right - view.width) * 0.5f).toInt()
-                params.y = ((parentBottom - view.height) * 0.5f).toInt()
+                params.x = (parentRect.right - view.width).shr(1)
+                params.y = (parentBottom - view.height).shr(1)
             }
             // 上中
             Gravity.CENTER_HORIZONTAL, Gravity.TOP or Gravity.CENTER_HORIZONTAL ->
-                params.x = ((parentRect.right - view.width) * 0.5f).toInt()
+                params.x = (parentRect.right - view.width).shr(1)
             // 下中
             Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL -> {
-                params.x = ((parentRect.right - view.width) * 0.5f).toInt()
+                params.x = (parentRect.right - view.width).shr(1)
                 params.y = parentBottom - view.height
             }
             // 左中
             Gravity.CENTER_VERTICAL, Gravity.START or Gravity.CENTER_VERTICAL, Gravity.LEFT or Gravity.CENTER_VERTICAL ->
-                params.y = ((parentBottom - view.height) * 0.5f).toInt()
+                params.y = (parentBottom - view.height).shr(1)
             // 右中
             Gravity.END or Gravity.CENTER_VERTICAL, Gravity.RIGHT or Gravity.CENTER_VERTICAL -> {
                 params.x = parentRect.right - view.width
-                params.y = ((parentBottom - view.height) * 0.5f).toInt()
+                params.y = (parentBottom - view.height).shr(1)
             }
             // 其他情况，均视为左上
             else -> {
@@ -167,22 +167,19 @@ internal class AppFloatManager(val context: Context, var config: FloatConfig) {
      * 设置浮窗的可见性
      */
     fun setVisible(visible: Int, needShow: Boolean = true) {
-        if (frameLayout == null) return
+        if (frameLayout == null || frameLayout!!.childCount < 1) return
         // 如果用户主动隐藏浮窗，则该值为false
         config.needShow = needShow
-        frameLayout?.visibility = visible
+        frameLayout!!.visibility = visible
+        val view = frameLayout!!.getChildAt(0)
         if (visible == View.VISIBLE) {
             config.isShow = true
-            if (frameLayout!!.childCount > 0) {
-                config.callbacks?.show(frameLayout!!.getChildAt(0))
-                config.floatCallbacks?.builder?.show?.invoke(frameLayout!!.getChildAt(0))
-            }
+            config.callbacks?.show(view)
+            config.floatCallbacks?.builder?.show?.invoke(view)
         } else {
             config.isShow = false
-            if (frameLayout!!.childCount > 0) {
-                config.callbacks?.hide(frameLayout!!.getChildAt(0))
-                config.floatCallbacks?.builder?.hide?.invoke(frameLayout!!.getChildAt(0))
-            }
+            config.callbacks?.hide(view)
+            config.floatCallbacks?.builder?.hide?.invoke(view)
         }
     }
 
