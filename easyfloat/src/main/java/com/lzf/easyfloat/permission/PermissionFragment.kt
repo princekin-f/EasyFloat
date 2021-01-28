@@ -44,6 +44,7 @@ internal class PermissionFragment : Fragment() {
                 Logger.i("PermissionFragment onActivityResult: $check")
                 // 回调权限结果
                 onPermissionResult?.permissionResult(check)
+                onPermissionResult = null
                 // 将Fragment移除
                 fragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
             }, 500)
