@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.lzf.easyfloat.EasyFloat;
-import com.lzf.easyfloat.anim.AppFloatDefaultAnimator;
 import com.lzf.easyfloat.anim.DefaultAnimator;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
@@ -28,35 +27,39 @@ import org.jetbrains.annotations.Nullable;
  */
 public class JavaTestActivity extends Activity {
 
+    private final String TAG = "JavaTestActivity";
+
     @Override
     protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_java);
 
-        findViewById(R.id.testJava).setOnClickListener(v ->
-                EasyFloat.with(this)
-                        .setLayout(R.layout.float_custom, view ->
-                                view.findViewById(R.id.textView).setOnClickListener(v1 -> toast("onClick")))
-                        .setGravity(Gravity.END, 0, 100)
-                        // 在Java中使用Kotlin DSL回调
-                        .registerCallback(builder -> {
-                            builder.createResult((aBoolean, s, view) -> {
-                                toast("创建成功：" + aBoolean.toString());
-                                return null;
-                            });
-
-                            builder.dismiss(() -> {
-                                toast("dismiss");
-                                return null;
-                            });
-
-                            // ...可根据需求复写其他方法
-
+        findViewById(R.id.testJava).setOnClickListener(v -> {
+            EasyFloat.with(this)
+                    .setTag(TAG)
+                    .setLayout(R.layout.float_custom, view ->
+                            view.findViewById(R.id.textView).setOnClickListener(v1 -> toast("onClick")))
+                    .setGravity(Gravity.END, 0, 100)
+                    // 在Java中使用Kotlin DSL回调
+                    .registerCallback(builder -> {
+                        builder.createResult((aBoolean, s, view) -> {
+                            toast("createResult：" + aBoolean.toString());
                             return null;
-                        })
-                        .show());
+                        });
 
-        findViewById(R.id.tvCloseFloat).setOnClickListener(v -> EasyFloat.dismiss(this));
+                        builder.dismiss(() -> {
+                            toast("dismiss");
+                            return null;
+                        });
+
+                        // ...可根据需求复写其他方法
+
+                        return null;
+                    })
+                    .show();
+        });
+
+        findViewById(R.id.tvCloseFloat).setOnClickListener(v -> EasyFloat.dismiss(TAG));
     }
 
     private void toast(String text) {
@@ -64,14 +67,10 @@ public class JavaTestActivity extends Activity {
     }
 
     private void test() {
-
         EasyFloat.with(this)
                 // 设置浮窗xml布局文件
                 .setLayout(R.layout.float_app, view -> {
                     // view就是我们传入的浮窗xml布局
-                })
-                // 设置我们传入xml布局的详细信息（建议直接在setLayout方法中设置）
-                .invokeView(view -> {
                 })
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -81,7 +80,7 @@ public class JavaTestActivity extends Activity {
                 .setTag("testFloat")
                 // 设置浮窗是否可拖拽
                 .setDragEnable(true)
-                // 系统浮窗是否包含EditText，仅针对系统浮窗，默认不包含
+                // 浮窗是否包含EditText，默认不包含
                 .hasEditText(false)
                 // 设置浮窗固定坐标，ps：设置固定坐标，Gravity属性和offset属性将无效
                 .setLocation(100, 200)
@@ -89,10 +88,8 @@ public class JavaTestActivity extends Activity {
                 .setGravity(Gravity.END | Gravity.CENTER_VERTICAL, 0, 200)
                 // 设置宽高是否充满父布局，直接在xml设置match_parent属性无效
                 .setMatchParent(false, false)
-                // 设置Activity浮窗的出入动画，可自定义，实现相应接口即可（策略模式），无需动画直接设置为null
+                // 设置浮窗的出入动画，可自定义，实现相应接口即可（策略模式），无需动画直接设置为null
                 .setAnimator(new DefaultAnimator())
-                // 设置系统浮窗的出入动画，使用同上
-                .setAppFloatAnimator(new AppFloatDefaultAnimator())
                 // 设置系统浮窗的不需要显示的页面
                 .setFilter(MainActivity.class, SecondActivity.class)
                 // 设置系统浮窗的有效显示高度（不包含虚拟导航栏的高度），基本用不到，除非有虚拟导航栏适配问题
@@ -155,7 +152,7 @@ public class JavaTestActivity extends Activity {
 
 
         // 测试方法重载
-        EasyFloat.setDragEnable(this, false);
+        EasyFloat.dragEnable(false);
 
         PermissionUtils.checkPermission(this);
 

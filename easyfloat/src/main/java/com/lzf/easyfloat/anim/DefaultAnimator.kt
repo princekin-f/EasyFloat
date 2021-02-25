@@ -1,122 +1,146 @@
 package com.lzf.easyfloat.anim
 
 import android.animation.Animator
-import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.graphics.Rect
 import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.interfaces.OnFloatAnimator
+import com.lzf.easyfloat.utils.DisplayUtils
 import kotlin.math.min
 
 /**
  * @author: liuzhenfeng
- * @function: 默认的出入动画：选择距离边框最近的的一个边，进行出入。
- * 想要实现其他动画效果，只需实现OnFloatAnimator接口，自行定义内容；也可为null，不执行动画。
- * @date: 2019-07-19  14:19
+ * @function: 系统浮窗的默认效果，选择靠近左右侧的一边进行出入
+ * @date: 2019-07-22  17:22
  */
 open class DefaultAnimator : OnFloatAnimator {
 
-    // 浮窗各边到窗口边框的距离
-    private var leftDistance = 0
-    private var rightDistance = 0
-    private var topDistance = 0
-    private var bottomDistance = 0
-    // x轴和y轴距离的最小值
-    private var minX = 0
-    private var minY = 0
-    // 浮窗和窗口所在的矩形
-    private var floatRect = Rect()
-    private var parentRect = Rect()
-
     override fun enterAnim(
         view: View,
-        parentView: ViewGroup,
+        params: WindowManager.LayoutParams,
+        windowManager: WindowManager,
         sidePattern: SidePattern
-    ): Animator? {
-        initValue(view, parentView)
-        val (animType, startValue, endValue) = animTriple(view, sidePattern)
-        return ObjectAnimator.ofFloat(view, animType, startValue, endValue).setDuration(500)
-    }
+    ): Animator? = getAnimator(view, params, windowManager, sidePattern, false)
 
     override fun exitAnim(
         view: View,
-        parentView: ViewGroup,
+        params: WindowManager.LayoutParams,
+        windowManager: WindowManager,
         sidePattern: SidePattern
-    ): Animator? {
-        initValue(view, parentView)
-        val (animType, startValue, endValue) = animTriple(view, sidePattern)
-        return ObjectAnimator.ofFloat(view, animType, endValue, startValue).setDuration(500)
+    ): Animator? = getAnimator(view, params, windowManager, sidePattern, true)
+
+    private fun getAnimator(
+        view: View,
+        params: WindowManager.LayoutParams,
+        windowManager: WindowManager,
+        sidePattern: SidePattern,
+        isExit: Boolean
+    ): Animator {
+        val triple = initValue(view, params, windowManager, sidePattern)
+        // 退出动画的起始值、终点值，与入场动画相反
+        val start = if (isExit) triple.second else triple.first
+        val end = if (isExit) triple.first else triple.second
+        return ValueAnimator.ofInt(start, end).apply {
+            addUpdateListener {
+                try {
+                    val value = it.animatedValue as Int
+                    if (triple.third) params.x = value else params.y = value
+                    // 动画执行过程中页面关闭，出现异常
+                    windowManager.updateViewLayout(view, params)
+                } catch (e: Exception) {
+                    cancel()
+                }
+            }
+        }
     }
 
     /**
-     * 设置动画类型，计算具体数值
+     * 计算边距，起始坐标等
      */
-    private fun animTriple(view: View, sidePattern: SidePattern): Triple<String, Float, Float> {
-        val animType: String
-        val startValue: Float = when (sidePattern) {
+    private fun initValue(
+        view: View,
+        params: WindowManager.LayoutParams,
+        windowManager: WindowManager,
+        sidePattern: SidePattern
+    ): Triple<Int, Int, Boolean> {
+        val parentRect = Rect()
+        windowManager.defaultDisplay.getRectSize(parentRect)
+        // 浮窗各边到窗口边框的距离
+        val leftDistance = params.x
+        val rightDistance = parentRect.right - (leftDistance + view.right)
+        val topDistance = params.y
+        val bottomDistance = parentRect.bottom - (topDistance + view.bottom)
+        // 水平、垂直方向的距离最小值
+        val minX = min(leftDistance, rightDistance)
+        val minY = min(topDistance, bottomDistance)
+
+        val isHorizontal: Boolean
+        val endValue: Int
+        val startValue: Int = when (sidePattern) {
             SidePattern.LEFT, SidePattern.RESULT_LEFT -> {
-                animType = "translationX"
-                leftValue(view)
+                // 从左侧到目标位置，右移
+                isHorizontal = true
+                endValue = params.x
+                -view.right
             }
             SidePattern.RIGHT, SidePattern.RESULT_RIGHT -> {
-                animType = "translationX"
-                rightValue(view)
+                // 从右侧到目标位置，左移
+                isHorizontal = true
+                endValue = params.x
+                parentRect.right
             }
             SidePattern.TOP, SidePattern.RESULT_TOP -> {
-                animType = "translationY"
-                topValue(view)
+                // 从顶部到目标位置，下移
+                isHorizontal = false
+                endValue = params.y
+                -view.bottom
             }
             SidePattern.BOTTOM, SidePattern.RESULT_BOTTOM -> {
-                animType = "translationY"
-                rightValue(view)
+                // 从底部到目标位置，上移
+                isHorizontal = false
+                endValue = params.y
+                parentRect.bottom + getCompensationHeight(view, params)
             }
 
             SidePattern.DEFAULT, SidePattern.AUTO_HORIZONTAL, SidePattern.RESULT_HORIZONTAL -> {
-                animType = "translationX"
-                if (leftDistance < rightDistance) leftValue(view) else rightValue(view)
+                // 水平位移，哪边距离屏幕近，从哪侧移动
+                isHorizontal = true
+                endValue = params.x
+                if (leftDistance < rightDistance) -view.right else parentRect.right
             }
             SidePattern.AUTO_VERTICAL, SidePattern.RESULT_VERTICAL -> {
-                animType = "translationY"
-                if (topDistance < bottomDistance) topValue(view) else bottomValue(view)
+                // 垂直位移，哪边距离屏幕近，从哪侧移动
+                isHorizontal = false
+                endValue = params.y
+                if (topDistance < bottomDistance) -view.bottom
+                else parentRect.bottom + getCompensationHeight(view, params)
             }
 
             else -> if (minX <= minY) {
-                animType = "translationX"
-                if (leftDistance < rightDistance) leftValue(view) else rightValue(view)
+                isHorizontal = true
+                endValue = params.x
+                if (leftDistance < rightDistance) -view.right else parentRect.right
             } else {
-                animType = "translationY"
-                if (topDistance < bottomDistance) topValue(view) else bottomValue(view)
+                isHorizontal = false
+                endValue = params.y
+                if (topDistance < bottomDistance) -view.bottom
+                else parentRect.bottom + getCompensationHeight(view, params)
             }
         }
-
-        val endValue = if (animType == "translationX") view.translationX else view.translationY
-        return Triple(animType, startValue, endValue)
+        return Triple(startValue, endValue, isHorizontal)
     }
 
-    private fun leftValue(view: View) = -(leftDistance + view.width) + view.translationX
-
-    private fun rightValue(view: View) = rightDistance + view.width + view.translationX
-
-    private fun topValue(view: View) = -(topDistance + view.height) + view.translationY
-
-    private fun bottomValue(view: View) = bottomDistance + view.height + view.translationY
-
-
     /**
-     * 计算一些数值，方便使用
+     * 单页面浮窗（popupWindow），坐标从顶部计算，需要加上状态栏的高度
      */
-    private fun initValue(view: View, parentView: ViewGroup) {
-        view.getGlobalVisibleRect(floatRect)
-        parentView.getGlobalVisibleRect(parentRect)
-
-        leftDistance = floatRect.left
-        rightDistance = parentRect.right - floatRect.right
-        topDistance = floatRect.top - parentRect.top
-        bottomDistance = parentRect.bottom - floatRect.bottom
-
-        minX = min(leftDistance, rightDistance)
-        minY = min(topDistance, bottomDistance)
+    private fun getCompensationHeight(view: View, params: WindowManager.LayoutParams): Int {
+        val location = IntArray(2)
+        // 获取在整个屏幕内的绝对坐标
+        view.getLocationOnScreen(location)
+        // 绝对高度和相对高度相等，说明是单页面浮窗（popupWindow），计算底部动画时需要加上状态栏高度
+        return if (location[1] == params.y) DisplayUtils.statusBarHeight(view) else 0
     }
 
 }

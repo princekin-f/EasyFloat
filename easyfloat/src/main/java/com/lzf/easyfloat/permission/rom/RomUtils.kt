@@ -31,23 +31,6 @@ object RomUtils {
         return 4.0
     }
 
-    /**
-     * 获取小米 rom 版本号，获取失败返回 -1
-     *
-     * @return miui rom version code, if fail , return -1
-     */
-    fun getMiuiVersion(): Int {
-        val version = getSystemProperty("ro.miui.ui.version.name")
-        if (version != null) {
-            try {
-                return version.substring(1).toInt()
-            } catch (e: Exception) {
-                Log.e(TAG, "get miui version code error, version : $version")
-            }
-        }
-        return -1
-    }
-
     @JvmStatic
     fun getSystemProperty(propName: String): String? {
         val line: String

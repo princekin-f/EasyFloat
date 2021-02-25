@@ -1,25 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/translucent"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        app:cardBackgroundColor="@color/translucent"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
 
-    <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@mipmap/ic_launcher_round" />
-
-    <TextView
-            android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:text="欢迎回来，EasyFloat..."
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:gravity="center"
+            android:paddingVertical="12dp">
 
-</LinearLayout>
+        <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="20dp"
+                android:src="@mipmap/ic_launcher_round"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:text="EasyFloat"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@id/iv_logo"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:text="浮窗从未如此简单..."
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@id/tv_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,4 +1,4 @@
-package com.lzf.easyfloat.widget.appfloat
+package com.lzf.easyfloat.core
 
 import android.animation.Animator
 import android.animation.ValueAnimator
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams
 import com.lzf.easyfloat.data.FloatConfig
+import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.utils.DisplayUtils
 import kotlin.math.min
@@ -41,12 +42,10 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
     private var minX = 0
     private var minY = 0
     private val location = IntArray(2)
+    private var statusBarHeight = 0
 
     // 屏幕可用高度 - 浮窗自身高度 的剩余高度
     private var emptyHeight = 0
-
-    // 是否包含状态栏
-    private var hasStatusBar = true
 
     /**
      * 根据吸附模式，实现相应的拖拽效果
@@ -77,8 +76,8 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 // 获取在整个屏幕内的绝对坐标
                 view.getLocationOnScreen(location)
                 // 通过绝对高度和相对高度比较，判断包含顶部状态栏
-                hasStatusBar = location[1] > params.y
-                emptyHeight = parentHeight - view.height
+                statusBarHeight = if (location[1] > params.y) statusBarHeight(view) else 0
+                emptyHeight = parentHeight - view.height - statusBarHeight
             }
 
             MotionEvent.ACTION_MOVE -> {
@@ -97,15 +96,19 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                     x > parentWidth - view.width -> parentWidth - view.width
                     else -> x
                 }
+
+                if (config.showPattern == ShowPattern.CURRENT_ACTIVITY) {
+                    // 单页面浮窗，设置状态栏不沉浸时，最小高度为状态栏高度
+                    if (y < statusBarHeight(view) && !config.immersionStatusBar) y =
+                        statusBarHeight(view)
+                }
+
                 y = when {
-                    y < 0 -> 0
-                    y > emptyHeight - statusBarHeight(view) -> {
-                        when {
-                            hasStatusBar -> emptyHeight - statusBarHeight(view)
-                            y > emptyHeight -> emptyHeight
-                            else -> y
-                        }
-                    }
+                    // 状态栏沉浸时，最小高度为-statusBarHeight，反之最小高度为0
+                    y < 0 -> if (config.immersionStatusBar) {
+                        if (y < -statusBarHeight) -statusBarHeight else y
+                    } else 0
+                    y > emptyHeight -> emptyHeight
                     else -> y
                 }
 
@@ -113,7 +116,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                     SidePattern.LEFT -> x = 0
                     SidePattern.RIGHT -> x = parentWidth - view.width
                     SidePattern.TOP -> y = 0
-                    SidePattern.BOTTOM -> y = parentHeight - view.height
+                    SidePattern.BOTTOM -> y = emptyHeight
 
                     SidePattern.AUTO_HORIZONTAL ->
                         x = if (event.rawX * 2 > parentWidth) parentWidth - view.width else 0
@@ -133,7 +136,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                         if (minX < minY) {
                             x = if (leftDistance == minX) 0 else parentWidth - view.width
                         } else {
-                            y = if (topDistance == minY) 0 else parentHeight - view.height
+                            y = if (topDistance == minY) 0 else emptyHeight
                         }
                     }
                     else -> {
@@ -153,6 +156,9 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
 
             MotionEvent.ACTION_UP -> {
                 if (!config.isDrag) return
+                // 回调拖拽事件的ACTION_UP
+                config.callbacks?.drag(view, event)
+                config.floatCallbacks?.builder?.drag?.invoke(view, event)
                 when (config.sidePattern) {
                     SidePattern.RESULT_LEFT,
                     SidePattern.RESULT_RIGHT,
@@ -195,18 +201,16 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
 
             SidePattern.RESULT_TOP -> {
                 isX = false
-                0
+                if (config.immersionStatusBar) -statusBarHeight else 0
             }
             SidePattern.RESULT_BOTTOM -> {
                 isX = false
                 // 不要轻易使用此相关模式，需要考虑虚拟导航栏的情况
-                if (hasStatusBar) emptyHeight - statusBarHeight(view) else emptyHeight
+                emptyHeight
             }
             SidePattern.RESULT_VERTICAL -> {
                 isX = false
-                if (topDistance < bottomDistance) 0 else {
-                    if (hasStatusBar) emptyHeight - statusBarHeight(view) else emptyHeight
-                }
+                if (topDistance < bottomDistance) 0 else emptyHeight
             }
 
             SidePattern.RESULT_SIDE -> {
@@ -215,9 +219,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                     if (leftDistance < rightDistance) 0 else params.x + rightDistance
                 } else {
                     isX = false
-                    if (topDistance < bottomDistance) 0 else {
-                        if (hasStatusBar) emptyHeight - statusBarHeight(view) else emptyHeight
-                    }
+                    if (topDistance < bottomDistance) if (config.immersionStatusBar) -statusBarHeight else 0 else emptyHeight
                 }
             }
             else -> return
@@ -264,9 +266,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
         leftDistance = params.x
         rightDistance = parentWidth - (leftDistance + view.right)
         topDistance = params.y
-        bottomDistance = if (hasStatusBar) {
-            parentHeight - statusBarHeight(view) - topDistance - view.height
-        } else parentHeight - topDistance - view.height
+        bottomDistance = emptyHeight - topDistance
 
         minX = min(leftDistance, rightDistance)
         minY = min(topDistance, bottomDistance)

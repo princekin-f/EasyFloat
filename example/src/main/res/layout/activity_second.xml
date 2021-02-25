@@ -12,37 +12,26 @@
             android:text="Show" />
 
     <TextView
-            android:id="@+id/openThird"
+            android:id="@+id/openEditTextFloat"
             style="@style/TextStyle2"
             android:layout_marginTop="20dp"
-            android:text="Open ThirdActivity" />
+            android:text="OpenEditTextFloat" />
 
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            android:background="@color/violet">
+    <TextView
+            android:id="@+id/openJavaTestActivity"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="OpenJavaTestActivity" />
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="直接在xml布局中使用"
-                android:textColor="@color/white" />
+    <TextView
+            android:id="@+id/changeBackground"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="改变首页系统浮窗1的背景" />
 
-        <com.lzf.easyfloat.widget.activityfloat.FloatingView
-                android:id="@+id/floatingView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-            <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@mipmap/ic_launcher_round" />
-
-        </com.lzf.easyfloat.widget.activityfloat.FloatingView>
-
-    </FrameLayout>
+    <TextView
+            android:id="@+id/recoverBackground"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="恢复首页系统浮窗1的背景" />
 </LinearLayout>

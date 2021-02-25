@@ -5,6 +5,7 @@ package com.lzf.easyfloat.permission.rom;
 
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,8 @@ import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
+
+import com.lzf.easyfloat.permission.PermissionUtils;
 
 import java.lang.reflect.Method;
 
@@ -42,15 +45,9 @@ public class MiuiUtils {
      */
     public static boolean checkFloatWindowPermission(Context context) {
         final int version = Build.VERSION.SDK_INT;
-
         if (version >= 19) {
             return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
         } else {
-//            if ((context.getApplicationInfo().flags & 1 << 27) == 1) {
-//                return true;
-//            } else {
-//                return false;
-//            }
             return true;
         }
     }
@@ -76,16 +73,16 @@ public class MiuiUtils {
     /**
      * 小米 ROM 权限申请
      */
-    public static void applyMiuiPermission(Context context) {
+    public static void applyMiuiPermission(Fragment fragment) {
         int versionCode = getMiuiVersion();
         if (versionCode == 5) {
-            goToMiuiPermissionActivity_V5(context);
+            goToMiuiPermissionActivity_V5(fragment);
         } else if (versionCode == 6) {
-            goToMiuiPermissionActivity_V6(context);
+            goToMiuiPermissionActivity_V6(fragment);
         } else if (versionCode == 7) {
-            goToMiuiPermissionActivity_V7(context);
+            goToMiuiPermissionActivity_V7(fragment);
         } else if (versionCode >= 8) {
-            goToMiuiPermissionActivity_V8(context);
+            goToMiuiPermissionActivity_V8(fragment);
         } else {
             Log.e(TAG, "this is a special MIUI rom version, its version code " + versionCode);
         }
@@ -101,49 +98,27 @@ public class MiuiUtils {
     /**
      * 小米 V5 版本 ROM权限申请
      */
-    public static void goToMiuiPermissionActivity_V5(Context context) {
-        Intent intent = null;
-        String packageName = context.getPackageName();
-        intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    public static void goToMiuiPermissionActivity_V5(Fragment fragment) {
+        String packageName = fragment.getActivity().getPackageName();
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", packageName, null);
         intent.setData(uri);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (isIntentAvailable(intent, context)) {
-            context.startActivity(intent);
+        if (isIntentAvailable(intent, fragment.getActivity())) {
+            fragment.startActivityForResult(intent, PermissionUtils.requestCode);
         } else {
             Log.e(TAG, "intent is not available!");
         }
-
-        //设置页面在应用详情页面
-//        Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
-//        PackageInfo pInfo = null;
-//        try {
-//            pInfo = context.getPackageManager().getPackageInfo
-//                    (HostInterfaceManager.getHostInterface().getApp().getPackageName(), 0);
-//        } catch (PackageManager.NameNotFoundException e) {
-//            AVLogUtils.e(TAG, e.getMessage());
-//        }
-//        intent.setClassName("com.android.settings", "com.miui.securitycenter.permission.AppPermissionsEditor");
-//        intent.putExtra("extra_package_uid", pInfo.applicationInfo.uid);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        if (isIntentAvailable(intent, context)) {
-//            context.startActivity(intent);
-//        } else {
-//            AVLogUtils.e(TAG, "Intent is not available!");
-//        }
     }
 
     /**
      * 小米 V6 版本 ROM权限申请
      */
-    public static void goToMiuiPermissionActivity_V6(Context context) {
+    public static void goToMiuiPermissionActivity_V6(Fragment fragment) {
         Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
         intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
-        intent.putExtra("extra_pkgname", context.getPackageName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        if (isIntentAvailable(intent, context)) {
-            context.startActivity(intent);
+        intent.putExtra("extra_pkgname", fragment.getActivity().getPackageName());
+        if (isIntentAvailable(intent, fragment.getActivity())) {
+            fragment.startActivityForResult(intent, PermissionUtils.requestCode);
         } else {
             Log.e(TAG, "Intent is not available!");
         }
@@ -152,14 +127,12 @@ public class MiuiUtils {
     /**
      * 小米 V7 版本 ROM权限申请
      */
-    public static void goToMiuiPermissionActivity_V7(Context context) {
+    public static void goToMiuiPermissionActivity_V7(Fragment fragment) {
         Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
         intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
-        intent.putExtra("extra_pkgname", context.getPackageName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        if (isIntentAvailable(intent, context)) {
-            context.startActivity(intent);
+        intent.putExtra("extra_pkgname", fragment.getActivity().getPackageName());
+        if (isIntentAvailable(intent, fragment.getActivity())) {
+            fragment.startActivityForResult(intent, PermissionUtils.requestCode);
         } else {
             Log.e(TAG, "Intent is not available!");
         }
@@ -168,23 +141,18 @@ public class MiuiUtils {
     /**
      * 小米 V8 版本 ROM权限申请
      */
-    public static void goToMiuiPermissionActivity_V8(Context context) {
+    public static void goToMiuiPermissionActivity_V8(Fragment fragment) {
         Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
         intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
-//        intent.setPackage("com.miui.securitycenter");
-        intent.putExtra("extra_pkgname", context.getPackageName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        if (isIntentAvailable(intent, context)) {
-            context.startActivity(intent);
+        intent.putExtra("extra_pkgname", fragment.getActivity().getPackageName());
+        if (isIntentAvailable(intent, fragment.getActivity())) {
+            fragment.startActivityForResult(intent, PermissionUtils.requestCode);
         } else {
             intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
             intent.setPackage("com.miui.securitycenter");
-            intent.putExtra("extra_pkgname", context.getPackageName());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            if (isIntentAvailable(intent, context)) {
-                context.startActivity(intent);
+            intent.putExtra("extra_pkgname", fragment.getActivity().getPackageName());
+            if (isIntentAvailable(intent, fragment.getActivity())) {
+                fragment.startActivityForResult(intent, PermissionUtils.requestCode);
             } else {
                 Log.e(TAG, "Intent is not available!");
             }

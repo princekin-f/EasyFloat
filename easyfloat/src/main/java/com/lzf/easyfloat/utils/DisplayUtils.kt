@@ -81,7 +81,6 @@ object DisplayUtils {
         val resourceId =
             resources.getIdentifier("navigation_bar_height", "dimen", "android")
         if (resourceId > 0) result = resources.getDimensionPixelSize(resourceId)
-        Log.d(TAG, "getNavigationBarHeight = $result")
         return result
     }
 

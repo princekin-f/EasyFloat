@@ -7,13 +7,17 @@
         android:orientation="vertical"
         tools:context="com.lzf.easyfloat.example.activity.MainActivity">
 
+    <androidx.appcompat.widget.ActionMenuView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="当页浮窗1（Activity Float）"
+            android:text="当页浮窗1（Activity Float，状态栏沉浸）"
             android:textSize="13sp" />
 
     <LinearLayout
@@ -84,7 +88,7 @@
             android:layout_marginStart="14dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="系统浮窗1（全局显示）"
+            android:text="系统浮窗1（全局显示，状态栏沉浸）"
             android:textSize="13sp" />
 
     <LinearLayout
@@ -153,5 +157,11 @@
             style="@style/TextStyle2"
             android:layout_marginTop="20dp"
             android:text="Open SecondActivity" />
+
+    <TextView
+            android:id="@+id/openSwipeTest"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="Open SeipeTestActivity" />
 
 </LinearLayout>

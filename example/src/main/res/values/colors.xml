@@ -21,5 +21,6 @@
     <color name="smallCircle">#3D8EC0CD</color>
     <color name="mainBackground">#E6FFFFFF</color>
     <color name="titleColor">#989898</color>
+    <color name="light_gray">#242424</color>
 
 </resources>

@@ -1,7 +1,6 @@
 package com.lzf.easyfloat.data
 
 import android.view.View
-import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
@@ -32,6 +31,8 @@ data class FloatConfig(
     var isShow: Boolean = false,
     // 是否包含EditText
     var hasEditText: Boolean = false,
+    // 状态栏沉浸
+    var immersionStatusBar: Boolean = false,
 
     // 浮窗的吸附方式（默认不吸附，拖到哪里是哪里）
     var sidePattern: SidePattern = SidePattern.DEFAULT,
@@ -59,7 +60,6 @@ data class FloatConfig(
 
     // 出入动画
     var floatAnimator: OnFloatAnimator? = DefaultAnimator(),
-    var appFloatAnimator: OnAppFloatAnimator? = AppFloatDefaultAnimator(),
 
     // 设置屏幕的有效显示高度（不包含虚拟导航栏的高度），仅针对系统浮窗，一般不用复写
     var displayHeight: OnDisplayHeight = DefaultDisplayHeight(),

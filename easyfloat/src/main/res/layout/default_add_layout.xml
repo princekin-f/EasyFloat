@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.lzf.easyfloat.widget.switch.DefaultAddView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:clipChildren="false">
+
+    <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:paddingStart="26dp"
+            android:text="@string/add_floating_window"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+
+    <ImageView
+            android:id="@+id/iv_add"
+            android:layout_width="70dp"
+            android:layout_height="44dp"
+            android:layout_above="@id/tv_add"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="6dp"
+            android:paddingStart="26dp"
+            android:src="@drawable/add_normal" />
+
+</com.lzf.easyfloat.widget.switch.DefaultAddView>

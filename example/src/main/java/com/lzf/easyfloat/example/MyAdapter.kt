@@ -43,7 +43,7 @@ class MyAdapter(
         viewHolder.checkBox.apply {
             setOnTouchListener { _, event ->
                 logger.e("setOnTouchListener: ${event.action}")
-                EasyFloat.appFloatDragEnable(event?.action == MotionEvent.ACTION_CANCEL)
+                EasyFloat.dragEnable(event?.action == MotionEvent.ACTION_CANCEL)
                 false
             }
 

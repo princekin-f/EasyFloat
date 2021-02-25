@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
@@ -16,15 +15,16 @@ import com.lzf.easyfloat.example.logger
 import com.lzf.easyfloat.example.startActivity
 import com.lzf.easyfloat.example.widget.RoundProgressBar
 import com.lzf.easyfloat.example.widget.ScaleImage
-import com.lzf.easyfloat.interfaces.OnInvokeView
 import com.lzf.easyfloat.interfaces.OnPermissionResult
+import com.lzf.easyfloat.interfaces.OnTouchRangeListener
 import com.lzf.easyfloat.permission.PermissionUtils
+import com.lzf.easyfloat.utils.DragUtils
+import com.lzf.easyfloat.widget.switch.BaseSwitchView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.float_seekbar.*
 import kotlin.math.max
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,32 +51,34 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         dismiss4.setOnClickListener(this)
 
         openSecond.setOnClickListener(this)
+        openSwipeTest.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
             open1 -> showActivityFloat()
-            hide1 -> EasyFloat.hide(this)
-            show1 -> EasyFloat.show(this)
-            dismiss1 -> EasyFloat.dismiss(this)
+            hide1 -> EasyFloat.hide("showActivityFloat")
+            show1 -> EasyFloat.show("showActivityFloat")
+            dismiss1 -> EasyFloat.dismiss("showActivityFloat")
 
             open2 -> showActivity2()
-            hide2 -> EasyFloat.hide(this, "seekBar")
-            show2 -> EasyFloat.show(this, "seekBar")
-            dismiss2 -> EasyFloat.dismiss(this, "seekBar")
+            hide2 -> EasyFloat.hide("seekBar")
+            show2 -> EasyFloat.show("seekBar")
+            dismiss2 -> EasyFloat.dismiss("seekBar")
 
             // 检测权限根据需求考虑有无即可，权限申请为内部进行
             open3 -> checkPermission()
-            hide3 -> EasyFloat.hideAppFloat()
-            show3 -> EasyFloat.showAppFloat()
-            dismiss3 -> EasyFloat.dismissAppFloat()
+            hide3 -> EasyFloat.hide()
+            show3 -> EasyFloat.show()
+            dismiss3 -> EasyFloat.dismiss()
 
             open4 -> checkPermission("scaleFloat")
-            hide4 -> EasyFloat.hideAppFloat("scaleFloat")
-            show4 -> EasyFloat.showAppFloat("scaleFloat")
-            dismiss4 -> EasyFloat.dismissAppFloat("scaleFloat")
+            hide4 -> EasyFloat.hide("scaleFloat")
+            show4 -> EasyFloat.show("scaleFloat")
+            dismiss4 -> EasyFloat.dismiss("scaleFloat")
 
             openSecond -> startActivity<SecondActivity>(this)
+            openSwipeTest -> startActivity<SwipeTestActivity>(this)
 
             else -> return
         }
@@ -86,13 +88,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      * 测试Callback回调
      */
     @SuppressLint("SetTextI18n")
-    private fun showActivityFloat() {
+    private fun showActivityFloat(tag: String = "showActivityFloat") {
         EasyFloat.with(this)
             .setSidePattern(SidePattern.RESULT_HORIZONTAL)
-            .setGravity(Gravity.END, 0, 100)
-            .setLayout(R.layout.float_custom, OnInvokeView {
+            .setImmersionStatusBar(true)
+            .setGravity(Gravity.END, 0, 10)
+            .setLayout(R.layout.float_custom) {
                 it.findViewById<TextView>(R.id.textView).setOnClickListener { toast() }
-            })
+            }
+            .setTag(tag)
             .registerCallback {
                 // 在此处设置view也可以，建议在setLayout进行view操作
                 createResult { isCreated, msg, _ -> logger.e("DSL:  $isCreated   $msg") }
@@ -112,11 +116,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
 
-                drag { view, _ ->
+                drag { view, motionEvent ->
                     view.findViewById<TextView>(R.id.textView).apply {
                         text = "我被拖拽..."
                         setBackgroundResource(R.drawable.corners_red)
                     }
+                    DragUtils.registerDragClose(motionEvent, object : OnTouchRangeListener {
+                        override fun touchInRange(inRange: Boolean, view: BaseSwitchView) {
+                            setVibrator(inRange)
+                        }
+
+                        override fun touchUpInRange() {
+                            EasyFloat.dismiss(tag, true)
+                        }
+                    })
                 }
 
                 dragEnd {
@@ -124,27 +137,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         text = "拖拽结束"
                         val location = IntArray(2)
                         getLocationOnScreen(location)
-                        setBackgroundResource(if (location[0] > 0) R.drawable.corners_left else R.drawable.corners_right)
+                        setBackgroundResource(if (location[0] > 10) R.drawable.corners_left else R.drawable.corners_right)
                     }
                 }
             }
             .show()
     }
 
-    private fun showActivity2() {
+    private fun showActivity2(tag: String = "seekBar") {
         // 改变浮窗1的文字
         EasyFloat.getFloatView()?.findViewById<TextView>(R.id.textView)?.text = "恭喜浮窗2"
 
         EasyFloat.with(this)
-            .setTag("seekBar")
+            .setTag(tag)
             .setGravity(Gravity.CENTER)
-            .setLayout(R.layout.float_seekbar, OnInvokeView {
+            .setLayout(R.layout.float_seekbar) {
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
-                    EasyFloat.dismiss(this@MainActivity, "seekBar")
+                    EasyFloat.dismiss(tag)
                 }
-                it.findViewById<TextView>(R.id.tvProgress).setOnClickListener { tv ->
-                    toast((tv as TextView).text.toString())
-                }
+                val tvProgress = it.findViewById<TextView>(R.id.tvProgress)
+                tvProgress.setOnClickListener { toast(tvProgress.text.toString()) }
+
                 it.findViewById<SeekBar>(R.id.seekBar)
                     .setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                         override fun onProgressChanged(
@@ -157,26 +170,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         override fun onStopTrackingTouch(seekBar: SeekBar?) {}
                     })
-            })
+            }
             .show()
     }
 
     private fun showAppFloat() {
-        EasyFloat.with(this)
+        EasyFloat.with(this.applicationContext)
             .setShowPattern(ShowPattern.ALL_TIME)
             .setSidePattern(SidePattern.RESULT_SIDE)
-            .setGravity(Gravity.CENTER)
-            .setLayout(R.layout.float_app, OnInvokeView {
+            .setImmersionStatusBar(true)
+            .setGravity(Gravity.END, -20, 10)
+            .setLayout(R.layout.float_app) {
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
-                    EasyFloat.dismissAppFloat()
+                    EasyFloat.dismiss()
                 }
                 it.findViewById<TextView>(R.id.tvOpenMain).setOnClickListener {
                     startActivity<MainActivity>(this)
                 }
                 it.findViewById<CheckBox>(R.id.checkbox)
-                    .setOnCheckedChangeListener { _, isChecked ->
-                        EasyFloat.appFloatDragEnable(isChecked)
-                    }
+                    .setOnCheckedChangeListener { _, isChecked -> EasyFloat.dragEnable(isChecked) }
 
                 val progressBar = it.findViewById<RoundProgressBar>(R.id.roundProgressBar).apply {
                     setProgress(66, "66")
@@ -207,34 +219,54 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                        false
 //                    }
 //                }
-            })
+            }
+            .registerCallback {
+                drag { _, motionEvent ->
+                    DragUtils.registerDragClose(motionEvent, object : OnTouchRangeListener {
+                        override fun touchInRange(inRange: Boolean, view: BaseSwitchView) {
+                            setVibrator(inRange)
+                            view.findViewById<TextView>(com.lzf.easyfloat.R.id.tv_delete).text =
+                                if (inRange) "松手删除" else "删除浮窗"
+
+                            view.findViewById<ImageView>(com.lzf.easyfloat.R.id.iv_delete)
+                                .setImageResource(
+                                    if (inRange) com.lzf.easyfloat.R.drawable.icon_delete_selected
+                                    else com.lzf.easyfloat.R.drawable.icon_delete_normal
+                                )
+                        }
+
+                        override fun touchUpInRange() {
+                            EasyFloat.dismiss()
+                        }
+                    }, showPattern = ShowPattern.ALL_TIME)
+                }
+            }
             .show()
     }
 
-
     private fun showAppFloat2(tag: String) {
-        EasyFloat.with(this)
+        EasyFloat.with(this.applicationContext)
             .setTag(tag)
             .setShowPattern(ShowPattern.FOREGROUND)
             .setLocation(100, 100)
-            .setAppFloatAnimator(null)
+            .setAnimator(null)
             .setFilter(SecondActivity::class.java)
-            .setLayout(R.layout.float_app_scale, OnInvokeView {
+            .setLayout(R.layout.float_app_scale) {
                 val content = it.findViewById<RelativeLayout>(R.id.rlContent)
                 val params = content.layoutParams as FrameLayout.LayoutParams
                 it.findViewById<ScaleImage>(R.id.ivScale).onScaledListener =
                     object : ScaleImage.OnScaledListener {
                         override fun onScaled(x: Float, y: Float, event: MotionEvent) {
-                            params.width = max(params.width + x.toInt(), 100)
-                            params.height = max(params.height + y.toInt(), 100)
+                            params.width = max(params.width + x.toInt(), 200)
+                            params.height = max(params.height + y.toInt(), 200)
                             content.layoutParams = params
                         }
                     }
 
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
-                    EasyFloat.dismissAppFloat(tag)
+                    EasyFloat.dismiss(tag)
                 }
-            })
+            }
             .show()
     }
 
@@ -265,7 +297,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
 
     private fun toast(string: String = "onClick") =
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show()

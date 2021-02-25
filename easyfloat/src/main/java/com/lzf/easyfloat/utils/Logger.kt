@@ -1,7 +1,7 @@
 package com.lzf.easyfloat.utils
 
 import android.util.Log
-import com.lzf.easyfloat.EasyFloat
+import com.lzf.easyfloat.BuildConfig
 
 /**
  * @author: liuzhenfeng
@@ -13,7 +13,7 @@ internal object Logger {
     private var tag = "EasyFloat--->"
 
     // 设为false关闭日志
-    private var logEnable = EasyFloat.isDebug
+    private var logEnable = BuildConfig.DEBUG
 
     fun i(msg: Any) = i(tag, msg.toString())
 

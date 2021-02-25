@@ -2,19 +2,28 @@ package com.lzf.easyfloat.interfaces
 
 import android.animation.Animator
 import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
 import com.lzf.easyfloat.enums.SidePattern
 
 /**
  * @author: liuzhenfeng
- * @function: 浮窗动画的接口类，实现该接口，可自定义不同的动画效果（策略模式）
- * @date: 2019-07-19  14:14
+ * @function: 系统浮窗的出入动画
+ * @date: 2019-07-22  16:40
  */
 interface OnFloatAnimator {
 
-    // 入场动画
-    fun enterAnim(view: View, parentView: ViewGroup, sidePattern: SidePattern): Animator? = null
+    fun enterAnim(
+        view: View,
+        params: WindowManager.LayoutParams,
+        windowManager: WindowManager,
+        sidePattern: SidePattern
+    ): Animator? = null
 
-    // 退出动画
-    fun exitAnim(view: View, parentView: ViewGroup, sidePattern: SidePattern): Animator? = null
+    fun exitAnim(
+        view: View,
+        params: WindowManager.LayoutParams,
+        windowManager: WindowManager,
+        sidePattern: SidePattern
+    ): Animator? = null
+
 }

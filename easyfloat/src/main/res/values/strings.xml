@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">easyfloat</string>
+    <string name="app_name">EasyFloat</string>
+    <string name="add_floating_window">浮窗</string>
+    <string name="delete_floating_window">删除浮窗</string>
 </resources>

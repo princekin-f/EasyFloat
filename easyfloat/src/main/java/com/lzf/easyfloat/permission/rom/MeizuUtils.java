@@ -26,7 +26,8 @@ public class MeizuUtils {
     public static boolean checkFloatWindowPermission(Context context) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 19) {
-            return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
+            // OP_SYSTEM_ALERT_WINDOW = 24;
+            return checkOp(context, 24);
         }
         return true;
     }
@@ -37,7 +38,6 @@ public class MeizuUtils {
     public static void applyPermission(Fragment fragment) {
         try {
             Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
-//            intent.setClassName("com.meizu.safe", "com.meizu.safe.security.AppSecActivity");//remove this line code for fix flyme6.3
             intent.putExtra("packageName", fragment.getActivity().getPackageName());
             fragment.startActivityForResult(intent, PermissionUtils.requestCode);
         } catch (Exception e) {

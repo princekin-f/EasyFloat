@@ -1,2 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.lzf.easyfloat"/>
+        package="com.lzf.easyfloat">
+
+    <application>
+        <provider
+                android:name="com.lzf.easyfloat.EasyFloatInitializer"
+                android:authorities="${applicationId}.EasyFloatInitializer"
+                android:exported="false"
+                android:multiprocess="true" />
+    </application>
+
+</manifest>

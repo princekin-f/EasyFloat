@@ -3,7 +3,7 @@ package com.lzf.easyfloat.example
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import com.lzf.easyfloat.EasyFloat
+import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper
 
 /**
  * @author: liuzhenfeng
@@ -20,8 +20,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this
-
-        EasyFloat.init(this, true)
+        BGASwipeBackHelper.init(this, null)
     }
 
 }

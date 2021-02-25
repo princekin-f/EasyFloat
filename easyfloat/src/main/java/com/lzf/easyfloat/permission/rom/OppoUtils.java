@@ -2,12 +2,15 @@ package com.lzf.easyfloat.permission.rom;
 
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
+import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.util.Log;
+
+import com.lzf.easyfloat.permission.PermissionUtils;
 
 import java.lang.reflect.Method;
 
@@ -27,7 +30,8 @@ public class OppoUtils {
     public static boolean checkFloatWindowPermission(Context context) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 19) {
-            return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
+            // OP_SYSTEM_ALERT_WINDOW = 24;
+            return checkOp(context, 24);
         }
         return true;
     }
@@ -53,17 +57,15 @@ public class OppoUtils {
     /**
      * oppo ROM 权限申请
      */
-    public static void applyOppoPermission(Context context) {
+    public static void applyOppoPermission(Fragment fragment) {
         //merge requestPermission from https://github.com/zhaozepeng/FloatWindowPermission/pull/26
         try {
             Intent intent = new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //com.coloros.safecenter/.sysfloatwindow.FloatWindowListActivity
-            ComponentName comp = new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.sysfloatwindow.FloatWindowListActivity");//悬浮窗管理页面
+            //悬浮窗管理页面
+            ComponentName comp = new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.sysfloatwindow.FloatWindowListActivity");
             intent.setComponent(comp);
-            context.startActivity(intent);
-        }
-        catch(Exception e){
+            fragment.startActivityForResult(intent, PermissionUtils.requestCode);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

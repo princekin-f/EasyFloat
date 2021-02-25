@@ -46,11 +46,11 @@ object PermissionUtils {
 
     internal fun requestPermission(fragment: Fragment) =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) when {
-            RomUtils.checkIsHuaweiRom() -> HuaweiUtils.applyPermission(fragment.activity)
-            RomUtils.checkIsMiuiRom() -> MiuiUtils.applyMiuiPermission(fragment.activity)
-            RomUtils.checkIsOppoRom() -> OppoUtils.applyOppoPermission(fragment.activity)
+            RomUtils.checkIsHuaweiRom() -> HuaweiUtils.applyPermission(fragment)
+            RomUtils.checkIsMiuiRom() -> MiuiUtils.applyMiuiPermission(fragment)
+            RomUtils.checkIsOppoRom() -> OppoUtils.applyOppoPermission(fragment)
             RomUtils.checkIsMeizuRom() -> MeizuUtils.applyPermission(fragment)
-            RomUtils.checkIs360Rom() -> QikuUtils.applyPermission(fragment.activity)
+            RomUtils.checkIs360Rom() -> QikuUtils.applyPermission(fragment)
             else -> Logger.i(TAG, "原生 Android 6.0 以下无需权限申请")
         } else commonROMPermissionApply(fragment)
 

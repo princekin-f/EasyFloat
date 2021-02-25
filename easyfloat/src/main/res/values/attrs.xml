@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <!--圆弧进度条-->
+    <declare-styleable name="TasksCompletedView">
+        <!--内圆半径-->
+        <attr name="radius" format="dimension" />
+        <!--内圆颜色-->
+        <attr name="circleColor" format="color" />
+        <!--进度条宽度-->
+        <attr name="progressWidth" format="dimension" />
+        <!--进度条颜色-->
+        <attr name="progressColor" format="color" />
+        <!--进度条背景色-->
+        <attr name="progressBgColor" format="color" />
+        <!--进度条中间的文字-->
+        <attr name="progressText" format="string" />
+        <!--进度条中间的文字大小-->
+        <attr name="progressTextSize" format="dimension" />
+        <!--进度条中间的文字颜色-->
+        <attr name="progressTextColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleLoadingView">
+        <!--圆弧宽度-->
+        <attr name="arcWidth" format="dimension" />
+        <!--加载动画的颜色-->
+        <attr name="loadingColor" format="color" />
+        <!--环形圆点的数量-->
+        <attr name="dotSize" format="integer" />
+        <!--圆环转动一周的时间-->
+        <attr name="durationTime" format="float" />
+        <!--每周期圆点旋转的角度-->
+        <attr name="dotAngle" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="DefaultCloseView">
+        <!--区域默认颜色-->
+        <attr name="normalColor" format="color" />
+        <!--区域选中颜色-->
+        <attr name="inRangeColor" format="color" />
+        <!--区域形状-->
+        <attr name="shapeType" format="enum">
+            <enum name="oval" value="0" />
+            <enum name="rect" value="1" />
+            <enum name="circle" value="2" />
+        </attr>
+        <!--选中切换时的缩放大小-->
+        <attr name="zoomSize" format="dimension" />
+    </declare-styleable>
+
+</resources>

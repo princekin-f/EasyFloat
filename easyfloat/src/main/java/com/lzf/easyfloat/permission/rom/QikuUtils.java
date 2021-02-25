@@ -5,12 +5,15 @@ package com.lzf.easyfloat.permission.rom;
 
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
 import android.util.Log;
+
+import com.lzf.easyfloat.permission.PermissionUtils;
 
 import java.lang.reflect.Method;
 
@@ -23,7 +26,8 @@ public class QikuUtils {
     public static boolean checkFloatWindowPermission(Context context) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 19) {
-            return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
+            // OP_SYSTEM_ALERT_WINDOW = 24;
+            return checkOp(context, 24);
         }
         return true;
     }
@@ -36,7 +40,7 @@ public class QikuUtils {
             try {
                 Class clazz = AppOpsManager.class;
                 Method method = clazz.getDeclaredMethod("checkOp", int.class, int.class, String.class);
-                return AppOpsManager.MODE_ALLOWED == (int)method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
+                return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
             } catch (Exception e) {
                 Log.e(TAG, Log.getStackTraceString(e));
             }
@@ -49,16 +53,15 @@ public class QikuUtils {
     /**
      * 去360权限申请页面
      */
-    public static void applyPermission(Context context) {
+    public static void applyPermission(Fragment fragment) {
         Intent intent = new Intent();
         intent.setClassName("com.android.settings", "com.android.settings.Settings$OverlaySettingsActivity");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (isIntentAvailable(intent, context)) {
-            context.startActivity(intent);
+        if (isIntentAvailable(intent, fragment.getActivity())) {
+            fragment.startActivityForResult(intent, PermissionUtils.requestCode);
         } else {
             intent.setClassName("com.qihoo360.mobilesafe", "com.qihoo360.mobilesafe.ui.index.AppEnterActivity");
-            if (isIntentAvailable(intent, context)) {
-                context.startActivity(intent);
+            if (isIntentAvailable(intent, fragment.getActivity())) {
+                fragment.startActivityForResult(intent, PermissionUtils.requestCode);
             } else {
                 Log.e(TAG, "can't open permission page with particular name, please use " +
                         "\"adb shell dumpsys activity\" command and tell me the name of the float window permission page");

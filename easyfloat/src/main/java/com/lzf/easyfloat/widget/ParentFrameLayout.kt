@@ -1,4 +1,4 @@
-package com.lzf.easyfloat.widget.appfloat
+package com.lzf.easyfloat.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -59,7 +59,7 @@ internal class ParentFrameLayout(
      */
     override fun dispatchKeyEventPreIme(event: KeyEvent?): Boolean {
         if (config.hasEditText && event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_BACK) {
-            InputMethodUtils.closedInputMethod(FloatManager.getTag(config.floatTag))
+            InputMethodUtils.closedInputMethod(config.floatTag)
         }
         return super.dispatchKeyEventPreIme(event)
     }
