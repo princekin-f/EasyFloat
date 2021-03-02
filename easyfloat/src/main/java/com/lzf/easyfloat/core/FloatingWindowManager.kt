@@ -16,8 +16,6 @@ internal object FloatingWindowManager {
 
     private const val DEFAULT_TAG = "default"
     val windowMap = ConcurrentHashMap<String, FloatingWindowHelper>()
-//    val map :ConcurrentHashMap
-//    val list = java.util.Collections.synchronizedList(mutableListOf<String>())
 
     /**
      * 创建浮窗，tag不存在创建，tag存在创建失败

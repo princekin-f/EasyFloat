@@ -24,10 +24,10 @@
 
 |状态回调|View修改|拓展使用|
 |:---:|:---:|:---:|
-|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%96%B9%E4%BE%BF%E7%9A%84view%E4%BF%AE%E6%94%B9.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/dialog%E5%92%8Cxml%E4%BD%BF%E7%94%A8.gif)|
+|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%96%B9%E4%BE%BF%E7%9A%84view%E4%BF%AE%E6%94%B9.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/DragUtils.gif)|
 
 ## 下载体验：
-- [直接下载测试APK](https://raw.githubusercontent.com/princekin-f/EasyFloat/master/example/release/EasyFloat.apk)，或者扫码下载：
+- [直接下载测试APK](http://fir.zsc7454.cn/qgp2?release_id=603e0d26b2eb4639c8315f4d)，或者扫码下载：
 
 ![](https://raw.githubusercontent.com/princekin-f/EasyFloat/master/example/release/downloadImage.png)
 

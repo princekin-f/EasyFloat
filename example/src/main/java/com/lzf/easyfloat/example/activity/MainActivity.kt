@@ -146,7 +146,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     private fun showActivity2(tag: String = "seekBar") {
         // 改变浮窗1的文字
-        EasyFloat.getFloatView()?.findViewById<TextView>(R.id.textView)?.text = "恭喜浮窗2"
+        EasyFloat.getFloatView("showActivityFloat")?.findViewById<TextView>(R.id.textView)?.text = "欢迎浮窗2"
 
         EasyFloat.with(this)
             .setTag(tag)
