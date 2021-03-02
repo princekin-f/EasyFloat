@@ -44,9 +44,18 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
+    // 抢先版，希望大家多反馈
     implementation 'com.github.princekin-f:EasyFloat:2.0.0-beta'
 }
 ```
+
+```
+dependencies {
+    // 稳定版
+    implementation 'com.github.princekin-f:EasyFloat:1.3.4'
+}
+```
+[稳定版 v1.3.4 使用文档](https://github.com/princekin-f/EasyFloat/blob/master/readme/README_1.3.4.md)
 
 ## 一行代码搞定Android浮窗，浮窗从未如此简单：
 ```
