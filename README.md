@@ -29,7 +29,7 @@
 ## 下载体验：
 - [直接下载测试APK](http://fir.zsc7454.cn/qgp2?release_id=603e0d26b2eb4639c8315f4d)，或者扫码下载：
 
-![](https://raw.githubusercontent.com/princekin-f/EasyFloat/master/example/release/downloadImage.png)
+![](https://github.com/princekin-f/EasyFloat/blob/master/readme/downloadImage.png)
 
 ## 关于集成：
 - **在项目的根目录的`build.gradle`添加：**
