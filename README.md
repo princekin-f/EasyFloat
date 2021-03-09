@@ -36,26 +36,26 @@
 ```
 allprojects {
     repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+        ...
+	maven { url 'https://jitpack.io' }
+    }
 }
 ```
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
     // 抢先版，希望大家多反馈
-    implementation 'com.github.princekin-f:EasyFloat:2.0.0-beta'
+    implementation 'com.github.princekin-f:EasyFloat:2.0.0'
 }
 ```
 
 ```
 dependencies {
-    // 稳定版
+    // 上一代稳定版
     implementation 'com.github.princekin-f:EasyFloat:1.3.4'
 }
 ```
-[稳定版 v1.3.4 使用文档](https://github.com/princekin-f/EasyFloat/blob/master/readme/README_1.3.4.md)
+[老版本 v1.3.4 使用文档](https://github.com/princekin-f/EasyFloat/blob/master/readme/README_1.3.4.md)
 
 ## 一行代码搞定Android浮窗，浮窗从未如此简单：
 ```
@@ -93,6 +93,8 @@ EasyFloat.with(this)
     .setLocation(100, 200)
     // 设置浮窗的对齐方式和坐标偏移量
     .setGravity(Gravity.END or Gravity.CENTER_VERTICAL, 0, 200)
+    // 设置拖拽边界值
+    .setBorder(100, 100，800，800)
     // 设置宽高是否充满父布局，直接在xml设置match_parent属性无效
     .setMatchParent(widthMatch = false, heightMatch = false)
     // 设置浮窗的出入动画，可自定义，实现相应接口即可（策略模式），无需动画直接设置为null
@@ -175,6 +177,9 @@ isShow(tag: String? = null)
 
 // 获取我们设置的浮窗View
 getFloatView(tag: String? = null)
+
+// 更新浮窗坐标，未指定坐标执行吸附动画
+updateFloat(tag: String? = null, x: Int = -1, y: Int = -1)
 
 // *******************  系统浮窗独有  *******************
 // 添加单个浮窗过滤页面
