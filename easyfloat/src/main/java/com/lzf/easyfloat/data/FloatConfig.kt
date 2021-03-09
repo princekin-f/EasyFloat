@@ -52,6 +52,12 @@ data class FloatConfig(
     var locationPair: Pair<Int, Int> = Pair(0, 0),
     // ps：优先使用固定坐标，若固定坐标不为原点坐标，gravity属性和offset属性无效
 
+    // 四周边界值
+    var leftBorder: Int = 0,
+    var topBorder: Int = -999,
+    var rightBorder: Int = 9999,
+    var bottomBorder: Int = 9999,
+
     // Callbacks
     var invokeView: OnInvokeView? = null,
     var callbacks: OnFloatCallbacks? = null,

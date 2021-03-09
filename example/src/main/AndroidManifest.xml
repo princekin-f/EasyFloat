@@ -31,6 +31,7 @@
         <activity android:name=".activity.SecondActivity" />
         <activity android:name=".activity.JavaTestActivity" />
         <activity android:name=".activity.SwipeTestActivity" />
+        <activity android:name=".activity.BorderTestActivity" />
 
     </application>
 

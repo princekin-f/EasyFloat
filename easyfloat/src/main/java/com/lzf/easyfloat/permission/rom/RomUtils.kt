@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 
 /**
  * @author: liuzhenfeng
- * @github：https://github.com/princekin-f/EasyHttp
+ * @github：https://github.com/princekin-f/EasyFloat
  * @function: 判断手机ROM
  * @date: 2020-01-07  22:30
  */
@@ -40,7 +40,7 @@ object RomUtils {
             input = BufferedReader(InputStreamReader(p.inputStream), 1024)
             line = input.readLine()
             input.close()
-        } catch (ex: IOException) {
+        } catch (ex: Exception) {
             Log.e(TAG, "Unable to read sysprop $propName", ex)
             return null
         } finally {

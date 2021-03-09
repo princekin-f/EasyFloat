@@ -12,6 +12,7 @@ import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.utils.DisplayUtils
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -27,6 +28,12 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
     // 悬浮的父布局高度、宽度
     private var parentHeight = 0
     private var parentWidth = 0
+
+    // 四周坐标边界值
+    private var leftBorder = 0
+    private var topBorder = 0
+    private var rightBorder = 0
+    private var bottomBorder = 0
 
     // 起点坐标
     private var lastX = 0f
@@ -70,17 +77,16 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 // 记录触摸点的位置
                 lastX = event.rawX
                 lastY = event.rawY
-                // 屏幕宽高需要每次获取，可能会有屏幕旋转、虚拟导航栏的状态变化
-                parentWidth = DisplayUtils.getScreenWidth(context)
-                parentHeight = config.displayHeight.getDisplayRealHeight(context)
-                // 获取在整个屏幕内的绝对坐标
-                view.getLocationOnScreen(location)
-                // 通过绝对高度和相对高度比较，判断包含顶部状态栏
-                statusBarHeight = if (location[1] > params.y) statusBarHeight(view) else 0
-                emptyHeight = parentHeight - view.height - statusBarHeight
+                // 初始化一些边界数据
+                initBoarderValue(view, params)
             }
 
             MotionEvent.ACTION_MOVE -> {
+                // 过滤边界值之外的拖拽
+                if (event.rawX < leftBorder || event.rawX > rightBorder + view.width
+                    || event.rawY < topBorder || event.rawY > bottomBorder + view.width
+                ) return
+
                 // 移动值 = 本次触摸值 - 上次触摸值
                 val dx = event.rawX - lastX
                 val dy = event.rawY - lastY
@@ -92,8 +98,8 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 var y = params.y + dy.toInt()
                 // 检测浮窗是否到达边缘
                 x = when {
-                    x < 0 -> 0
-                    x > parentWidth - view.width -> parentWidth - view.width
+                    x < leftBorder -> leftBorder
+                    x > rightBorder -> rightBorder
                     else -> x
                 }
 
@@ -104,11 +110,12 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 }
 
                 y = when {
+                    y < topBorder -> topBorder
                     // 状态栏沉浸时，最小高度为-statusBarHeight，反之最小高度为0
                     y < 0 -> if (config.immersionStatusBar) {
                         if (y < -statusBarHeight) -statusBarHeight else y
                     } else 0
-                    y > emptyHeight -> emptyHeight
+                    y > bottomBorder -> bottomBorder
                     else -> y
                 }
 
@@ -154,7 +161,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
                 lastY = event.rawY
             }
 
-            MotionEvent.ACTION_UP -> {
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (!config.isDrag) return
                 // 回调拖拽事件的ACTION_UP
                 config.callbacks?.drag(view, event)
@@ -178,17 +185,67 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
         }
     }
 
+    /**
+     * 根据吸附类别，更新浮窗位置
+     */
+    fun updateFloat(
+        view: View,
+        params: LayoutParams,
+        windowManager: WindowManager
+    ) {
+        initBoarderValue(view, params)
+        sideAnim(view, params, windowManager)
+    }
+
+    /**
+     * 初始化边界值等数据
+     */
+    private fun initBoarderValue(view: View, params: LayoutParams) {
+        // 屏幕宽高需要每次获取，可能会有屏幕旋转、虚拟导航栏的状态变化
+        parentWidth = DisplayUtils.getScreenWidth(context)
+        parentHeight = config.displayHeight.getDisplayRealHeight(context)
+        // 获取在整个屏幕内的绝对坐标
+        view.getLocationOnScreen(location)
+        // 通过绝对高度和相对高度比较，判断包含顶部状态栏
+        statusBarHeight = if (location[1] > params.y) statusBarHeight(view) else 0
+        emptyHeight = parentHeight - view.height - statusBarHeight
+
+        leftBorder = max(0, config.leftBorder)
+        rightBorder = min(parentWidth, config.rightBorder) - view.width
+        topBorder = if (config.showPattern == ShowPattern.CURRENT_ACTIVITY) {
+            // 单页面浮窗，坐标屏幕顶部计算
+            if (config.immersionStatusBar) config.topBorder
+            else config.topBorder + statusBarHeight(view)
+        } else {
+            // 系统浮窗，坐标从状态栏底部开始，沉浸时坐标为负
+            if (config.immersionStatusBar) config.topBorder - statusBarHeight(view) else config.topBorder
+        }
+        bottomBorder = if (config.showPattern == ShowPattern.CURRENT_ACTIVITY) {
+            // 单页面浮窗，坐标屏幕顶部计算
+            if (config.immersionStatusBar)
+                min(emptyHeight, config.bottomBorder - view.height)
+            else
+                min(emptyHeight, config.bottomBorder + statusBarHeight(view) - view.height)
+        } else {
+            // 系统浮窗，坐标从状态栏底部开始，沉浸时坐标为负
+            if (config.immersionStatusBar)
+                min(emptyHeight, config.bottomBorder - statusBarHeight(view) - view.height)
+            else
+                min(emptyHeight, config.bottomBorder - view.height)
+        }
+    }
+
     private fun sideAnim(
         view: View,
         params: LayoutParams,
         windowManager: WindowManager
     ) {
-        initDistanceValue(params, view)
+        initDistanceValue(params)
         val isX: Boolean
         val end = when (config.sidePattern) {
             SidePattern.RESULT_LEFT -> {
                 isX = true
-                0
+                leftBorder
             }
             SidePattern.RESULT_RIGHT -> {
                 isX = true
@@ -196,30 +253,30 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
             }
             SidePattern.RESULT_HORIZONTAL -> {
                 isX = true
-                if (leftDistance < rightDistance) 0 else params.x + rightDistance
+                if (leftDistance < rightDistance) leftBorder else params.x + rightDistance
             }
 
             SidePattern.RESULT_TOP -> {
                 isX = false
-                if (config.immersionStatusBar) -statusBarHeight else 0
+                topBorder
             }
             SidePattern.RESULT_BOTTOM -> {
                 isX = false
                 // 不要轻易使用此相关模式，需要考虑虚拟导航栏的情况
-                emptyHeight
+                bottomBorder
             }
             SidePattern.RESULT_VERTICAL -> {
                 isX = false
-                if (topDistance < bottomDistance) 0 else emptyHeight
+                if (topDistance < bottomDistance) topBorder else bottomBorder
             }
 
             SidePattern.RESULT_SIDE -> {
                 if (minX < minY) {
                     isX = true
-                    if (leftDistance < rightDistance) 0 else params.x + rightDistance
+                    if (leftDistance < rightDistance) leftBorder else params.x + rightDistance
                 } else {
                     isX = false
-                    if (topDistance < bottomDistance) if (config.immersionStatusBar) -statusBarHeight else 0 else emptyHeight
+                    if (topDistance < bottomDistance) topBorder else bottomBorder
                 }
             }
             else -> return
@@ -262,11 +319,11 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
     /**
      * 计算一些边界距离数据
      */
-    private fun initDistanceValue(params: LayoutParams, view: View) {
-        leftDistance = params.x
-        rightDistance = parentWidth - (leftDistance + view.right)
-        topDistance = params.y
-        bottomDistance = emptyHeight - topDistance
+    private fun initDistanceValue(params: LayoutParams) {
+        leftDistance = params.x - leftBorder
+        rightDistance = rightBorder - params.x
+        topDistance = params.y - topBorder
+        bottomDistance = bottomBorder - params.y
 
         minX = min(leftDistance, rightDistance)
         minY = min(topDistance, bottomDistance)

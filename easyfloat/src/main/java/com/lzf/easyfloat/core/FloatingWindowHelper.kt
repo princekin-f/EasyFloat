@@ -319,4 +319,19 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
         Logger.e("浮窗关闭出现异常：$e")
     }
 
+    /**
+     * 更新浮窗坐标
+     */
+    fun updateFloat(x: Int, y: Int) {
+        frameLayout?.let {
+            if (x == -1 && y == -1) {
+                // 未指定具体坐标，执行吸附动画
+                it.postDelayed({ touchUtils.updateFloat(it, params, windowManager) }, 200)
+            } else {
+                params.x = x
+                params.y = y
+                windowManager.updateViewLayout(it, params)
+            }
+        }
+    }
 }

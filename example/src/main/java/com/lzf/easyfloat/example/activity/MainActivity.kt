@@ -52,6 +52,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         openSecond.setOnClickListener(this)
         openSwipeTest.setOnClickListener(this)
+        openBorderTest.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -79,6 +80,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
             openSecond -> startActivity<SecondActivity>(this)
             openSwipeTest -> startActivity<SwipeTestActivity>(this)
+            openBorderTest -> startActivity<BorderTestActivity>(this)
 
             else -> return
         }

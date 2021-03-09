@@ -12,6 +12,7 @@ import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.utils.LifecycleUtils
 import com.lzf.easyfloat.interfaces.FloatCallbacks
+import com.lzf.easyfloat.utils.DisplayUtils
 import com.lzf.easyfloat.utils.Logger
 import java.lang.Exception
 
@@ -86,6 +87,15 @@ class EasyFloat {
         @JvmStatic
         @JvmOverloads
         fun getFloatView(tag: String? = null): View? = getConfig(tag)?.layoutView
+
+        /**
+         * 更新浮窗坐标，未指定坐标执行吸附动画
+         * @param tag 浮窗标签
+         * @param x 更新后的X轴坐标
+         * @param y 更新后的Y轴坐标
+         */
+        fun updateFloat(tag: String? = null, x: Int = -1, y: Int = -1) =
+            FloatingWindowManager.getHelper(tag)?.updateFloat(x, y)
 
         // 以下几个方法为：系统浮窗过滤页面的添加、移除、清空
         /**
@@ -199,6 +209,25 @@ class EasyFloat {
          * @param y 起始竖直坐标
          */
         fun setLocation(x: Int, y: Int) = apply { config.locationPair = Pair(x, y) }
+
+        /**
+         * 设置浮窗的拖拽边距值
+         * @param left 浮窗左侧边距
+         * @param top 浮窗顶部边距
+         * @param right 浮窗右侧边距
+         * @param bottom 浮窗底部边距
+         */
+        fun setBorder(
+            left: Int = 0,
+            top: Int = -DisplayUtils.getStatusBarHeight(activity),
+            right: Int = DisplayUtils.getScreenWidth(activity),
+            bottom: Int = DisplayUtils.getScreenHeight(activity)
+        ) = apply {
+            config.leftBorder = left
+            config.topBorder = top
+            config.rightBorder = right
+            config.bottomBorder = bottom
+        }
 
         /**
          * 设置浮窗的标签：只有一个浮窗时，可以不设置；

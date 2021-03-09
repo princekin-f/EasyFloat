@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white2">
+
+    <View
+            android:id="@+id/view_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="180dp"
+            android:background="@color/violet" />
+
+    <TextView
+            android:id="@+id/tv_show"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="Show Border Test"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_bg" />
+
+    <TextView
+            android:id="@+id/tv_dismiss"
+            style="@style/TextStyle2"
+            android:layout_marginTop="20dp"
+            android:text="Dismiss Border Test"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_show" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
