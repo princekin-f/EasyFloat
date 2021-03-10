@@ -22,12 +22,12 @@
 |:---:|:---:|:---:|
 |![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%9D%83%E9%99%90%E7%94%B3%E8%AF%B7.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E7%B3%BB%E7%BB%9F%E6%B5%AE%E7%AA%97.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%B5%AE%E7%AA%97%E7%BC%A9%E6%94%BE.gif)|
 
-|状态回调|View修改|拓展使用|
+|状态回调|拖拽边界|拓展使用|
 |:---:|:---:|:---:|
-|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%B5%AE%E7%AA%97Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/%E6%96%B9%E4%BE%BF%E7%9A%84view%E4%BF%AE%E6%94%B9.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/DragUtils.gif)|
+|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/Callbacks.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/BoarderAndSlide.gif)|![](https://github.com/princekin-f/EasyFloat/blob/master/readme/DragUtils.gif)|
 
 ## 下载体验：
-- [直接下载测试APK](http://fir.zsc7454.cn/qgp2?release_id=603e0d26b2eb4639c8315f4d)，或者扫码下载：
+- [直接下载测试APK](http://fir.zsc7454.cn/qgp2)，或者扫码下载：
 
 ![](https://github.com/princekin-f/EasyFloat/blob/master/readme/downloadImage.png)
 
@@ -44,7 +44,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    // 抢先版，希望大家多反馈
+    // 最新版本，希望大家多反馈
     implementation 'com.github.princekin-f:EasyFloat:2.0.0'
 }
 ```

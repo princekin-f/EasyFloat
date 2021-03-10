@@ -84,7 +84,7 @@ internal class TouchUtils(val context: Context, val config: FloatConfig) {
             MotionEvent.ACTION_MOVE -> {
                 // 过滤边界值之外的拖拽
                 if (event.rawX < leftBorder || event.rawX > rightBorder + view.width
-                    || event.rawY < topBorder || event.rawY > bottomBorder + view.width
+                    || event.rawY < topBorder || event.rawY > bottomBorder + view.height
                 ) return
 
                 // 移动值 = 本次触摸值 - 上次触摸值

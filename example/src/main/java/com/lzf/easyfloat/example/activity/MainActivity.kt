@@ -101,7 +101,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             .setTag(tag)
             .registerCallback {
                 // 在此处设置view也可以，建议在setLayout进行view操作
-                createResult { isCreated, msg, _ -> logger.e("DSL:  $isCreated   $msg") }
+                createResult { isCreated, msg, _ ->
+                    toast("isCreated: $isCreated")
+                    logger.e("DSL:  $isCreated   $msg")
+                }
 
                 show { toast("show") }
 
@@ -148,7 +151,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     private fun showActivity2(tag: String = "seekBar") {
         // 改变浮窗1的文字
-        EasyFloat.getFloatView("showActivityFloat")?.findViewById<TextView>(R.id.textView)?.text = "欢迎浮窗2"
+        EasyFloat.getFloatView("showActivityFloat")?.findViewById<TextView>(R.id.textView)?.text =
+            "欢迎浮窗2"
 
         EasyFloat.with(this)
             .setTag(tag)

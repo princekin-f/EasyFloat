@@ -94,6 +94,8 @@ class EasyFloat {
          * @param x 更新后的X轴坐标
          * @param y 更新后的Y轴坐标
          */
+        @JvmStatic
+        @JvmOverloads
         fun updateFloat(tag: String? = null, x: Int = -1, y: Int = -1) =
             FloatingWindowManager.getHelper(tag)?.updateFloat(x, y)
 
@@ -217,6 +219,7 @@ class EasyFloat {
          * @param right 浮窗右侧边距
          * @param bottom 浮窗底部边距
          */
+        @JvmOverloads
         fun setBorder(
             left: Int = 0,
             top: Int = -DisplayUtils.getStatusBarHeight(activity),

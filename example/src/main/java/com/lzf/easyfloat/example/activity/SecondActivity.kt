@@ -140,6 +140,8 @@ class SecondActivity : BaseActivity() {
             .setLocation(100, 200)
             // 设置浮窗的对齐方式和坐标偏移量
             .setGravity(Gravity.END or Gravity.CENTER_VERTICAL, 0, 200)
+            // 设置拖拽边界值
+            .setBorder(100, 100, 800, 800)
             // 设置宽高是否充满父布局，直接在xml设置match_parent属性无效
             .setMatchParent(widthMatch = false, heightMatch = false)
             // 设置浮窗的出入动画，可自定义，实现相应接口即可（策略模式），无需动画直接设置为null

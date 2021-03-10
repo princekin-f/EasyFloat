@@ -7,7 +7,6 @@ import android.widget.ImageView
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
-import com.lzf.easyfloat.utils.DisplayUtils
 import kotlinx.android.synthetic.main.activity_border_test.*
 
 /**
@@ -45,16 +44,10 @@ class BorderTestActivity : BaseActivity() {
                     EasyFloat.updateFloat(tag)
                 }
             }
-            .setBorder(
-                30f.dp2px(), 50f.dp2px(),
-                DisplayUtils.getScreenWidth(this) - 30f.dp2px(),
-                DisplayUtils.getScreenHeight(this) - 180f.dp2px()
-            )
+            .setBorder(view_bg.left, view_bg.top, view_bg.right, view_bg.bottom)
             .setGravity(Gravity.CENTER)
             .setSidePattern(SidePattern.RESULT_SIDE)
             .show()
     }
-
-    private fun Float.dp2px() = DisplayUtils.dp2px(this@BorderTestActivity, this)
 
 }
