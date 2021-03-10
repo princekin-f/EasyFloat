@@ -45,7 +45,7 @@ allprojects {
 ```
 dependencies {
     // 最新版本，希望大家多反馈
-    implementation 'com.github.princekin-f:EasyFloat:2.0.0'
+    implementation 'com.github.princekin-f:EasyFloat:2.0.1'
 }
 ```
 
