@@ -122,26 +122,8 @@ EasyFloat.with(this)
 
 ```
 .registerCallbacks(new OnFloatCallbacks() {
-        @Override
-        public void createdResult(boolean isCreated, @Nullable String msg, @Nullable View view) { }
-
-        @Override
-        public void show(@NotNull View view) { }
-
-        @Override
-        public void hide(@NotNull View view) { }
-
-        @Override
-        public void dismiss() { }
-
-        @Override
-        public void touchEvent(@NotNull View view, @NotNull MotionEvent event) { }
-
-        @Override
-        public void drag(@NotNull View view, @NotNull MotionEvent event) { }
-
-        @Override
-        public void dragEnd(@NotNull View view) { }
+        // 各种回调...
+        ...
 })
 ```
 
