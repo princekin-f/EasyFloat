@@ -122,8 +122,8 @@ EasyFloat.with(this)
 
 ```
 .registerCallbacks(new OnFloatCallbacks() {
-        // 各种回调...
-        ...
+    // 各种回调...
+    ...
 })
 ```
 
@@ -187,16 +187,16 @@ clearFilters(tag: String? = null)
 ```
 // 在拖拽回调中，注册拖拽关闭
 drag { view, motionEvent ->
-	DragUtils.registerDragClose(motionEvent, object : OnTouchRangeListener {
-		override fun touchInRange(inRange: Boolean, view: BaseSwitchView) {
-			// 震动、视图调整等...
-		}
+    DragUtils.registerDragClose(motionEvent, object : OnTouchRangeListener {
+        override fun touchInRange(inRange: Boolean, view: BaseSwitchView) {
+            // 震动、视图调整等...
+        }
 
-		override fun touchUpInRange() {
-			// 关闭浮窗等...
-			EasyFloat.dismiss(tag, true)
-		}
-	})
+        override fun touchUpInRange() {
+            // 关闭浮窗等...
+            EasyFloat.dismiss(tag, true)
+        }
+    })
 }
 
 // 在Activity的dispatchTouchEvent中，注册侧滑创建
