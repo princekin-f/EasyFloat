@@ -1,4 +1,4 @@
-package com.lzf.easyfloat.widget.switch
+package com.lzf.easyfloat.widget
 
 import android.content.Context
 import android.graphics.*
@@ -11,7 +11,7 @@ import com.lzf.easyfloat.utils.DisplayUtils
 /**
  * @author: liuzhenfeng
  * @date: 2020/10/25  11:16
- * @Package: com.lzf.easyfloat.widget.switch
+ * @Package: com.lzf.easyfloat.widget
  * @Description:
  */
 class DefaultCloseView @JvmOverloads constructor(

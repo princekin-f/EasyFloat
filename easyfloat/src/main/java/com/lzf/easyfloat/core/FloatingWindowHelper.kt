@@ -70,7 +70,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             height = if (config.heightMatch) MATCH_PARENT else WRAP_CONTENT
 
             if (config.immersionStatusBar && config.heightMatch) {
-                height = DisplayUtils.getScreenSize(context).y
+                height = DisplayUtils.getScreenHeight(context)
             }
 
             // 如若设置了固定坐标，直接定位

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lzf.easyfloat.widget.switch.DefaultAddView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lzf.easyfloat.widget.DefaultAddView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:clipChildren="false">
@@ -27,4 +27,4 @@
             android:paddingStart="26dp"
             android:src="@drawable/add_normal" />
 
-</com.lzf.easyfloat.widget.switch.DefaultAddView>
+</com.lzf.easyfloat.widget.DefaultAddView>

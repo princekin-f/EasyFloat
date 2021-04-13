@@ -19,7 +19,7 @@ import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.interfaces.OnTouchRangeListener
 import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.utils.DragUtils
-import com.lzf.easyfloat.widget.switch.BaseSwitchView
+import com.lzf.easyfloat.widget.BaseSwitchView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.max
 

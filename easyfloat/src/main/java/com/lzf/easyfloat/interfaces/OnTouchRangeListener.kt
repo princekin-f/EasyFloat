@@ -1,6 +1,6 @@
 package com.lzf.easyfloat.interfaces
 
-import com.lzf.easyfloat.widget.switch.BaseSwitchView
+import com.lzf.easyfloat.widget.BaseSwitchView
 
 /**
  * @author: liuzhenfeng

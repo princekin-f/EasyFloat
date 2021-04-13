@@ -2,12 +2,13 @@ package com.lzf.easyfloat.utils
 
 import android.app.Service
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
-import android.util.Log
-import android.view.*
+import android.view.View
+import android.view.WindowManager
 import com.lzf.easyfloat.permission.rom.RomUtils
 
 /**
@@ -40,21 +41,25 @@ object DisplayUtils {
     }
 
     /**
-     * 获取屏幕宽度
+     * 获取屏幕宽度（显示宽度，横屏的时候可能会小于物理像素值）
      */
-    fun getScreenWidth(context: Context) = context.resources.displayMetrics.widthPixels
+    fun getScreenWidth(context: Context): Int {
+        val windowManager = context.getSystemService(Service.WINDOW_SERVICE) as WindowManager
+        val outMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(outMetrics)
+        return outMetrics.widthPixels
+    }
 
     /**
-     * 获取屏幕高度
+     * 获取屏幕高度（物理像素值的高度）
      */
-    fun getScreenHeight(context: Context) = context.resources.displayMetrics.heightPixels
+    fun getScreenHeight(context: Context) = getScreenSize(context).y
 
     /**
      * 获取屏幕宽高
      */
     fun getScreenSize(context: Context) = Point().apply {
-        val windowManager: WindowManager =
-            context.getSystemService(Service.WINDOW_SERVICE) as WindowManager
+        val windowManager = context.getSystemService(Service.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         display.getRealSize(this)
     }

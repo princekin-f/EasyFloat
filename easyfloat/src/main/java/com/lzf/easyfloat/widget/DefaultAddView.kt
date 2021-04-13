@@ -1,4 +1,4 @@
-package com.lzf.easyfloat.widget.switch
+package com.lzf.easyfloat.widget
 
 import android.content.Context
 import android.graphics.*
@@ -9,7 +9,7 @@ import com.lzf.easyfloat.interfaces.OnTouchRangeListener
 /**
  * @author: liuzhenfeng
  * @date: 11/21/20  17:49
- * @Package: com.lzf.easyfloat.widget.switch
+ * @Package: com.lzf.easyfloat.widget
  * @Description:
  */
 class DefaultAddView @JvmOverloads constructor(
