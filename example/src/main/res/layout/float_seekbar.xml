@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="150dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layoutContent"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:background="@color/translucent"
         android:orientation="vertical">
 
-    <TextView
+        <TextView
             android:id="@+id/tvProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -15,7 +21,7 @@
             android:textColor="@color/pinkRed"
             android:textSize="20sp" />
 
-    <ImageView
+        <ImageView
             android:id="@+id/ivClose"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -23,7 +29,7 @@
             android:padding="10dp"
             android:src="@drawable/icon_x" />
 
-    <SeekBar
+        <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,4 +39,16 @@
             android:progress="20" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/viewOther"
+        android:layout_width="wrap_content"
+        android:text="简化模式"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_height="55dp"
+        android:background="@color/translucent" />
+
+</LinearLayout>
