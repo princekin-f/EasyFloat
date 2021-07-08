@@ -53,6 +53,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         openSecond.setOnClickListener(this)
         openSwipeTest.setOnClickListener(this)
         openBorderTest.setOnClickListener(this)
+
+        // 测试activity中onCreate就启动浮框
+        // showActivity2()
     }
 
     override fun onClick(v: View?) {
