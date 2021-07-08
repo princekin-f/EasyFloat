@@ -38,14 +38,27 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
     var lastLayoutMeasureWidth = -1
     var lastLayoutMeasureHeight = -1;
 
-    fun createWindow() = try {
+    fun createWindow() {
         touchUtils = TouchUtils(context, config)
-        initParams()
-        addView()
-        config.isShow = true
-    } catch (e: Exception) {
-        config.callbacks?.createdResult(false, "$e", null)
-        config.floatCallbacks?.builder?.createdResult?.invoke(false, "$e", null)
+        if (getToken() == null) {
+            val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
+            activity?.findViewById<View>(android.R.id.content)?.post {
+                createWindowInner()
+            }
+        } else {
+            createWindowInner()
+        }
+    }
+
+    private fun createWindowInner() {
+        try {
+            initParams()
+            addView()
+            config.isShow = true
+        } catch (e: Exception) {
+            config.callbacks?.createdResult(false, "$e", null)
+            config.floatCallbacks?.builder?.createdResult?.invoke(false, "$e", null)
+        }
     }
 
     private fun initParams() {
