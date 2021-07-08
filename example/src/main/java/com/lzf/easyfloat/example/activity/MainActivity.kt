@@ -21,6 +21,7 @@ import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.utils.DragUtils
 import com.lzf.easyfloat.widget.BaseSwitchView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.float_seekbar.*
 import kotlin.math.max
 
 
@@ -53,6 +54,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         openSecond.setOnClickListener(this)
         openSwipeTest.setOnClickListener(this)
         openBorderTest.setOnClickListener(this)
+
+        // 测试activity中onCreate就启动浮框
+        // showActivity2()
     }
 
     override fun onClick(v: View?) {
@@ -157,7 +161,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         EasyFloat.with(this)
             .setTag(tag)
             .setGravity(Gravity.CENTER)
+            .setLayoutChangedGravity(Gravity.END)
             .setLayout(R.layout.float_seekbar) {
+                val layoutContent = it.findViewById<View>(R.id.layoutContent);
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
                     EasyFloat.dismiss(tag)
                 }
@@ -176,6 +182,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
                         override fun onStopTrackingTouch(seekBar: SeekBar?) {}
                     })
+                it.findViewById<TextView>(R.id.viewOther).setOnClickListener { otherView->
+                    if (layoutContent.visibility == View.VISIBLE) layoutContent.visibility = View.GONE
+                    else layoutContent.visibility = View.VISIBLE
+                }
             }
             .show()
     }

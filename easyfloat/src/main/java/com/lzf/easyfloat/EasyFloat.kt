@@ -206,6 +206,16 @@ class EasyFloat {
         }
 
         /**
+         * 当layout大小变化后，整体view的位置的对齐方式
+         * 比如，当设置为 Gravity.END 时，当view的宽度变小或者变大时，都将会以原有的右边对齐 <br/>
+         * 默认对齐方式为左上角
+         * @param gravity 对齐方式
+         */
+        fun setLayoutChangedGravity(gravity: Int) = apply {
+            config.layoutChangedGravity = gravity;
+        }
+
+        /**
          * 设置浮窗的起始坐标，优先级高于setGravity
          * @param x 起始水平坐标
          * @param y 起始竖直坐标
