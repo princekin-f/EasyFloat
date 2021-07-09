@@ -1,5 +1,6 @@
 package com.lzf.easyfloat.data
 
+import android.view.Gravity
 import android.view.View
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
@@ -75,6 +76,8 @@ data class FloatConfig(
     // 是否设置，当前创建的页面也被过滤
     internal var filterSelf: Boolean = false,
     // 是否需要显示，当过滤信息匹配上时，该值为false（用户手动调用隐藏，该值也为false，相当于手动过滤）
-    internal var needShow: Boolean = true
+    internal var needShow: Boolean = true,
 
+    // 当layout大小变化后，整体view的位置的摆放
+    var layoutChangedGravity: Int = Gravity.TOP.or(Gravity.START)
 )
