@@ -44,8 +44,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    // 最新版本，希望大家多反馈
-    implementation 'com.github.princekin-f:EasyFloat:2.0.2'
+    implementation 'com.github.princekin-f:EasyFloat:2.0.3'
 }
 ```
 
@@ -77,7 +76,7 @@ EasyFloat.with(this).setLayout(R.layout.float_test).show()
 ## 完整使用示例：
 ```
 EasyFloat.with(this)
-    // 设置浮窗xml布局文件，并可设置详细信息
+    // 设置浮窗xml布局文件/自定义View，并可设置详细信息
     .setLayout(R.layout.float_app) { }
     // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
     .setShowPattern(ShowPattern.ALL_TIME)
@@ -93,6 +92,8 @@ EasyFloat.with(this)
     .setLocation(100, 200)
     // 设置浮窗的对齐方式和坐标偏移量
     .setGravity(Gravity.END or Gravity.CENTER_VERTICAL, 0, 200)
+    // 设置当布局大小变化后，整体view的位置对齐方式
+    .setLayoutChangedGravity(Gravity.END)
     // 设置拖拽边界值
     .setBorder(100, 100，800，800)
     // 设置宽高是否充满父布局，直接在xml设置match_parent属性无效

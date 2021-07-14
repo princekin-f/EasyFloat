@@ -44,10 +44,14 @@ object DisplayUtils {
      * 获取屏幕宽度（显示宽度，横屏的时候可能会小于物理像素值）
      */
     fun getScreenWidth(context: Context): Int {
-        val windowManager = context.getSystemService(Service.WINDOW_SERVICE) as WindowManager
-        val outMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(outMetrics)
-        return outMetrics.widthPixels
+        val manager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val metrics = DisplayMetrics()
+        manager.defaultDisplay.getRealMetrics(metrics)
+        return if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            metrics.widthPixels
+        } else {
+            metrics.widthPixels - getNavigationBarCurrentHeight(context)
+        }
     }
 
     /**

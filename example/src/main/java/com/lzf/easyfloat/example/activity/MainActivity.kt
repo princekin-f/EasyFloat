@@ -13,19 +13,24 @@ import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.example.logger
 import com.lzf.easyfloat.example.startActivity
-import com.lzf.easyfloat.example.widget.RoundProgressBar
-import com.lzf.easyfloat.example.widget.ScaleImage
+import com.lzf.easyfloat.example.widget.*
 import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.interfaces.OnTouchRangeListener
 import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.utils.DragUtils
 import com.lzf.easyfloat.widget.BaseSwitchView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.float_seekbar.*
 import kotlin.math.max
 
 
 class MainActivity : BaseActivity(), View.OnClickListener {
+
+    companion object {
+        private const val TAG_1 = "TAG_1"
+        private const val TAG_2 = "TAG_2"
+        private const val TAG_3 = "TAG_3"
+        private const val TAG_4 = "TAG_4"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,20 +61,20 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         openBorderTest.setOnClickListener(this)
 
         // 测试activity中onCreate就启动浮框
-        // showActivity2()
+//         showActivity2()
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            open1 -> showActivityFloat()
-            hide1 -> EasyFloat.hide("showActivityFloat")
-            show1 -> EasyFloat.show("showActivityFloat")
-            dismiss1 -> EasyFloat.dismiss("showActivityFloat")
+            open1 -> showActivityFloat(TAG_1)
+            hide1 -> EasyFloat.hide(TAG_1)
+            show1 -> EasyFloat.show(TAG_1)
+            dismiss1 -> EasyFloat.dismiss(TAG_1)
 
-            open2 -> showActivity2()
-            hide2 -> EasyFloat.hide("seekBar")
-            show2 -> EasyFloat.show("seekBar")
-            dismiss2 -> EasyFloat.dismiss("seekBar")
+            open2 -> showActivity2(TAG_2)
+            hide2 -> EasyFloat.hide(TAG_2)
+            show2 -> EasyFloat.show(TAG_2)
+            dismiss2 -> EasyFloat.dismiss(TAG_2)
 
             // 检测权限根据需求考虑有无即可，权限申请为内部进行
             open3 -> checkPermission()
@@ -77,10 +82,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             show3 -> EasyFloat.show()
             dismiss3 -> EasyFloat.dismiss()
 
-            open4 -> checkPermission("scaleFloat")
-            hide4 -> EasyFloat.hide("scaleFloat")
-            show4 -> EasyFloat.show("scaleFloat")
-            dismiss4 -> EasyFloat.dismiss("scaleFloat")
+            open4 -> checkPermission(TAG_4)
+            hide4 -> EasyFloat.hide(TAG_4)
+            show4 -> EasyFloat.show(TAG_4)
+            dismiss4 -> EasyFloat.dismiss(TAG_4)
 
             openSecond -> startActivity<SecondActivity>(this)
             openSwipeTest -> startActivity<SwipeTestActivity>(this)
@@ -94,15 +99,16 @@ class MainActivity : BaseActivity(), View.OnClickListener {
      * 测试Callback回调
      */
     @SuppressLint("SetTextI18n")
-    private fun showActivityFloat(tag: String = "showActivityFloat") {
+    private fun showActivityFloat(tag: String) {
         EasyFloat.with(this)
             .setSidePattern(SidePattern.RESULT_HORIZONTAL)
             .setImmersionStatusBar(true)
             .setGravity(Gravity.END, 0, 10)
-            .setLayout(R.layout.float_custom) {
+            // 传入View，传入布局文件皆可，如：MyCustomView(this)、R.layout.float_custom
+            .setLayout(MyCustomView(this)) {
                 it.findViewById<TextView>(R.id.textView).setOnClickListener { toast() }
             }
-            .setTag(tag)
+            .setTag(TAG_1)
             .registerCallback {
                 // 在此处设置view也可以，建议在setLayout进行view操作
                 createResult { isCreated, msg, _ ->
@@ -153,17 +159,15 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             .show()
     }
 
-    private fun showActivity2(tag: String = "seekBar") {
+    private fun showActivity2(tag: String) {
         // 改变浮窗1的文字
-        EasyFloat.getFloatView("showActivityFloat")?.findViewById<TextView>(R.id.textView)?.text =
-            "欢迎浮窗2"
+        EasyFloat.getFloatView(TAG_1)?.findViewById<TextView>(R.id.textView)?.text = "😆😆😆"
 
         EasyFloat.with(this)
             .setTag(tag)
             .setGravity(Gravity.CENTER)
             .setLayoutChangedGravity(Gravity.END)
             .setLayout(R.layout.float_seekbar) {
-                val layoutContent = it.findViewById<View>(R.id.layoutContent);
                 it.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
                     EasyFloat.dismiss(tag)
                 }
@@ -182,9 +186,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
                         override fun onStopTrackingTouch(seekBar: SeekBar?) {}
                     })
-                it.findViewById<TextView>(R.id.viewOther).setOnClickListener { otherView->
-                    if (layoutContent.visibility == View.VISIBLE) layoutContent.visibility = View.GONE
-                    else layoutContent.visibility = View.VISIBLE
+
+                val layoutContent = it.findViewById<View>(R.id.layoutContent)
+                it.findViewById<TextView>(R.id.viewOther).setOnClickListener {
+                    layoutContent.visibility =
+                        if (layoutContent.visibility == View.VISIBLE) View.GONE else View.VISIBLE
                 }
             }
             .show()

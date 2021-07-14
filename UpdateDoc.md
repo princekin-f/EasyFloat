@@ -1,6 +1,13 @@
 ## 版本更新日志
+#### v 2.0.3:
+- [支持直接设置View（`xml/View`即可使用）](https://github.com/princekin-f/EasyFloat/issues/110)；
+- [支持设置布局大小变化后，整体View的位置对齐方式](https://github.com/princekin-f/EasyFloat/pull/159)；
+- [修复`onCreate`无法创建单页面浮窗的问题](https://github.com/princekin-f/EasyFloat/issues/132)；
+- [修复在别的应用，横屏宽度异常问题](https://github.com/princekin-f/EasyFloat/issues/135)；
+- [修复浮窗创建失败，无法创建相同TAG的问题](https://github.com/princekin-f/EasyFloat/issues/138)。
+
 #### v 2.0.2:
-- 解决Java关键字导致的包名冲突和[在别的应用上横屏的问题](https://github.com/princekin-f/EasyFloat/issues/135)
+- 解决Java关键字导致的包名冲突。
 
 #### v 2.0.0:
 - 新增拖拽关闭、侧滑创建、状态栏沉浸、拖拽边界等功能；

@@ -21,13 +21,16 @@ internal object FloatingWindowManager {
      * 创建浮窗，tag不存在创建，tag存在创建失败
      * 创建结果通过tag添加到相应的map进行管理
      */
-    fun create(context: Context, config: FloatConfig) = if (!checkTag(config)) {
-        windowMap[config.floatTag!!] =
-            FloatingWindowHelper(context, config).apply { createWindow() }
-    } else {
-        // 存在相同的tag，直接创建失败
-        config.callbacks?.createdResult(false, WARN_REPEATED_TAG, null)
-        Logger.w(WARN_REPEATED_TAG)
+    fun create(context: Context, config: FloatConfig) {
+        if (!checkTag(config)) {
+            val helper = FloatingWindowHelper(context, config)
+            if (helper.createWindow()) windowMap[config.floatTag!!] = helper
+        } else {
+            // 存在相同的tag，直接创建失败
+            config.callbacks?.createdResult(false, WARN_REPEATED_TAG, null)
+            config.floatCallbacks?.builder?.createdResult?.invoke(false, WARN_REPEATED_TAG, null)
+            Logger.w(WARN_REPEATED_TAG)
+        }
     }
 
     /**

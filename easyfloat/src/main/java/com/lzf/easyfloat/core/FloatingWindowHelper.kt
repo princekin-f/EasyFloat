@@ -9,7 +9,6 @@ import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import android.view.*
 import android.view.WindowManager.LayoutParams.*
 import android.widget.EditText
@@ -35,30 +34,26 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
     var frameLayout: ParentFrameLayout? = null
     private lateinit var touchUtils: TouchUtils
     private var enterAnimator: Animator? = null
-    var lastLayoutMeasureWidth = -1
-    var lastLayoutMeasureHeight = -1;
+    private var lastLayoutMeasureWidth = -1
+    private var lastLayoutMeasureHeight = -1
 
-    fun createWindow() {
-        touchUtils = TouchUtils(context, config)
-        if (getToken() == null) {
-            val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
-            activity?.findViewById<View>(android.R.id.content)?.post {
-                createWindowInner()
-            }
-        } else {
-            createWindowInner()
-        }
+    fun createWindow(): Boolean = if (getToken() == null) {
+        val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
+        activity?.findViewById<View>(android.R.id.content)?.post { createWindowInner() } ?: false
+    } else {
+        createWindowInner()
     }
 
-    private fun createWindowInner() {
-        try {
-            initParams()
-            addView()
-            config.isShow = true
-        } catch (e: Exception) {
-            config.callbacks?.createdResult(false, "$e", null)
-            config.floatCallbacks?.builder?.createdResult?.invoke(false, "$e", null)
-        }
+    private fun createWindowInner(): Boolean = try {
+        touchUtils = TouchUtils(context, config)
+        initParams()
+        addView()
+        config.isShow = true
+        true
+    } catch (e: Exception) {
+        config.callbacks?.createdResult(false, "$e", null)
+        config.floatCallbacks?.builder?.createdResult?.invoke(false, "$e", null)
+        false
     }
 
     private fun initParams() {
@@ -111,8 +106,8 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
         frameLayout = ParentFrameLayout(context, config)
         frameLayout?.tag = config.floatTag
         // 将浮窗布局文件添加到父容器frameLayout中，并返回该浮窗文件
-        val floatingView =
-            LayoutInflater.from(context).inflate(config.layoutId!!, frameLayout, true)
+        val floatingView = config.layoutView?.also { frameLayout?.addView(it) }
+            ?: LayoutInflater.from(context).inflate(config.layoutId!!, frameLayout, true)
         // 为了避免创建的时候闪一下，我们先隐藏视图，不能直接设置GONE，否则定位会出现问题
         floatingView.visibility = View.INVISIBLE
         // 将frameLayout添加到系统windowManager中
@@ -149,11 +144,19 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             }
         }
 
-        // 监听frameLayout布局完成
+        setChangedListener()
+    }
+
+    /**
+     * 设置布局变化监听，根据变化时的对齐方式，设置浮窗位置
+     */
+    private fun setChangedListener() {
         frameLayout?.apply {
+            // 监听frameLayout布局完成
             viewTreeObserver?.addOnGlobalLayoutListener {
                 val filterInvalidVal = lastLayoutMeasureWidth == -1 || lastLayoutMeasureHeight == -1
-                val filterEqualVal = lastLayoutMeasureWidth == this.measuredWidth && lastLayoutMeasureHeight == this.measuredHeight
+                val filterEqualVal =
+                    lastLayoutMeasureWidth == this.measuredWidth && lastLayoutMeasureHeight == this.measuredHeight
                 if (filterInvalidVal || filterEqualVal) {
                     return@addOnGlobalLayoutListener
                 }
@@ -166,8 +169,9 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                     val diffChangedSize = this.measuredWidth - lastLayoutMeasureWidth
                     params.x = params.x - diffChangedSize
 
-                } else if (config.layoutChangedGravity.and(Gravity.CENTER_HORIZONTAL) == Gravity.CENTER_HORIZONTAL ||
-                        config.layoutChangedGravity.and(Gravity.CENTER) == Gravity.CENTER) {
+                } else if (config.layoutChangedGravity.and(Gravity.CENTER_HORIZONTAL) == Gravity.CENTER_HORIZONTAL
+                    || config.layoutChangedGravity.and(Gravity.CENTER) == Gravity.CENTER
+                ) {
                     val diffChangedCenter = lastLayoutMeasureWidth / 2 - this.measuredWidth / 2
                     params.x += diffChangedCenter
                 }
@@ -180,8 +184,9 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                     val diffChangedSize = this.measuredHeight - lastLayoutMeasureHeight
                     params.y = params.y - diffChangedSize
 
-                } else if (config.layoutChangedGravity.and(Gravity.CENTER_VERTICAL) == Gravity.CENTER_VERTICAL ||
-                        config.layoutChangedGravity.and(Gravity.CENTER) == Gravity.CENTER) {
+                } else if (config.layoutChangedGravity.and(Gravity.CENTER_VERTICAL) == Gravity.CENTER_VERTICAL
+                    || config.layoutChangedGravity.and(Gravity.CENTER) == Gravity.CENTER
+                ) {
                     val diffChangedCenter = lastLayoutMeasureHeight / 2 - this.measuredHeight / 2
                     params.y += diffChangedCenter
                 }
