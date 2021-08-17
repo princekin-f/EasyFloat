@@ -75,8 +75,8 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             // 设置浮窗以外的触摸事件可以传递给后面的窗口、不自动获取焦点
             flags = if (config.immersionStatusBar)
             // 没有边界限制，允许窗口扩展到屏幕外
-                FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
-            else FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE
+                FLAG_NOT_TOUCH_MODAL or focusAble() or FLAG_LAYOUT_NO_LIMITS
+            else FLAG_NOT_TOUCH_MODAL or focusAble()
             width = if (config.widthMatch) MATCH_PARENT else WRAP_CONTENT
             height = if (config.heightMatch) MATCH_PARENT else WRAP_CONTENT
 
@@ -320,7 +320,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             .enterAnim()?.apply {
                 // 可以延伸到屏幕外，动画结束按需去除该属性，不然旋转屏幕可能置于屏幕外部
                 params.flags =
-                    FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
+                    FLAG_NOT_TOUCH_MODAL or focusAble() or FLAG_LAYOUT_NO_LIMITS
 
                 addListener(object : Animator.AnimatorListener {
                     override fun onAnimationRepeat(animation: Animator?) {}
@@ -329,7 +329,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                         config.isAnim = false
                         if (!config.immersionStatusBar) {
                             // 不需要延伸到屏幕外了，防止屏幕旋转的时候，浮窗处于屏幕外
-                            params.flags = FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE
+                            params.flags = FLAG_NOT_TOUCH_MODAL or focusAble()
                         }
                         initEditText()
                     }
@@ -361,7 +361,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             // 二次判断，防止重复调用引发异常
             if (config.isAnim) return
             config.isAnim = true
-            params.flags = FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
+            params.flags = FLAG_NOT_TOUCH_MODAL or focusAble() or FLAG_LAYOUT_NO_LIMITS
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {}
 
@@ -400,6 +400,17 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                 params.y = y
                 windowManager.updateViewLayout(it, params)
             }
+        }
+    }
+
+    /**
+     * 根据 config 返回是否需要焦点的 flag
+     */
+    private fun focusAble() : Int {
+        if(config.focusable) {
+            return 0
+        }else{
+            return FLAG_NOT_FOCUSABLE
         }
     }
 }

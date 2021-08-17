@@ -79,5 +79,8 @@ data class FloatConfig(
     internal var needShow: Boolean = true,
 
     // 当layout大小变化后，整体view的位置的摆放
-    var layoutChangedGravity: Int = Gravity.TOP.or(Gravity.START)
+    var layoutChangedGravity: Int = Gravity.TOP.or(Gravity.START),
+
+    //设置浮窗是否获取焦点
+    var focusable: Boolean = false
 )
