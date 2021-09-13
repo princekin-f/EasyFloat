@@ -37,12 +37,20 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
     private var lastLayoutMeasureWidth = -1
     private var lastLayoutMeasureHeight = -1
 
-    fun createWindow(): Boolean = if (getToken() == null) {
-        val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
-        activity?.findViewById<View>(android.R.id.content)?.post { createWindowInner() } ?: false
-    } else {
-        createWindowInner()
-    }
+//    fun createWindow(): Boolean = if (getToken() == null) {
+//        val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
+//        activity?.findViewById<View>(android.R.id.content)?.post { createWindowInner() } ?: false
+//    } else {
+//        createWindowInner()
+//    }
+
+    /**
+     * 直接调用，不再使用 getToken() 判断，并post
+     * 原因：如果调用 float.show() 后，内部调用了 post 的话，在 post 之前调用了 dismiss
+     *      将会导致程序崩溃，因为 post 是在线程 looper 到之后才会执行创建
+     *      异步的 post 将导致多个问题。
+     */
+    fun createWindow(): Boolean = createWindowInner()
 
     private fun createWindowInner(): Boolean = try {
         touchUtils = TouchUtils(context, config)
