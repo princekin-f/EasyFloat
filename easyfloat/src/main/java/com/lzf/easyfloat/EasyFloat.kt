@@ -332,6 +332,17 @@ class EasyFloat {
         }
 
         /**
+         * 设置浮窗是否获取焦点，
+         * 获取焦点后，底部的 activity 将不能响应按键事件
+         * 此功能一般在 TV 版本 app 上需要用到
+         *
+         * @param 是否允许获取焦点
+         */
+        fun setFocusable(focusable:Boolean) = apply {
+            config.focusable = focusable
+        }
+
+        /**
          * 创建浮窗，包括Activity浮窗和系统浮窗，如若系统浮窗无权限，先进行权限申请
          */
         fun show() = when {

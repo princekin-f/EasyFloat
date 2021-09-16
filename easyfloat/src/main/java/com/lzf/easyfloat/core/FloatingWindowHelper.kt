@@ -37,12 +37,20 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
     private var lastLayoutMeasureWidth = -1
     private var lastLayoutMeasureHeight = -1
 
-    fun createWindow(): Boolean = if (getToken() == null) {
-        val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
-        activity?.findViewById<View>(android.R.id.content)?.post { createWindowInner() } ?: false
-    } else {
-        createWindowInner()
-    }
+//    fun createWindow(): Boolean = if (getToken() == null) {
+//        val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
+//        activity?.findViewById<View>(android.R.id.content)?.post { createWindowInner() } ?: false
+//    } else {
+//        createWindowInner()
+//    }
+
+    /**
+     * 直接调用，不再使用 getToken() 判断，并post
+     * 原因：如果调用 float.show() 后，内部调用了 post 的话，在 post 之前调用了 dismiss
+     *      将会导致程序崩溃，因为 post 是在线程 looper 到之后才会执行创建
+     *      异步的 post 将导致多个问题。
+     */
+    fun createWindow(): Boolean = createWindowInner()
 
     private fun createWindowInner(): Boolean = try {
         touchUtils = TouchUtils(context, config)
@@ -75,8 +83,8 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             // 设置浮窗以外的触摸事件可以传递给后面的窗口、不自动获取焦点
             flags = if (config.immersionStatusBar)
             // 没有边界限制，允许窗口扩展到屏幕外
-                FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
-            else FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE
+                FLAG_NOT_TOUCH_MODAL or focusAble() or FLAG_LAYOUT_NO_LIMITS
+            else FLAG_NOT_TOUCH_MODAL or focusAble()
             width = if (config.widthMatch) MATCH_PARENT else WRAP_CONTENT
             height = if (config.heightMatch) MATCH_PARENT else WRAP_CONTENT
 
@@ -320,7 +328,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             .enterAnim()?.apply {
                 // 可以延伸到屏幕外，动画结束按需去除该属性，不然旋转屏幕可能置于屏幕外部
                 params.flags =
-                    FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
+                    FLAG_NOT_TOUCH_MODAL or focusAble() or FLAG_LAYOUT_NO_LIMITS
 
                 addListener(object : Animator.AnimatorListener {
                     override fun onAnimationRepeat(animation: Animator?) {}
@@ -329,7 +337,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                         config.isAnim = false
                         if (!config.immersionStatusBar) {
                             // 不需要延伸到屏幕外了，防止屏幕旋转的时候，浮窗处于屏幕外
-                            params.flags = FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE
+                            params.flags = FLAG_NOT_TOUCH_MODAL or focusAble()
                         }
                         initEditText()
                     }
@@ -361,7 +369,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             // 二次判断，防止重复调用引发异常
             if (config.isAnim) return
             config.isAnim = true
-            params.flags = FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
+            params.flags = FLAG_NOT_TOUCH_MODAL or focusAble() or FLAG_LAYOUT_NO_LIMITS
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {}
 
@@ -400,6 +408,17 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                 params.y = y
                 windowManager.updateViewLayout(it, params)
             }
+        }
+    }
+
+    /**
+     * 根据 config 返回是否需要焦点的 flag
+     */
+    private fun focusAble() : Int {
+        if(config.focusable) {
+            return 0
+        }else{
+            return FLAG_NOT_FOCUSABLE
         }
     }
 }
