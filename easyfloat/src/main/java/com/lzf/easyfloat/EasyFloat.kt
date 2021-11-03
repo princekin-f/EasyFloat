@@ -205,6 +205,17 @@ class EasyFloat {
         }
 
         /**
+         * 设置浮窗的布局视图，以及布局的操作接口
+         * @param layoutViewBuilder 自定义的布局视图Builder
+         * @param invokeView 布局视图的操作接口
+         */
+        @JvmOverloads
+        fun setLayout(layoutViewBuilder:(View)-> View, invokeView: OnInvokeView? = null) = apply {
+            config.layoutViewBuilder = layoutViewBuilder
+            config.invokeView = invokeView
+        }
+
+        /**
          * 设置浮窗的对齐方式，以及偏移量
          * @param gravity 对齐方式
          * @param offsetX 目标坐标的水平偏移量
@@ -336,7 +347,7 @@ class EasyFloat {
          */
         fun show() = when {
             // 未设置浮窗布局文件/布局视图，不予创建
-            config.layoutId == null && config.layoutView == null ->
+            config.layoutId == null && config.layoutView == null&&config.layoutViewBuilder==null ->
                 callbackCreateFailed(WARN_NO_LAYOUT)
             // 仅当页显示，则直接创建activity浮窗
             config.showPattern == ShowPattern.CURRENT_ACTIVITY -> createFloat()

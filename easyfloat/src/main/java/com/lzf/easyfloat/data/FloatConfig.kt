@@ -18,6 +18,7 @@ data class FloatConfig(
     // 浮窗的xml布局文件
     var layoutId: Int? = null,
     var layoutView: View? = null,
+    var layoutViewBuilder: ((View) -> View)? = null,
 
     // 当前浮窗的tag
     var floatTag: String? = null,

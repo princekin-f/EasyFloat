@@ -103,10 +103,13 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
      */
     private fun addView() {
         // 创建一个frameLayout作为浮窗布局的父容器
-        frameLayout = ParentFrameLayout(context, config)
-        frameLayout?.tag = config.floatTag
+        val frameLayout = ParentFrameLayout(context, config).apply {
+            frameLayout = this
+        }
+        frameLayout.tag = config.floatTag
         // 将浮窗布局文件添加到父容器frameLayout中，并返回该浮窗文件
-        val floatingView = config.layoutView?.also { frameLayout?.addView(it) }
+        val floatingView = (config.layoutView ?: config.layoutViewBuilder?.invoke(frameLayout))
+            ?.also { frameLayout.addView(it) }
             ?: LayoutInflater.from(context).inflate(config.layoutId!!, frameLayout, true)
         // 为了避免创建的时候闪一下，我们先隐藏视图，不能直接设置GONE，否则定位会出现问题
         floatingView.visibility = View.INVISIBLE
@@ -114,17 +117,17 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
         windowManager.addView(frameLayout, params)
 
         // 通过重写frameLayout的Touch事件，实现拖拽效果
-        frameLayout?.touchListener = object : OnFloatTouchListener {
+        frameLayout.touchListener = object : OnFloatTouchListener {
             override fun onTouch(event: MotionEvent) =
-                touchUtils.updateFloat(frameLayout!!, event, windowManager, params)
+                touchUtils.updateFloat(frameLayout, event, windowManager, params)
         }
 
         // 在浮窗绘制完成的时候，设置初始坐标、执行入场动画
-        frameLayout?.layoutListener = object : ParentFrameLayout.OnLayoutListener {
+        frameLayout.layoutListener = object : ParentFrameLayout.OnLayoutListener {
             override fun onLayout() {
                 setGravity(frameLayout)
-                lastLayoutMeasureWidth = frameLayout?.measuredWidth ?: -1
-                lastLayoutMeasureHeight = frameLayout?.measuredHeight ?: -1
+                lastLayoutMeasureWidth = frameLayout.measuredWidth ?: -1
+                lastLayoutMeasureHeight = frameLayout.measuredHeight ?: -1
                 config.apply {
                     // 如果设置了过滤当前页，或者后台显示前台创建、前台显示后台创建，隐藏浮窗，否则执行入场动画
                     if (filterSelf

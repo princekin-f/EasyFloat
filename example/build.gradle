@@ -6,7 +6,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.lzf.easyfloat.example"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -39,6 +39,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.0.4"
+    }
 }
 
 dependencies {
@@ -54,4 +62,8 @@ dependencies {
     implementation 'cn.bingoogolapple:bga-swipebacklayout:2.0.1@aar'
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
+
+    implementation 'androidx.compose.ui:ui:1.0.4'
+    implementation 'androidx.compose.ui:ui-tooling:1.0.4'
+    implementation 'androidx.compose.material:material:1.0.4'
 }

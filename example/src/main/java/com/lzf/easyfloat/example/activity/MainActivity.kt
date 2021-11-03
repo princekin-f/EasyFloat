@@ -3,17 +3,25 @@ package com.lzf.easyfloat.example.activity
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
+import androidx.compose.material.Text
+import androidx.compose.ui.platform.ComposeView
+import androidx.lifecycle.ViewTreeLifecycleOwner
+import androidx.lifecycle.ViewTreeViewModelStoreOwner
+import androidx.savedstate.ViewTreeSavedStateRegistryOwner
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
 import com.lzf.easyfloat.example.logger
 import com.lzf.easyfloat.example.startActivity
-import com.lzf.easyfloat.example.widget.*
+import com.lzf.easyfloat.example.widget.MyCustomView
+import com.lzf.easyfloat.example.widget.RoundProgressBar
+import com.lzf.easyfloat.example.widget.ScaleImage
 import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.interfaces.OnTouchRangeListener
 import com.lzf.easyfloat.permission.PermissionUtils
@@ -30,6 +38,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         private const val TAG_2 = "TAG_2"
         private const val TAG_3 = "TAG_3"
         private const val TAG_4 = "TAG_4"
+        private const val TAG_5 = "TAG_5"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,21 +49,25 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         open2.setOnClickListener(this)
         open3.setOnClickListener(this)
         open4.setOnClickListener(this)
+        open5.setOnClickListener(this)
 
         hide1.setOnClickListener(this)
         hide2.setOnClickListener(this)
         hide3.setOnClickListener(this)
         hide4.setOnClickListener(this)
+        hide5.setOnClickListener(this)
 
         show1.setOnClickListener(this)
         show2.setOnClickListener(this)
         show3.setOnClickListener(this)
         show4.setOnClickListener(this)
+        show5.setOnClickListener(this)
 
         dismiss1.setOnClickListener(this)
         dismiss2.setOnClickListener(this)
         dismiss3.setOnClickListener(this)
         dismiss4.setOnClickListener(this)
+        dismiss5.setOnClickListener(this)
 
         openSecond.setOnClickListener(this)
         openSwipeTest.setOnClickListener(this)
@@ -86,6 +99,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             hide4 -> EasyFloat.hide(TAG_4)
             show4 -> EasyFloat.show(TAG_4)
             dismiss4 -> EasyFloat.dismiss(TAG_4)
+
+            open5 -> checkPermission(TAG_5)
+            hide5 -> EasyFloat.hide(TAG_5)
+            show5 -> EasyFloat.show(TAG_5)
+            dismiss5 -> EasyFloat.dismiss(TAG_5)
 
             openSecond -> startActivity<SecondActivity>(this)
             openSwipeTest -> startActivity<SwipeTestActivity>(this)
@@ -292,12 +310,36 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             .show()
     }
 
+    private fun showSystemFloatCompose() {
+        EasyFloat.with(this.applicationContext)
+            .setTag(TAG_5)
+            .setShowPattern(ShowPattern.FOREGROUND)
+            .setLocation(100, 100)
+            .setLayout({ parent ->
+                ViewTreeLifecycleOwner.set(parent, this)
+                ViewTreeViewModelStoreOwner.set(parent, this)
+                ViewTreeSavedStateRegistryOwner.set(parent, this)
+                ComposeView(this)
+            }) {
+                if (it is ComposeView) {
+                    it.setContent {
+                        Text(text = "我是compose悬浮窗")
+                    }
+                }
+            }
+            .show()
+    }
+
     /**
      * 检测浮窗权限是否开启，若没有给与申请提示框（非必须，申请依旧是EasyFloat内部内保进行）
      */
     private fun checkPermission(tag: String? = null) {
         if (PermissionUtils.checkPermission(this)) {
-            if (tag == null) showAppFloat() else showAppFloat2(tag)
+            when (tag) {
+                null -> showAppFloat()
+                TAG_5 -> showSystemFloatCompose()
+                else -> showAppFloat2(tag)
+            }
         } else {
             AlertDialog.Builder(this)
                 .setMessage("使用浮窗功能，需要您授权悬浮窗权限。")
