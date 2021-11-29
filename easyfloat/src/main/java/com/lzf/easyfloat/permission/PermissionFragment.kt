@@ -1,11 +1,12 @@
 package com.lzf.easyfloat.permission
 
-import android.app.Activity
-import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.utils.Logger
 
@@ -19,17 +20,17 @@ internal class PermissionFragment : Fragment() {
     companion object {
         private var onPermissionResult: OnPermissionResult? = null
 
-        fun requestPermission(activity: Activity, onPermissionResult: OnPermissionResult) {
+        fun requestPermission(activity: FragmentActivity, onPermissionResult: OnPermissionResult) {
             this.onPermissionResult = onPermissionResult
-            activity.fragmentManager
+            activity.supportFragmentManager
                 .beginTransaction()
                 .add(PermissionFragment(), activity.localClassName)
                 .commitAllowingStateLoss()
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // 权限申请
         PermissionUtils.requestPermission(this)
         Logger.i("PermissionFragment：requestPermission")
@@ -46,7 +47,7 @@ internal class PermissionFragment : Fragment() {
                 onPermissionResult?.permissionResult(check)
                 onPermissionResult = null
                 // 将Fragment移除
-                fragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
+                parentFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
             }, 500)
         }
     }

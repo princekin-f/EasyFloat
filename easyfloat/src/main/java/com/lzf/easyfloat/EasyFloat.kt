@@ -3,6 +3,7 @@ package com.lzf.easyfloat
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import com.lzf.easyfloat.core.FloatingWindowManager
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.enums.ShowPattern
@@ -366,7 +367,7 @@ class EasyFloat {
          * 通过Fragment去申请系统悬浮窗权限
          */
         private fun requestPermission() =
-            if (activity is Activity) PermissionUtils.requestPermission(activity, this)
+            if (activity is FragmentActivity) PermissionUtils.requestPermission(activity, this)
             else callbackCreateFailed(WARN_CONTEXT_REQUEST)
 
         /**

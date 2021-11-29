@@ -5,7 +5,6 @@ package com.lzf.easyfloat.permission.rom;
 
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +13,8 @@ import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
+
+import androidx.fragment.app.Fragment;
 
 import com.lzf.easyfloat.permission.PermissionUtils;
 

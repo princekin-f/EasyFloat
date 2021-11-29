@@ -1,13 +1,14 @@
 package com.lzf.easyfloat.permission
 
 import android.app.Activity
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.lzf.easyfloat.interfaces.OnPermissionResult
 import com.lzf.easyfloat.permission.rom.*
 import com.lzf.easyfloat.utils.Logger
@@ -41,7 +42,7 @@ object PermissionUtils {
      * 申请悬浮窗权限
      */
     @JvmStatic
-    fun requestPermission(activity: Activity, onPermissionResult: OnPermissionResult) =
+    fun requestPermission(activity: FragmentActivity, onPermissionResult: OnPermissionResult) =
         PermissionFragment.requestPermission(activity, onPermissionResult)
 
     internal fun requestPermission(fragment: Fragment) =
@@ -106,8 +107,8 @@ object PermissionUtils {
     fun commonROMPermissionApplyInternal(fragment: Fragment) = try {
         val clazz = Settings::class.java
         val field = clazz.getDeclaredField("ACTION_MANAGE_OVERLAY_PERMISSION")
-        val intent = Intent(field.get(null).toString())
-        intent.data = Uri.parse("package:${fragment.activity.packageName}")
+        val intent = Intent(field.get(null)?.toString())
+        intent.data = Uri.parse("package:${fragment.requireActivity().packageName}")
         fragment.startActivityForResult(intent, requestCode)
     } catch (e: Exception) {
         Logger.e(TAG, "$e")

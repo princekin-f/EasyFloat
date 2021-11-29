@@ -126,8 +126,8 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
         frameLayout.layoutListener = object : ParentFrameLayout.OnLayoutListener {
             override fun onLayout() {
                 setGravity(frameLayout)
-                lastLayoutMeasureWidth = frameLayout.measuredWidth ?: -1
-                lastLayoutMeasureHeight = frameLayout.measuredHeight ?: -1
+                lastLayoutMeasureWidth = frameLayout.measuredWidth
+                lastLayoutMeasureHeight = frameLayout.measuredHeight
                 config.apply {
                     // 如果设置了过滤当前页，或者后台显示前台创建、前台显示后台创建，隐藏浮窗，否则执行入场动画
                     if (filterSelf

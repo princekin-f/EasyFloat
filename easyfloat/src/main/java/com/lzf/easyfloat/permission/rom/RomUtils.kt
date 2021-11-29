@@ -6,6 +6,7 @@ import android.util.Log
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.*
 
 /**
  * @author: liuzhenfeng
@@ -62,7 +63,7 @@ object RomUtils {
     fun checkIsMeizuRom(): Boolean {
         val systemProperty = getSystemProperty("ro.build.display.id")
         return if (TextUtils.isEmpty(systemProperty)) false
-        else systemProperty!!.contains("flyme") || systemProperty.toLowerCase().contains("flyme")
+        else systemProperty!!.contains("flyme") || systemProperty.lowercase(Locale.getDefault()).contains("flyme")
     }
 
     fun checkIs360Rom(): Boolean =

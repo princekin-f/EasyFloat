@@ -5,7 +5,6 @@ package com.lzf.easyfloat.permission.rom;
 
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
-import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +13,8 @@ import android.os.Binder;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.lzf.easyfloat.permission.PermissionUtils;
 
