@@ -345,7 +345,7 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             }
         if (enterAnimator == null) {
             floatingView.visibility = View.VISIBLE
-            windowManager.updateViewLayout(floatingView, params)
+            windowManager.updateViewLayout(frameLayout, params)
         }
     }
 
