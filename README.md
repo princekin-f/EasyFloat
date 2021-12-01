@@ -1,5 +1,5 @@
 ## EasyFloat：Android悬浮窗框架
-[![](https://jitpack.io/v/mr-bogey/EasyFloat.svg)](https://jitpack.io/#mr-bogey/EasyFloat)
+[![](https://jitpack.io/v/princekin-f/EasyFloat.svg)](https://jitpack.io/#princekin-f/EasyFloat)
 [![License](https://img.shields.io/badge/License%20-Apache%202-337ab7.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 > [EasyFloat：浮窗从未如此简单](https://www.jianshu.com/p/7d1a7c82094a)
@@ -44,7 +44,7 @@ allprojects {
 - **在应用模块的`build.gradle`添加：**
 ```
 dependencies {
-    implementation 'com.github.princekin-f:EasyFloat:2.0.3'
+    implementation 'com.github.princekin-f:EasyFloat:2.0.4'
 }
 ```
 
@@ -161,8 +161,8 @@ isShow(tag: String? = null)
 // 获取我们设置的浮窗View
 getFloatView(tag: String? = null)
 
-// 更新浮窗坐标，未指定坐标执行吸附动画
-updateFloat(tag: String? = null, x: Int = -1, y: Int = -1)
+// 更新浮窗位置、大小信息，未指定数值执行吸附动画
+updateFloat(tag: String? = null, x: Int = -1, y: Int = -1, width: Int = -1, height: Int = -1)
 
 // *******************  系统浮窗独有  *******************
 // 添加单个浮窗过滤页面

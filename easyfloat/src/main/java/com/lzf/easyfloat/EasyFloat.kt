@@ -28,8 +28,8 @@ class EasyFloat {
 
         /**
          * 通过上下文，创建浮窗的构建者信息，使浮窗拥有一些默认属性
-         * @param activity 上下文信息，优先使用Activity上下文，因为系统浮窗权限的自动申请，需要使用Activity信息
-         * @return 浮窗属性构建者
+         * @param activity  上下文信息，优先使用Activity上下文，因为系统浮窗权限的自动申请，需要使用Activity信息
+         * @return  浮窗属性构建者
          */
         @JvmStatic
         fun with(activity: Context): Builder = if (activity is Activity) Builder(activity)
@@ -37,8 +37,8 @@ class EasyFloat {
 
         /**
          * 关闭当前浮窗
-         * @param tag 浮窗标签
-         * @param force 立即关闭，有退出动画也不执行
+         * @param tag       浮窗标签
+         * @param force     立即关闭，有退出动画也不执行
          */
         @JvmStatic
         @JvmOverloads
@@ -47,7 +47,7 @@ class EasyFloat {
 
         /**
          * 隐藏当前浮窗
-         * @param tag 浮窗标签
+         * @param tag   浮窗标签
          */
         @JvmStatic
         @JvmOverloads
@@ -55,7 +55,7 @@ class EasyFloat {
 
         /**
          * 设置当前浮窗可见
-         * @param tag 浮窗标签
+         * @param tag   浮窗标签
          */
         @JvmStatic
         @JvmOverloads
@@ -63,8 +63,8 @@ class EasyFloat {
 
         /**
          * 设置当前浮窗是否可拖拽，先获取浮窗的config，后修改相应属性
-         * @param dragEnable 是否可拖拽
-         * @param tag 浮窗标签
+         * @param dragEnable    是否可拖拽
+         * @param tag           浮窗标签
          */
         @JvmStatic
         @JvmOverloads
@@ -73,8 +73,8 @@ class EasyFloat {
 
         /**
          * 获取当前浮窗是否显示，通过浮窗的config，获取显示状态
-         * @param tag 浮窗标签
-         * @return 当前浮窗是否显示
+         * @param tag   浮窗标签
+         * @return  当前浮窗是否显示
          */
         @JvmStatic
         @JvmOverloads
@@ -82,28 +82,36 @@ class EasyFloat {
 
         /**
          * 获取当前浮窗中，我们传入的View
-         * @param tag 浮窗标签
+         * @param tag   浮窗标签
          */
         @JvmStatic
         @JvmOverloads
         fun getFloatView(tag: String? = null): View? = getConfig(tag)?.layoutView
 
         /**
-         * 更新浮窗坐标，未指定坐标执行吸附动画
-         * @param tag 浮窗标签
-         * @param x 更新后的X轴坐标
-         * @param y 更新后的Y轴坐标
+         * 更新浮窗坐标、以及大小，未指定数值（全为-1）执行吸附动画；
+         * 需要修改的参数，传入具体数值，不需要修改的参数保持-1即可
+         * @param tag       浮窗标签
+         * @param x         更新后的X轴坐标
+         * @param y         更新后的Y轴坐标
+         * @param width     更新后的宽度
+         * @param height    更新后的高度
          */
         @JvmStatic
         @JvmOverloads
-        fun updateFloat(tag: String? = null, x: Int = -1, y: Int = -1) =
-            FloatingWindowManager.getHelper(tag)?.updateFloat(x, y)
+        fun updateFloat(
+            tag: String? = null,
+            x: Int = -1,
+            y: Int = -1,
+            width: Int = -1,
+            height: Int = -1
+        ) = FloatingWindowManager.getHelper(tag)?.updateFloat(x, y, width, height)
 
         // 以下几个方法为：系统浮窗过滤页面的添加、移除、清空
         /**
          * 为当前浮窗过滤，设置需要过滤的Activity
-         * @param activity 需要过滤的Activity
-         * @param tag 浮窗标签
+         * @param activity  需要过滤的Activity
+         * @param tag       浮窗标签
          */
         @JvmStatic
         @JvmOverloads
@@ -112,8 +120,8 @@ class EasyFloat {
 
         /**
          * 为当前浮窗，设置需要过滤的Activity类名（一个或者多个）
-         * @param tag 浮窗标签
-         * @param clazz 需要过滤的Activity类名，一个或者多个
+         * @param tag       浮窗标签
+         * @param clazz     需要过滤的Activity类名，一个或者多个
          */
         @JvmStatic
         @JvmOverloads
@@ -122,8 +130,8 @@ class EasyFloat {
 
         /**
          * 为当前浮窗，移除需要过滤的Activity
-         * @param activity 需要移除过滤的Activity
-         * @param tag 浮窗标签
+         * @param activity  需要移除过滤的Activity
+         * @param tag       浮窗标签
          */
         @JvmStatic
         @JvmOverloads
@@ -132,8 +140,8 @@ class EasyFloat {
 
         /**
          * 为当前浮窗，移除需要过滤的Activity类名（一个或者多个）
-         * @param tag 浮窗标签
-         * @param clazz 需要移除过滤的Activity类名，一个或者多个
+         * @param tag       浮窗标签
+         * @param clazz     需要移除过滤的Activity类名，一个或者多个
          */
         @JvmStatic
         @JvmOverloads
@@ -142,7 +150,7 @@ class EasyFloat {
 
         /**
          * 清除当前浮窗的所有过滤信息
-         * @param tag 浮窗标签
+         * @param tag   浮窗标签
          */
         @JvmStatic
         @JvmOverloads
@@ -150,13 +158,13 @@ class EasyFloat {
 
         /**
          * 获取当前浮窗的config
-         * @param tag 浮窗标签
+         * @param tag   浮窗标签
          */
         private fun getConfig(tag: String?) = FloatingWindowManager.getHelper(tag)?.config
 
         /**
          * 获取当前浮窗的过滤集合
-         * @param tag 浮窗标签
+         * @param tag   浮窗标签
          */
         private fun getFilterSet(tag: String?) = getConfig(tag)?.filterSet
     }
@@ -172,20 +180,20 @@ class EasyFloat {
 
         /**
          * 设置浮窗的吸附模式
-         * @param sidePattern 浮窗吸附模式
+         * @param sidePattern   浮窗吸附模式
          */
         fun setSidePattern(sidePattern: SidePattern) = apply { config.sidePattern = sidePattern }
 
         /**
          * 设置浮窗的显示模式
-         * @param showPattern 浮窗显示模式
+         * @param showPattern   浮窗显示模式
          */
         fun setShowPattern(showPattern: ShowPattern) = apply { config.showPattern = showPattern }
 
         /**
          * 设置浮窗的布局文件，以及布局的操作接口
-         * @param layoutId 布局文件的资源Id
-         * @param invokeView 布局文件的操作接口
+         * @param layoutId      布局文件的资源Id
+         * @param invokeView    布局文件的操作接口
          */
         @JvmOverloads
         fun setLayout(layoutId: Int, invokeView: OnInvokeView? = null) = apply {
@@ -195,8 +203,8 @@ class EasyFloat {
 
         /**
          * 设置浮窗的布局视图，以及布局的操作接口
-         * @param layoutView 自定义的布局视图
-         * @param invokeView 布局视图的操作接口
+         * @param layoutView    自定义的布局视图
+         * @param invokeView    布局视图的操作接口
          */
         @JvmOverloads
         fun setLayout(layoutView: View, invokeView: OnInvokeView? = null) = apply {
@@ -206,9 +214,9 @@ class EasyFloat {
 
         /**
          * 设置浮窗的对齐方式，以及偏移量
-         * @param gravity 对齐方式
-         * @param offsetX 目标坐标的水平偏移量
-         * @param offsetY 目标坐标的竖直偏移量
+         * @param gravity   对齐方式
+         * @param offsetX   目标坐标的水平偏移量
+         * @param offsetY   目标坐标的竖直偏移量
          */
         @JvmOverloads
         fun setGravity(gravity: Int, offsetX: Int = 0, offsetY: Int = 0) = apply {
@@ -220,7 +228,7 @@ class EasyFloat {
          * 当layout大小变化后，整体view的位置的对齐方式
          * 比如，当设置为 Gravity.END 时，当view的宽度变小或者变大时，都将会以原有的右边对齐 <br/>
          * 默认对齐方式为左上角
-         * @param gravity 对齐方式
+         * @param gravity   对齐方式
          */
         fun setLayoutChangedGravity(gravity: Int) = apply {
             config.layoutChangedGravity = gravity;
@@ -228,17 +236,17 @@ class EasyFloat {
 
         /**
          * 设置浮窗的起始坐标，优先级高于setGravity
-         * @param x 起始水平坐标
-         * @param y 起始竖直坐标
+         * @param x     起始水平坐标
+         * @param y     起始竖直坐标
          */
         fun setLocation(x: Int, y: Int) = apply { config.locationPair = Pair(x, y) }
 
         /**
          * 设置浮窗的拖拽边距值
-         * @param left 浮窗左侧边距
-         * @param top 浮窗顶部边距
-         * @param right 浮窗右侧边距
-         * @param bottom 浮窗底部边距
+         * @param left      浮窗左侧边距
+         * @param top       浮窗顶部边距
+         * @param right     浮窗右侧边距
+         * @param bottom    浮窗底部边距
          */
         @JvmOverloads
         fun setBorder(
@@ -256,61 +264,61 @@ class EasyFloat {
         /**
          * 设置浮窗的标签：只有一个浮窗时，可以不设置；
          * 有多个浮窗必须设置不容的浮窗，不然没法管理，所以禁止创建相同标签的浮窗
-         * @param floatTag 浮窗标签
+         * @param floatTag      浮窗标签
          */
         fun setTag(floatTag: String?) = apply { config.floatTag = floatTag }
 
         /**
          * 设置浮窗是否可拖拽
-         * @param dragEnable 是否可拖拽
+         * @param dragEnable    是否可拖拽
          */
         fun setDragEnable(dragEnable: Boolean) = apply { config.dragEnable = dragEnable }
 
         /**
          * 设置浮窗是否状态栏沉浸
-         * @param immersionStatusBar 是否状态栏沉浸
+         * @param immersionStatusBar    是否状态栏沉浸
          */
         fun setImmersionStatusBar(immersionStatusBar: Boolean) =
             apply { config.immersionStatusBar = immersionStatusBar }
 
         /**
          * 浮窗是否包含EditText，浮窗默认不获取焦点，无法弹起软键盘，所以需要适配
-         * @param hasEditText 是否包含EditText
+         * @param hasEditText   是否包含EditText
          */
         fun hasEditText(hasEditText: Boolean) = apply { config.hasEditText = hasEditText }
 
         /**
          * 通过传统接口，进行浮窗的各种状态回调
-         * @param callbacks 浮窗的各种事件回调
+         * @param callbacks     浮窗的各种事件回调
          */
         fun registerCallbacks(callbacks: OnFloatCallbacks) = apply { config.callbacks = callbacks }
 
         /**
          * 针对kotlin 用户，传入带FloatCallbacks.Builder 返回值的 lambda，可按需回调
          * 为了避免方法重载时 出现编译错误的情况，更改了方法名
-         * @param builder 事件回调的构建者
+         * @param builder   事件回调的构建者
          */
         fun registerCallback(builder: FloatCallbacks.Builder.() -> Unit) =
             apply { config.floatCallbacks = FloatCallbacks().apply { registerListener(builder) } }
 
         /**
          * 设置浮窗的出入动画
-         * @param floatAnimator 浮窗的出入动画，为空时不执行动画
+         * @param floatAnimator     浮窗的出入动画，为空时不执行动画
          */
         fun setAnimator(floatAnimator: OnFloatAnimator?) =
             apply { config.floatAnimator = floatAnimator }
 
         /**
          * 设置屏幕的有效显示高度（不包含虚拟导航栏的高度）
-         * @param displayHeight 屏幕的有效高度
+         * @param displayHeight     屏幕的有效高度
          */
         fun setDisplayHeight(displayHeight: OnDisplayHeight) =
             apply { config.displayHeight = displayHeight }
 
         /**
          * 设置浮窗宽高是否充满屏幕
-         * @param widthMatch 宽度是否充满屏幕
-         * @param heightMatch 高度是否充满屏幕
+         * @param widthMatch    宽度是否充满屏幕
+         * @param heightMatch   高度是否充满屏幕
          */
         fun setMatchParent(widthMatch: Boolean = false, heightMatch: Boolean = false) = apply {
             config.widthMatch = widthMatch
@@ -319,7 +327,7 @@ class EasyFloat {
 
         /**
          * 设置需要过滤的Activity类名，仅对系统浮窗有效
-         * @param clazz 需要过滤的Activity类名
+         * @param clazz     需要过滤的Activity类名
          */
         fun setFilter(vararg clazz: Class<*>) = apply {
             clazz.forEach {
@@ -360,14 +368,14 @@ class EasyFloat {
 
         /**
          * 申请浮窗权限的结果回调
-         * @param isOpen 悬浮窗权限是否打开
+         * @param isOpen    悬浮窗权限是否打开
          */
         override fun permissionResult(isOpen: Boolean) =
             if (isOpen) createFloat() else callbackCreateFailed(WARN_PERMISSION)
 
         /**
          * 回调创建失败
-         * @param reason 失败原因
+         * @param reason    失败原因
          */
         private fun callbackCreateFailed(reason: String) {
             config.callbacks?.createdResult(false, reason, null)

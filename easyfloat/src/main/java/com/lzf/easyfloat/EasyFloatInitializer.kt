@@ -10,7 +10,7 @@ import com.lzf.easyfloat.utils.LifecycleUtils
 /**
  * @author: liuzhenfeng
  * @github：https://github.com/princekin-f
- * @function:
+ * @function: 通过内容提供者的上下文，进行生命周期回调的初始化
  * @date: 2020/10/23  13:41
  */
 class EasyFloatInitializer : ContentProvider() {

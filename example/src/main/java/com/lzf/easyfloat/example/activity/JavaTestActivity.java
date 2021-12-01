@@ -99,39 +99,25 @@ public class JavaTestActivity extends Activity {
                 // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
-                    public void createdResult(boolean isCreated, @Nullable String msg, @Nullable View view) {
-
-                    }
+                    public void createdResult(boolean isCreated, @Nullable String msg, @Nullable View view) { }
 
                     @Override
-                    public void show(@NotNull View view) {
-
-                    }
+                    public void show(@NotNull View view) { }
 
                     @Override
-                    public void hide(@NotNull View view) {
-
-                    }
+                    public void hide(@NotNull View view) { }
 
                     @Override
-                    public void dismiss() {
-
-                    }
+                    public void dismiss() { }
 
                     @Override
-                    public void touchEvent(@NotNull View view, @NotNull MotionEvent event) {
-
-                    }
+                    public void touchEvent(@NotNull View view, @NotNull MotionEvent event) { }
 
                     @Override
-                    public void drag(@NotNull View view, @NotNull MotionEvent event) {
-
-                    }
+                    public void drag(@NotNull View view, @NotNull MotionEvent event) { }
 
                     @Override
-                    public void dragEnd(@NotNull View view) {
-
-                    }
+                    public void dragEnd(@NotNull View view) { }
                 })
                 // Kotlin DSL实现回调效果，和registerCallbacks二选一即可，该方式主要针对Kotlin，Java使用起来并不怎么方便
                 .registerCallback(builder -> {

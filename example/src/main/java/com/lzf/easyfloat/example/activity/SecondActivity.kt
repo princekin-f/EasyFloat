@@ -162,34 +162,19 @@ class SecondActivity : BaseActivity() {
                 dragEnd { }
             }
             .registerCallbacks(object : OnFloatCallbacks {
-                override fun createdResult(isCreated: Boolean, msg: String?, view: View?) {
+                override fun createdResult(isCreated: Boolean, msg: String?, view: View?) {}
 
-                }
+                override fun show(view: View) {}
 
-                override fun show(view: View) {
+                override fun hide(view: View) {}
 
-                }
+                override fun dismiss() {}
 
-                override fun hide(view: View) {
+                override fun touchEvent(view: View, event: MotionEvent) {}
 
-                }
+                override fun drag(view: View, event: MotionEvent) {}
 
-                override fun dismiss() {
-
-                }
-
-                override fun touchEvent(view: View, event: MotionEvent) {
-
-                }
-
-                override fun drag(view: View, event: MotionEvent) {
-
-                }
-
-                override fun dragEnd(view: View) {
-
-                }
-
+                override fun dragEnd(view: View) {}
             })
             // 创建浮窗（这是关键哦😂）
             .show()

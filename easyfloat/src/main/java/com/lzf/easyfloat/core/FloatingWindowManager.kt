@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * @author: Liuzhenfeng
  * @date: 12/1/20  23:36
- * @Description:
+ * @Description: 负责多个悬浮窗的管理
  */
 internal object FloatingWindowManager {
 
@@ -24,7 +24,11 @@ internal object FloatingWindowManager {
     fun create(context: Context, config: FloatConfig) {
         if (!checkTag(config)) {
             val helper = FloatingWindowHelper(context, config)
-            if (helper.createWindow()) windowMap[config.floatTag!!] = helper
+            helper.createWindow(object : FloatingWindowHelper.CreateCallback {
+                override fun onCreate(success: Boolean) {
+                    if (success) windowMap[config.floatTag!!] = helper
+                }
+            })
         } else {
             // 存在相同的tag，直接创建失败
             config.callbacks?.createdResult(false, WARN_REPEATED_TAG, null)

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.lzf.easyfloat.widget.DefaultCloseView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:paddingHorizontal="50dp"
-        app:inRangeColor="#99FF0000"
-        app:normalColor="#99000000"
-        app:shapeType="oval"
-        app:zoomSize="4dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:paddingHorizontal="50dp"
+    app:closeShapeType="oval"
+    app:inRangeColor="#99FF0000"
+    app:normalColor="#99000000"
+    app:zoomSize="4dp">
 
     <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="@string/delete_floating_window"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp" />
+        android:id="@+id/tv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="@string/delete_floating_window"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp" />
 
     <ImageView
-            android:id="@+id/iv_delete"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_above="@id/tv_delete"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="6dp"
-            android:src="@drawable/icon_delete_normal" />
+        android:id="@+id/iv_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_above="@id/tv_delete"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="6dp"
+        android:src="@drawable/icon_delete_normal" />
 
 </com.lzf.easyfloat.widget.DefaultCloseView>

@@ -61,7 +61,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         openBorderTest.setOnClickListener(this)
 
         // 测试activity中onCreate就启动浮框
-//         showActivity2()
+//        showActivityFloat(TAG_1)
     }
 
     override fun onClick(v: View?) {
@@ -279,9 +279,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 it.findViewById<ScaleImage>(R.id.ivScale).onScaledListener =
                     object : ScaleImage.OnScaledListener {
                         override fun onScaled(x: Float, y: Float, event: MotionEvent) {
-                            params.width = max(params.width + x.toInt(), 200)
-                            params.height = max(params.height + y.toInt(), 200)
-                            content.layoutParams = params
+                            params.width = max(params.width + x.toInt(), 400)
+                            params.height = max(params.height + y.toInt(), 300)
+                            // 更新xml根布局的大小
+//                            content.layoutParams = params
+                            // 更新悬浮窗的大小，可以避免在其他应用横屏时，宽度受限
+                            EasyFloat.updateFloat(tag, width = params.width, height = params.height)
                         }
                     }
 
@@ -293,7 +296,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 检测浮窗权限是否开启，若没有给与申请提示框（非必须，申请依旧是EasyFloat内部内保进行）
+     * 检测浮窗权限是否开启，若没有给与申请提示框（非必须，申请依旧是EasyFloat内部进行）
      */
     private fun checkPermission(tag: String? = null) {
         if (PermissionUtils.checkPermission(this)) {

@@ -40,7 +40,7 @@
         <!--区域选中颜色-->
         <attr name="inRangeColor" format="color" />
         <!--区域形状-->
-        <attr name="shapeType" format="enum">
+        <attr name="closeShapeType" format="enum">
             <enum name="oval" value="0" />
             <enum name="rect" value="1" />
             <enum name="circle" value="2" />

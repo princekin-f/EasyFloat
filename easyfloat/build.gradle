@@ -5,13 +5,16 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.princekin-f'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+
+        // aar 打包混淆配置
+        consumerProguardFiles "proguard-rules.pro"
     }
 
     buildTypes {

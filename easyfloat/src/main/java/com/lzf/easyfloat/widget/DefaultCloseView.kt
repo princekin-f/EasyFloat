@@ -12,7 +12,7 @@ import com.lzf.easyfloat.utils.DisplayUtils
  * @author: liuzhenfeng
  * @date: 2020/10/25  11:16
  * @Package: com.lzf.easyfloat.widget
- * @Description:
+ * @Description: 自定义拖拽关闭视图，支持椭圆、矩形、半圆
  */
 class DefaultCloseView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -43,7 +43,7 @@ class DefaultCloseView @JvmOverloads constructor(
         context.theme.obtainStyledAttributes(attrs, R.styleable.DefaultCloseView, 0, 0).apply {
             normalColor = getColor(R.styleable.DefaultCloseView_normalColor, normalColor)
             inRangeColor = getColor(R.styleable.DefaultCloseView_inRangeColor, inRangeColor)
-            shapeType = getInt(R.styleable.DefaultCloseView_shapeType, shapeType)
+            shapeType = getInt(R.styleable.DefaultCloseView_closeShapeType, shapeType)
             zoomSize = getDimension(R.styleable.DefaultCloseView_zoomSize, zoomSize)
         }.recycle()
 

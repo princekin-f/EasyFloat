@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_border_test.*
  * @author: liuzhenfeng
  * @date: 3/9/21  11:27
  * @Package: com.lzf.easyfloat.example.activity
- * @Description:
+ * @Description: 悬浮窗边界测试页面
  */
 class BorderTestActivity : BaseActivity() {
 

@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.view.*
 import android.view.WindowManager.LayoutParams.*
 import android.widget.EditText
+import com.lzf.easyfloat.WARN_ACTIVITY_NULL
 import com.lzf.easyfloat.anim.AnimatorManager
 import com.lzf.easyfloat.data.FloatConfig
 import com.lzf.easyfloat.enums.ShowPattern
@@ -25,9 +26,13 @@ import com.lzf.easyfloat.widget.ParentFrameLayout
 /**
  * @author: Liuzhenfeng
  * @date: 12/1/20  23:40
- * @Description:
+ * @Description: 负责具体悬浮窗的创建管理
  */
 internal class FloatingWindowHelper(val context: Context, var config: FloatConfig) {
+
+    interface CreateCallback {
+        fun onCreate(success: Boolean)
+    }
 
     lateinit var windowManager: WindowManager
     lateinit var params: WindowManager.LayoutParams
@@ -37,11 +42,17 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
     private var lastLayoutMeasureWidth = -1
     private var lastLayoutMeasureHeight = -1
 
-    fun createWindow(): Boolean = if (getToken() == null) {
-        val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
-        activity?.findViewById<View>(android.R.id.content)?.post { createWindowInner() } ?: false
-    } else {
-        createWindowInner()
+    fun createWindow(callback: CreateCallback) {
+        // 如果在onCreate创建单页面浮窗，会存在获取windowToken为空的情况，需要异步创建
+        if (config.showPattern == ShowPattern.CURRENT_ACTIVITY && getToken() == null) {
+            getActivity()?.findViewById<View>(android.R.id.content)?.run {
+                post { callback.onCreate(createWindowInner()) }
+                return
+            }
+            callback.onCreate(false)
+            config.callbacks?.createdResult(false, WARN_ACTIVITY_NULL, null)
+            config.floatCallbacks?.builder?.createdResult?.invoke(false, WARN_ACTIVITY_NULL, null)
+        } else callback.onCreate(createWindowInner())
     }
 
     private fun createWindowInner(): Boolean = try {
@@ -92,10 +103,10 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
         }
     }
 
-    private fun getToken(): IBinder? {
-        val activity = if (context is Activity) context else LifecycleUtils.getTopActivity()
-        return activity?.window?.decorView?.windowToken
-    }
+    private fun getActivity() =
+        if (context is Activity) context else LifecycleUtils.getTopActivity()
+
+    private fun getToken(): IBinder? = getActivity()?.window?.decorView?.windowToken
 
     /**
      * 将自定义的布局，作为xml布局的父布局，添加到windowManager中，
@@ -388,18 +399,21 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
     }
 
     /**
-     * 更新浮窗坐标
+     * 更新浮窗坐标信息
      */
-    fun updateFloat(x: Int, y: Int) {
+    fun updateFloat(x: Int = -1, y: Int = -1, width: Int = -1, height: Int = -1) {
         frameLayout?.let {
-            if (x == -1 && y == -1) {
+            if (x == -1 && y == -1 && width == -1 && height == -1) {
                 // 未指定具体坐标，执行吸附动画
                 it.postDelayed({ touchUtils.updateFloat(it, params, windowManager) }, 200)
             } else {
-                params.x = x
-                params.y = y
+                if (x != -1) params.x = x
+                if (y != -1) params.y = y
+                if (width != -1) params.width = width
+                if (height != -1) params.height = height
                 windowManager.updateViewLayout(it, params)
             }
         }
     }
 }
+

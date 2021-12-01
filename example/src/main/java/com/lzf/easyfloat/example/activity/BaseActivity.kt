@@ -1,5 +1,6 @@
 package com.lzf.easyfloat.example.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -55,6 +56,7 @@ open class BaseActivity : AppCompatActivity(), BGASwipeBackHelper.Delegate {
         bgaSwipeBackHelper.backward()
     }
 
+    @SuppressLint("MissingPermission")
     fun setVibrator(inRange: Boolean) {
         if (!vibrator.hasVibrator() || (inRange && vibrating)) return
         vibrating = inRange
