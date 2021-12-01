@@ -1,4 +1,12 @@
 ## 版本更新日志
+#### v 2.0.4:
+- [修复延迟初始化单页面浮窗导致的一系列问题](https://github.com/princekin-f/EasyFloat/issues/173)；
+- [修复悬浮窗设置动画为空报错的问题](https://github.com/princekin-f/EasyFloat/issues/185)；
+- [修复aar打包混淆配置未生效的问题](https://github.com/princekin-f/EasyFloat/issues/164)；
+- [`DefaultCloseView`属性替换:`shapeType`->`closeShapeType`](https://github.com/princekin-f/EasyFloat/issues/132)；
+- [API扩展，支持更新浮窗大小`updateFloat`](https://github.com/princekin-f/EasyFloat/blob/40fb05f12e8fdc99af096a9cb50a72dfc3707aa8/easyfloat/src/main/java/com/lzf/easyfloat/EasyFloat.kt#L102)。
+
+
 #### v 2.0.3:
 - [支持直接设置View（`xml/View`即可使用）](https://github.com/princekin-f/EasyFloat/issues/110)；
 - [支持设置布局大小变化后，整体View的位置对齐方式](https://github.com/princekin-f/EasyFloat/pull/159)；
