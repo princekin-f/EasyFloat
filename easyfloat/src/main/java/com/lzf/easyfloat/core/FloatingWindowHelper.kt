@@ -113,8 +113,10 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
      * 重写自定义布局的touch事件，实现拖拽效果。
      */
     private fun addView() {
+        //浮窗父布局ParentFrameLayout与子view的context保持一致
+        val rootViewContext = config.layoutView?.run { context } ?: context
         // 创建一个frameLayout作为浮窗布局的父容器
-        frameLayout = ParentFrameLayout(context, config)
+        frameLayout = ParentFrameLayout(rootViewContext, config)
         frameLayout?.tag = config.floatTag
         // 将浮窗布局文件添加到父容器frameLayout中，并返回该浮窗文件
         val floatingView = config.layoutView?.also { frameLayout?.addView(it) }
