@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        package="com.lzf.easyfloat.example">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.lzf.easyfloat.example">
 
     <!--系统悬浮窗权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -9,19 +9,20 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-            android:name=".App"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppThemeNoActionBar"
-            tools:ignore="GoogleAppIndexingWarning">
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppThemeNoActionBar"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".activity.MainActivity"
-                android:configChanges="keyboardHidden|orientation|screenSize"
-                android:launchMode="standard"
-                android:theme="@style/AppTheme">
+            android:name=".activity.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:launchMode="standard"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
