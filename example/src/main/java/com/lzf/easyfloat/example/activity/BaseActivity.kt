@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper
 import com.lzf.easyfloat.EasyFloat
@@ -31,11 +32,24 @@ open class BaseActivity : AppCompatActivity(), BGASwipeBackHelper.Delegate {
     private var vibrating = false
     var slideOffset = 0f
     private var contractTag = "contractFloat"
+    private val backCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            // 正在滑动返回的时候取消返回按钮事件
+            if (bgaSwipeBackHelper.isSliding) return
+            // 原onKeyDown
+            if (EasyFloat.isShow(contractTag)) {
+                EasyFloat.dismiss(contractTag)
+                return
+            }
+            bgaSwipeBackHelper.backward()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         bgaSwipeBackHelper = BGASwipeBackHelper(this, this)
+        onBackPressedDispatcher.addCallback(this, backCallback)
     }
 
     override fun isSupportSwipeBack(): Boolean = false
@@ -48,12 +62,6 @@ open class BaseActivity : AppCompatActivity(), BGASwipeBackHelper.Delegate {
 
     override fun onSwipeBackLayoutExecuted() {
         bgaSwipeBackHelper.swipeBackward()
-    }
-
-    override fun onBackPressed() {
-        // 正在滑动返回的时候取消返回按钮事件
-        if (bgaSwipeBackHelper.isSliding) return
-        bgaSwipeBackHelper.backward()
     }
 
     @SuppressLint("MissingPermission")
@@ -105,15 +113,5 @@ open class BaseActivity : AppCompatActivity(), BGASwipeBackHelper.Delegate {
         .setDragEnable(false)
         .setAnimator(null)
         .show()
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (EasyFloat.isShow(contractTag)) {
-                EasyFloat.dismiss(contractTag)
-                return true
-            }
-        }
-        return super.onKeyDown(keyCode, event)
-    }
 
 }

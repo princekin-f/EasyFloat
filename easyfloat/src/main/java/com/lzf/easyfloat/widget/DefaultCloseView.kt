@@ -63,7 +63,7 @@ class DefaultCloseView @JvmOverloads constructor(
         height = h.toFloat()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         path.reset()
         if (inRange) {
             paint.color = inRangeColor
@@ -124,7 +124,7 @@ class DefaultCloseView @JvmOverloads constructor(
             }
             region.setPath(path, totalRegion)
         }
-        canvas?.drawPath(path, paint)
+        canvas.drawPath(path, paint)
         super.onDraw(canvas)
     }
 

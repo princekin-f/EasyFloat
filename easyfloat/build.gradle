@@ -1,15 +1,14 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-android'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 group = 'com.github.princekin-f'
 
 android {
-    compileSdkVersion 29
+    namespace "com.lzf.easyfloat"
+    compileSdkVersion 37
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 29
+        targetSdkVersion 37
         versionCode 1
         versionName "1.0"
 
@@ -24,9 +23,13 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
 }
@@ -34,6 +37,13 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-repositories {
-    mavenCentral()
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                artifact(tasks.getByName("bundleReleaseAar"))
+            }
+        }
+    }
 }

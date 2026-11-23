@@ -336,9 +336,9 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                     FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
 
                 addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(animation: Animator?) {}
+                    override fun onAnimationRepeat(animation: Animator) {}
 
-                    override fun onAnimationEnd(animation: Animator?) {
+                    override fun onAnimationEnd(animation: Animator) {
                         config.isAnim = false
                         if (!config.immersionStatusBar) {
                             // 不需要延伸到屏幕外了，防止屏幕旋转的时候，浮窗处于屏幕外
@@ -347,9 +347,9 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
                         initEditText()
                     }
 
-                    override fun onAnimationCancel(animation: Animator?) {}
+                    override fun onAnimationCancel(animation: Animator) {}
 
-                    override fun onAnimationStart(animation: Animator?) {
+                    override fun onAnimationStart(animation: Animator) {
                         floatingView.visibility = View.VISIBLE
                         config.isAnim = true
                     }
@@ -376,13 +376,13 @@ internal class FloatingWindowHelper(val context: Context, var config: FloatConfi
             config.isAnim = true
             params.flags = FLAG_NOT_TOUCH_MODAL or FLAG_NOT_FOCUSABLE or FLAG_LAYOUT_NO_LIMITS
             animator.addListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(animation: Animator?) {}
+                override fun onAnimationRepeat(animation: Animator) {}
 
-                override fun onAnimationEnd(animation: Animator?) = remove()
+                override fun onAnimationEnd(animation: Animator) = remove()
 
-                override fun onAnimationCancel(animation: Animator?) {}
+                override fun onAnimationCancel(animation: Animator) {}
 
-                override fun onAnimationStart(animation: Animator?) {}
+                override fun onAnimationStart(animation: Animator) {}
             })
             animator.start()
         }

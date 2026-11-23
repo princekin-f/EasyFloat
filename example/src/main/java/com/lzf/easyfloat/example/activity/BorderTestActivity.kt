@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.SidePattern
 import com.lzf.easyfloat.example.R
-import kotlinx.android.synthetic.main.activity_border_test.*
 
 /**
  * @author: liuzhenfeng
@@ -23,8 +23,8 @@ class BorderTestActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_border_test)
 
-        tv_show.setOnClickListener { showBorderTest() }
-        tv_dismiss.setOnClickListener { EasyFloat.dismiss(tag) }
+        findViewById<TextView>(R.id.tv_show).setOnClickListener { showBorderTest() }
+        findViewById<TextView>(R.id.tv_dismiss).setOnClickListener { EasyFloat.dismiss(tag) }
     }
 
     private fun showBorderTest() {
@@ -44,7 +44,7 @@ class BorderTestActivity : BaseActivity() {
                     EasyFloat.updateFloat(tag)
                 }
             }
-            .setBorder(view_bg.left, view_bg.top, view_bg.right, view_bg.bottom)
+            .setBorder(findViewById<View>(R.id.view_bg).left, findViewById<View>(R.id.view_bg).top, findViewById<View>(R.id.view_bg).right, findViewById<View>(R.id.view_bg).bottom)
             .setGravity(Gravity.CENTER)
             .setSidePattern(SidePattern.RESULT_SIDE)
             .show()

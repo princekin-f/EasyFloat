@@ -171,7 +171,7 @@
                     android:id="@+id/openSwipeTest"
                     style="@style/TextStyle2"
                     android:layout_marginTop="20dp"
-                    android:text="Open SeipeTestActivity" />
+                    android:text="Open SwipeTestActivity" />
 
             <TextView
                     android:id="@+id/openBorderTest"
