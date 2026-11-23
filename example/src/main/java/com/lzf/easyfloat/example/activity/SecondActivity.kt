@@ -20,12 +20,6 @@ import com.lzf.easyfloat.example.startActivity
 import com.lzf.easyfloat.interfaces.OnDisplayHeight
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks
 import com.lzf.easyfloat.utils.DisplayUtils
-import kotlinx.android.synthetic.main.activity_second.*
-import kotlinx.android.synthetic.main.activity_second.changeBackground
-import kotlinx.android.synthetic.main.activity_second.openEditTextFloat
-import kotlinx.android.synthetic.main.activity_second.openJavaTestActivity
-import kotlinx.android.synthetic.main.activity_second.recoverBackground
-import kotlinx.android.synthetic.main.activity_third.*
 import kotlin.random.Random
 
 /**
@@ -39,7 +33,7 @@ class SecondActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
-        tvShow.setOnClickListener {
+        findViewById<TextView>(R.id.tvShow).setOnClickListener {
             EasyFloat.with(this)
                 .setLayout(R.layout.float_top_dialog) {
                     it.postDelayed({ EasyFloat.dismiss(it.tag.toString()) }, 2333)
@@ -70,11 +64,11 @@ class SecondActivity : BaseActivity() {
                 .show()
         }
 
-        openEditTextFloat.setOnClickListener { showEditTextFloat() }
+        findViewById<TextView>(R.id.openEditTextFloat).setOnClickListener { showEditTextFloat() }
 
-        openJavaTestActivity.setOnClickListener { startActivity<JavaTestActivity>(this) }
+        findViewById<TextView>(R.id.openJavaTestActivity).setOnClickListener { startActivity<JavaTestActivity>(this) }
 
-        changeBackground.setOnClickListener {
+        findViewById<TextView>(R.id.changeBackground).setOnClickListener {
             EasyFloat.getFloatView()?.apply {
                 findViewById<RelativeLayout>(R.id.rlContent)
                     .setBackgroundColor(ContextCompat.getColor(this@SecondActivity, R.color.violet))
@@ -83,7 +77,7 @@ class SecondActivity : BaseActivity() {
             }
         }
 
-        recoverBackground.setOnClickListener {
+        findViewById<TextView>(R.id.recoverBackground).setOnClickListener {
             EasyFloat.getFloatView()?.findViewById<RelativeLayout>(R.id.rlContent)
                 ?.setBackgroundColor(ContextCompat.getColor(this, R.color.translucent))
         }

@@ -1,5 +1,6 @@
 package com.lzf.easyfloat.permission
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Fragment
 import android.content.Intent
@@ -14,6 +15,7 @@ import com.lzf.easyfloat.utils.Logger
  * @function: 用于浮窗权限的申请，自动处理回调结果
  * @date: 2019-07-15  10:36
  */
+@SuppressLint("ValidFragment")
 internal class PermissionFragment : Fragment() {
 
     companion object {

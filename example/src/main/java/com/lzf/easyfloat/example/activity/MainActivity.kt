@@ -19,7 +19,6 @@ import com.lzf.easyfloat.interfaces.OnTouchRangeListener
 import com.lzf.easyfloat.permission.PermissionUtils
 import com.lzf.easyfloat.utils.DragUtils
 import com.lzf.easyfloat.widget.BaseSwitchView
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.max
 
 
@@ -36,29 +35,29 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        open1.setOnClickListener(this)
-        open2.setOnClickListener(this)
-        open3.setOnClickListener(this)
-        open4.setOnClickListener(this)
+        findViewById<TextView>(R.id.open1).setOnClickListener(this)
+        findViewById<TextView>(R.id.open2).setOnClickListener(this)
+        findViewById<TextView>(R.id.open3).setOnClickListener(this)
+        findViewById<TextView>(R.id.open4).setOnClickListener(this)
 
-        hide1.setOnClickListener(this)
-        hide2.setOnClickListener(this)
-        hide3.setOnClickListener(this)
-        hide4.setOnClickListener(this)
+        findViewById<TextView>(R.id.hide1).setOnClickListener(this)
+        findViewById<TextView>(R.id.hide2).setOnClickListener(this)
+        findViewById<TextView>(R.id.hide3).setOnClickListener(this)
+        findViewById<TextView>(R.id.hide4).setOnClickListener(this)
 
-        show1.setOnClickListener(this)
-        show2.setOnClickListener(this)
-        show3.setOnClickListener(this)
-        show4.setOnClickListener(this)
+        findViewById<TextView>(R.id.show1).setOnClickListener(this)
+        findViewById<TextView>(R.id.show2).setOnClickListener(this)
+        findViewById<TextView>(R.id.show3).setOnClickListener(this)
+        findViewById<TextView>(R.id.show4).setOnClickListener(this)
 
-        dismiss1.setOnClickListener(this)
-        dismiss2.setOnClickListener(this)
-        dismiss3.setOnClickListener(this)
-        dismiss4.setOnClickListener(this)
+        findViewById<TextView>(R.id.dismiss1).setOnClickListener(this)
+        findViewById<TextView>(R.id.dismiss2).setOnClickListener(this)
+        findViewById<TextView>(R.id.dismiss3).setOnClickListener(this)
+        findViewById<TextView>(R.id.dismiss4).setOnClickListener(this)
 
-        openSecond.setOnClickListener(this)
-        openSwipeTest.setOnClickListener(this)
-        openBorderTest.setOnClickListener(this)
+        findViewById<TextView>(R.id.openSecond).setOnClickListener(this)
+        findViewById<TextView>(R.id.openSwipeTest).setOnClickListener(this)
+        findViewById<TextView>(R.id.openBorderTest).setOnClickListener(this)
 
         // 测试activity中onCreate就启动浮框
 //        showActivityFloat(TAG_1)
@@ -66,30 +65,30 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            open1 -> showActivityFloat(TAG_1)
-            hide1 -> EasyFloat.hide(TAG_1)
-            show1 -> EasyFloat.show(TAG_1)
-            dismiss1 -> EasyFloat.dismiss(TAG_1)
+            findViewById<TextView>(R.id.open1) -> showActivityFloat(TAG_1)
+            findViewById<TextView>(R.id.hide1) -> EasyFloat.hide(TAG_1)
+            findViewById<TextView>(R.id.show1) -> EasyFloat.show(TAG_1)
+            findViewById<TextView>(R.id.dismiss1) -> EasyFloat.dismiss(TAG_1)
 
-            open2 -> showActivity2(TAG_2)
-            hide2 -> EasyFloat.hide(TAG_2)
-            show2 -> EasyFloat.show(TAG_2)
-            dismiss2 -> EasyFloat.dismiss(TAG_2)
+            findViewById<TextView>(R.id.open2) -> showActivity2(TAG_2)
+            findViewById<TextView>(R.id.hide2) -> EasyFloat.hide(TAG_2)
+            findViewById<TextView>(R.id.show2) -> EasyFloat.show(TAG_2)
+            findViewById<TextView>(R.id.dismiss2) -> EasyFloat.dismiss(TAG_2)
 
             // 检测权限根据需求考虑有无即可，权限申请为内部进行
-            open3 -> checkPermission()
-            hide3 -> EasyFloat.hide()
-            show3 -> EasyFloat.show()
-            dismiss3 -> EasyFloat.dismiss()
+            findViewById<TextView>(R.id.open3) -> checkPermission()
+            findViewById<TextView>(R.id.hide3) -> EasyFloat.hide()
+            findViewById<TextView>(R.id.show3) -> EasyFloat.show()
+            findViewById<TextView>(R.id.dismiss3) -> EasyFloat.dismiss()
 
-            open4 -> checkPermission(TAG_4)
-            hide4 -> EasyFloat.hide(TAG_4)
-            show4 -> EasyFloat.show(TAG_4)
-            dismiss4 -> EasyFloat.dismiss(TAG_4)
+            findViewById<TextView>(R.id.open4) -> checkPermission(TAG_4)
+            findViewById<TextView>(R.id.hide4) -> EasyFloat.hide(TAG_4)
+            findViewById<TextView>(R.id.show4) -> EasyFloat.show(TAG_4)
+            findViewById<TextView>(R.id.dismiss4) -> EasyFloat.dismiss(TAG_4)
 
-            openSecond -> startActivity<SecondActivity>(this)
-            openSwipeTest -> startActivity<SwipeTestActivity>(this)
-            openBorderTest -> startActivity<BorderTestActivity>(this)
+            findViewById<TextView>(R.id.openSecond) -> startActivity<SecondActivity>(this)
+            findViewById<TextView>(R.id.openSwipeTest) -> startActivity<SwipeTestActivity>(this)
+            findViewById<TextView>(R.id.openBorderTest) -> startActivity<BorderTestActivity>(this)
 
             else -> return
         }

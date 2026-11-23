@@ -25,14 +25,14 @@ internal object LifecycleUtils {
         application.registerActivityLifecycleCallbacks(object :
             Application.ActivityLifecycleCallbacks {
 
-            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {}
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
-            override fun onActivityStarted(activity: Activity?) {
+            override fun onActivityStarted(activity: Activity) {
                 // 计算启动的activity数目
                 activity?.let { activityCount++ }
             }
 
-            override fun onActivityResumed(activity: Activity?) {
+            override fun onActivityResumed(activity: Activity) {
                 activity?.let {
                     mTopActivity?.clear()
                     mTopActivity = WeakReference<Activity>(it)
@@ -41,9 +41,9 @@ internal object LifecycleUtils {
                 }
             }
 
-            override fun onActivityPaused(activity: Activity?) {}
+            override fun onActivityPaused(activity: Activity) {}
 
-            override fun onActivityStopped(activity: Activity?) {
+            override fun onActivityStopped(activity: Activity) {
                 activity?.let {
                     // 计算关闭的activity数目，并判断当前App是否处于后台
                     activityCount--
@@ -51,9 +51,9 @@ internal object LifecycleUtils {
                 }
             }
 
-            override fun onActivityDestroyed(activity: Activity?) {}
+            override fun onActivityDestroyed(activity: Activity) {}
 
-            override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
         })
     }
 
